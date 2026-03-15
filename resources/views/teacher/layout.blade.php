@@ -1,4 +1,3 @@
-Laravel Php misollar, [13.01.2026 16:19]
 <!DOCTYPE html>
 <html lang="uz">
 
@@ -138,7 +137,6 @@ Laravel Php misollar, [13.01.2026 16:19]
             width: 25px;
         }
 
-Laravel Php misollar, [13.01.2026 16:19]
 
 
         .badge {
@@ -293,7 +291,6 @@ Laravel Php misollar, [13.01.2026 16:19]
             color: var(--dark);
         }
 
-Laravel Php misollar, [13.01.2026 16:19]
 
 
         .stat-info p {
@@ -430,10 +427,7 @@ Laravel Php misollar, [13.01.2026 16:19]
                 });
             }
 
-Laravel Php misollar, [13.01.2026 16:19]
-
-
-            // Overlay yoki menyu tashqarisi bosilganda yopish
+                // Overlay yoki menyu tashqarisi bosilganda yopish
             overlay.addEventListener('click', function() {
                 sidebar.classList.remove('active');
                 overlay.classList.remove('show');

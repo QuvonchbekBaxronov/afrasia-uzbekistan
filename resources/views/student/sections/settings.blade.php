@@ -76,10 +76,10 @@
                             <label style="display: block; margin-bottom: 8px; font-weight: 700;">E-mail</label>
                             <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px;">
                         </div>
-                        <div>
+                        {{-- <div>
                             <label style="display: block; margin-bottom: 8px; font-weight: 700;">Yosh (ixtiyoriy)</label>
                             <input type="number" name="age" class="form-control" value="{{ old('age', $user->age) }}" style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px;">
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div style="margin-top: 30px;">
@@ -119,7 +119,7 @@
         </div>
 
         <!-- Bildirishnomalar -->
-        <div class="card" style="margin-top: 30px;">
+        {{-- <div class="card" style="margin-top: 30px;">
             <div class="card-header">
                 <h4>Bildirishnomalar</h4>
             </div>
@@ -153,7 +153,7 @@
                     </button>
                 </form>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -59,7 +60,6 @@ class StudentController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? $user->phone;
-        $user->age = $data['age'] ?? $user->age;
         $user->save();
 
         return back()->with('success', 'Profil muvaffaqiyatli yangilandi!');
@@ -215,17 +215,22 @@ class StudentController extends Controller
     {
         $user = Auth::user();
 
-        // TO'G'IRLANDI: student_id ishlatildi
-        $groups = Group::with('teacher')
+        $courseIds = DB::table('course_student')
+            ->where('user_id', $user->id)   // yoki sizning ustuningiz nomi
+            ->pluck('course_id');
+
+        $teacherIds = DB::table('courses')
+            ->whereIn('id', $courseIds)
+            ->pluck('user_id')
+            ->unique();
+
+        $groups = Group::query()
+            ->whereIn('teacher_id', $teacherIds)
+            ->with('teacher')
             ->withCount('messages as messages_count')
-            // eager-load only the latest message per group
             ->with(['messages' => fn($q) => $q->latest()->limit(1)])
+            ->latest('updated_at')
             ->get();
-
-
-        foreach ($groups as $group) {
-            $group->current_students = $group->students()->count();
-        }
 
         $selectedGroup = $groups->first();
 
@@ -245,12 +250,7 @@ class StudentController extends Controller
     public function loadGroupChat($id)
     {
         try {
-            $user = Auth::user();
-
-            // TO'G'IRLANDI: student_id ishlatildi
-            $selectedGroup = Group::whereHas('students', fn($q) => $q->where('student_id', $user->id))
-                ->with('teacher')
-                ->findOrFail($id);
+            $selectedGroup = Group::with('teacher')->findOrFail($id);
 
             $messages = GroupMessage::with('user')
                 ->where('group_id', $id)
@@ -263,25 +263,24 @@ class StudentController extends Controller
 
             if (request()->ajax() || request()->wantsJson()) {
                 return response()->json([
-                    'html' => $html,
-                    'group_id' => $selectedGroup->id,
-                    'last_message' => optional($messages->last())->message ?? null,
-                    'last_time' => optional($messages->last())->created_at?->diffForHumans() ?? null,
-                    'last_user_id' => optional($messages->last())->user_id ?? null,
-                    'messages_count' => GroupMessage::where('group_id', $id)->count(),
-                    'last_message_id' => optional($messages->last())->id ?? null,
+                    'html'                  => $html,
+                    'group_id'              => $selectedGroup->id,
+                    'last_message'          => optional($messages->last())->message ?? null,
+                    'last_time'             => optional($messages->last())->created_at?->diffForHumans() ?? null,
+                    'messages_count'        => GroupMessage::where('group_id', $id)->count(),
+                    'last_message_id'       => optional($messages->last())->id ?? 0,
                 ]);
             }
 
             return view('student.sections.chat-window', compact('selectedGroup', 'messages'));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Guruh topilmadi.'
+            ], 404);
         } catch (\Throwable $e) {
-            Log::error('Student loadGroupChat error', ['id' => $id, 'error' => $e->getMessage()]);
-
-            if (request()->ajax() || request()->wantsJson()) {
-                return response()->json(['message' => 'Guruhni yuklashda server xatosi yuz berdi. Iltimos, sahifani yangilang.'], 500);
-            }
-
-            throw $e;
+            return response()->json([
+                'message' => 'Serverda texnik xatolik. Iltimos keyinroq urinib ko‘ring.'
+            ], 500);
         }
     }
 
@@ -334,73 +333,62 @@ class StudentController extends Controller
     {
         try {
             $request->validate([
-                'group_id' => 'required|exists:groups,id',
-                'message' => 'required|string|max:1000'
+                'group_id' => 'required|exists:groups,id',  // faqat guruh mavjudligini tekshiradi
+                'message'  => 'required|string|max:1000'
             ]);
 
             $user = Auth::user();
 
-            // TO'G'IRLANDI: student_id ishlatildi
-            $group = Group::whereHas('students', fn($q) => $q->where('student_id', $user->id))
-                ->findOrFail($request->group_id);
+            // Tekshiruv olib tashlandi — endi faqat group mavjud bo'lsa yetarli
+            $group = Group::findOrFail($request->group_id);
 
             $message = GroupMessage::create([
                 'group_id' => $group->id,
-                'user_id' => $user->id,
-                'message' => $request->message,
+                'user_id'  => $user->id,
+                'message'  => $request->message,
             ]);
 
-            // Load the user relationship
+            // Load the user relationship for broadcasting and view
             $message->load('user');
 
+            // Real-time event
             event(new \App\Events\NewGroupMessage($message));
 
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
-                    'success' => true,
-                    'group_id' => $group->id,
-                    'last_message' => $message->message,
-                    'last_time' => $message->created_at->diffForHumans(),
+                    'success'       => true,
+                    'group_id'      => $group->id,
+                    'last_message'  => $message->message,
+                    'last_time'     => $message->created_at->diffForHumans(),
                     'messages_count' => GroupMessage::where('group_id', $group->id)->count(),
                     'last_message_id' => $message->id,
-                    'message_html' => view('student.sections.partials.message', ['msg' => $message])->render(),
-                    'message_id' => $message->id,
+                    'message_html'  => view('student.sections.partials.message', ['msg' => $message])->render(),
+                    'message_id'    => $message->id,
                 ]);
             }
 
             return back()->with('success', 'Xabar yuborildi');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Student sendChatMessage validation error', ['errors' => $e->errors()]);
-            
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Validatsiya xatosi: ' . implode(', ', array_map(fn($arr) => implode(', ', $arr), $e->errors()))
+                    'message' => 'Xato: ' . implode(', ', array_map(fn($arr) => implode(', ', $arr), $e->errors()))
                 ], 422);
             }
             throw $e;
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error('Student sendChatMessage: group not found or access denied', ['group_id' => $request->group_id, 'user_id' => Auth::id()]);
-            
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Guruhga kirish huquqingiz yo\'q yoki guruh topilmadi.'
-                ], 403);
+                    'message' => 'Guruh topilmadi.'
+                ], 404);
             }
-            abort(403);
+            abort(404, 'Guruh topilmadi');
         } catch (\Throwable $e) {
-            Log::error('Student sendChatMessage error', [
-                'group_id' => $request->group_id ?? null,
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Xabar yuborishda xatolik yuz berdi: ' . $e->getMessage()
+                    'message' => 'Xabar yuborishda xatolik yuz berdi. Iltimos keyinroq urinib ko‘ring.'
                 ], 500);
             }
             throw $e;
