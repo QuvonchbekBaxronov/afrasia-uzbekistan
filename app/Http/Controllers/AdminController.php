@@ -11,9 +11,14 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Admin\AdminUpdateUserPasswordRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\StoreTeacherRequest;
+use App\Http\Requests\Admin\StoreGroupRequest;
+use App\Http\Requests\Admin\SendChatMessageRequest;
 
 class AdminController extends Controller
 {
@@ -126,18 +131,11 @@ class AdminController extends Controller
     }
     public function groups()
     {
-        if (!auth()->check() || !auth()->user()->is_admin) {
-            return redirect('/')->with('error', 'Ruxsat yo‘q');
-        }
 
-        $groups = Group::with('teacher')->latest()->get();
-
-        foreach ($groups as $group) {
-            // Keep `current_students` attribute in sync for the view
-            $group->current_students = DB::table('group_student')
-                ->where('group_id', $group->id)
-                ->count();
-        }
+        $groups = Group::with('teacher')
+            ->withCount(['students as current_students'])
+            ->latest()
+            ->get();
 
         $teachers = User::query()
             ->select(['users.id', 'users.name'])
@@ -182,10 +180,10 @@ class AdminController extends Controller
         return view('admin.sections.user-edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->only(['name', 'email', 'phone', 'role']));
+        $user->update($request->validated());
         return back()->with('success', 'Malumotlar yangilandi');
     }
 
@@ -203,23 +201,17 @@ class AdminController extends Controller
         return back()->with('success', 'Status o\'zgartirildi');
     }
 
-    public function updatePassword(Request $request, $id)
+    public function updatePassword(AdminUpdateUserPasswordRequest $request, $id)
     {
-        $request->validate(['password' => 'required|min:6']);
+        $validated = $request->validated();
         $user = User::findOrFail($id);
-        $user->password = bcrypt($request->password);
+        $user->password = bcrypt($validated['password']);
         $user->save();
         return back()->with('success', 'Parol yangilandi');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -237,18 +229,9 @@ class AdminController extends Controller
         return back()->with('success', 'O\'qituvchi o\'chirildi');
     }
 
-    public function teacher_store(Request $request)
+    public function teacher_store(StoreTeacherRequest $request)
     {
         Log::info('Yangi o‘qituvchi qo‘shish so‘rovi', ['request' => $request->all()]);
-
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'phone'    => 'nullable|string|max:20',
-            'subject'  => 'required|string|max:255',
-            'password' => 'required|min:6|confirmed',
-            'status'   => 'required|in:active,inactive',
-        ]);
 
         $teacher = User::create([
             'name'       => $request->name,
@@ -292,13 +275,8 @@ class AdminController extends Controller
         return view('admin.sections.chats', compact('groups', 'selectedGroup', 'messages'));
     }
 
-    public function sendChatMessage(Request $request)
+    public function sendChatMessage(SendChatMessageRequest $request)
     {
-        $request->validate([
-            'group_id' => 'required|exists:groups,id',
-            'message'  => 'required|string|max:1000'
-        ]);
-
         $message = GroupMessage::create([
             'group_id' => $request->group_id,
             'user_id'  => auth()->id(),
@@ -403,25 +381,9 @@ class AdminController extends Controller
             return response()->json(['message' => 'Polling xatosi'], 500);
         }
     }
-    public function storeGroup(Request $request)
+    public function storeGroup(StoreGroupRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|unique:groups,code',
-            'teacher_id' => 'required|exists:users,id',
-            'subject' => 'nullable|string',
-            'level' => 'required|in:beginner,intermediate,advanced',
-            'lesson_days' => 'nullable|string',
-            'lesson_time' => 'nullable|date_format:H:i',
-            'max_students' => 'required|integer|min:1',
-            'monthly_fee' => 'required|numeric|min:0',
-            'duration_months' => 'required|integer|min:1',
-            'start_date' => 'nullable|date',
-            'room' => 'nullable|string',
-            'description' => 'nullable|string',
-        ]);
-
-        Group::create($validated);
+        Group::create($request->validated());
 
         return redirect()->route('admin.groups')->with('success', 'Yangi guruh muvaffaqiyatli qoʻshildi!');
     }

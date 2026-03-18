@@ -22,4 +22,24 @@ class Video extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getResolvedUrlAttribute()
+    {
+        if (!$this->video_url) {
+            return null;
+        }
+
+        if (filter_var($this->video_url, FILTER_VALIDATE_URL)) {
+            return $this->video_url;
+        }
+
+        $defaultDisk = config('filesystems.default');
+        $disk = $defaultDisk === 'local' ? 'public' : $defaultDisk;
+
+        try {
+            return \Illuminate\Support\Facades\Storage::disk($disk)->url($this->video_url);
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
 }

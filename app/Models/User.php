@@ -57,15 +57,39 @@ class User extends Authenticatable
 
     public function courses()
     {
-        return $this->hasMany(Course::class);  // Course modelining to'liq nomi
+        return $this->hasMany(Course::class);
     }
 
-    public function enrolledCourses() // talaba sifatida sotib olgan kurslari
+    public function enrolledCourses()
     {
         return $this->belongsToMany(Course::class, 'course_student')
             ->withTimestamps()
             ->withPivot('enrolled_at');
     }
-    
-    
+    public function getAvatarUrlAttribute()
+    {
+        if (!$this->avatar) {
+            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) .
+                   '&background=10b981&color=fff&size=150&bold=true&font-size=0.5';
+        }
+
+        if (filter_var($this->avatar, FILTER_VALIDATE_URL)) {
+            return $this->avatar;
+        }
+
+        $defaultDisk = config('filesystems.default');
+        $disk = $defaultDisk === 'local' ? 'public' : $defaultDisk;
+
+        return \Illuminate\Support\Facades\Storage::disk($disk)->url($this->avatar);
+    }
+
+    public function subject()
+    {
+        return $this->hasOne(Subject::class, 'teacher_id');
+    }
+
+    public function groups()
+    {
+        return $this->hasMany(Group::class, 'teacher_id');
+    }
 }

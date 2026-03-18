@@ -7,12 +7,25 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\ImageService;
+
+use App\Http\Requests\Admin\UpdateProfileRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Admin\UpdateGeneralSettingsRequest;
+use App\Http\Requests\Admin\DestroyAllDataRequest;
+use Illuminate\Support\Facades\Storage;
 
 class AdminSettingsController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function edit()
     {
         $user = Auth::user();
@@ -20,77 +33,81 @@ class AdminSettingsController extends Controller
         return view('admin.sections.settings', compact('user', 'settings'));
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
+        $validated = $request->validated();
 
-        $data = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:50',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB ga oshirdim, kerak bo'lsa
-        ]);
+        $user->name  = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? $user->phone;
 
         if ($request->hasFile('avatar')) {
             try {
-                $file = $request->file('avatar');
-
-                $path = $file->store('avatars', [
-                    'disk'       => 's3',           // ← 'minio' emas, 's3' ishlatamiz
-                    'visibility' => 'public',
-                ]);
-
-                // Eski avatar bor bo'lsa — exists() siz o'chirishga urinaymiz
                 if ($user->avatar) {
-                    try {
-                        Storage::disk('s3')->delete($user->avatar);
-                    } catch (\Throwable $e) {
-                        // Fayl yo'q bo'lsa yoki 403 chiqsa — jim o'tkazamiz
-                        Log::warning("Eski avatar o'chirishda xato (ehtimol mavjud emas): " . $e->getMessage());
-                    }
+                    Storage::disk('minio')->delete($user->avatar);
                 }
 
-                $user->avatar = $path;   // ← bu yerda saqlanadi
-            } catch (\Throwable $e) {
-                return back()->with('error', 'Avatarni yuklashda xatolik: ' . $e->getMessage());
+                $avatarPath = $this->imageService->uploadImage(
+                    $request->file('avatar'),
+                    'avatars'
+                );
+
+                $user->avatar = $avatarPath;
+
+                Log::info('Avatar muvaffaqiyatli yuklandi', [
+                    'user_id' => $user->id,
+                    'path'    => $avatarPath,
+                    'full_url' => Storage::disk('minio')->url($avatarPath)
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Avatar yuklash xatosi', ['error' => $e->getMessage()]);
+                return back()->with('error', 'Rasm yuklashda xatolik: ' . $e->getMessage());
             }
         }
 
-        $user->name  = $data['name'];
-        $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? $user->phone;
+        if (!$user->isDirty()) {
+            return back()->with('info', 'Hech qanday o\'zgarish kiritilmadi');
+        }
+
         $user->save();
 
-        return back()->with('success', 'Profil muvaffaqiyatli yangilandi');
+        return back()->with('success', 'Profil ma\'lumotlari yangilandi');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', 'min:8'],
-        ]);
-
-        Auth::user()->update(['password' => Hash::make($request->password)]);
-
+        $validated = $request->validated();
+        Auth::user()->update(['password' => bcrypt($validated['password'])]);
         return back()->with('success', 'Parol muvaffaqiyatli yangilandi');
     }
 
-    public function destroyAll(Request $request)
+    public function updateGeneral(UpdateGeneralSettingsRequest $request)
     {
-        $request->validate([
-            'confirmation' => 'required|string',
-            'current_password' => 'required',
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->with('error', 'Parol noto\'g\'ri');
-        }
+        $user->update($validated);
 
-        if ($request->confirmation !== 'DELETE ALL') {
-            return back()->with('error', 'Tasdiqlash to\'g\'ri kelmadi');
-        }
+        return back()->with('success', 'Umumiy sozlamalar saqlandi');
+    }
+
+    public function updateNotifications(Request $request)
+    {
+        $user = Auth::user();
+        $user->update([
+            'email_notifications' => $request->has('email_notifications'),
+            'push_notifications' => $request->has('push_notifications'),
+        ]);
+
+        return back()->with('success', 'Bildirishnomalar yangilandi');
+    }
+
+    public function destroyAll(DestroyAllDataRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = Auth::user();
 
         DB::beginTransaction();
         try {

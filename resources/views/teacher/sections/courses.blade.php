@@ -19,12 +19,28 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert"
+                    style="padding:12px 18px;border-radius:12px;background:#fee2e2;color:#991b1b;margin-bottom:18px;font-weight:700;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert"
+                    style="padding:12px 18px;border-radius:12px;background:#fee2e2;color:#991b1b;margin-bottom:18px;font-weight:700;">
+                    <ul style="margin:0; padding-left:20px;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @forelse($courses as $course)
                 <div class="course-item" data-course-id="{{ $course->id }}">
                     <div class="course-thumbnail">
-                        <img src="{{ $course->img
-                ? Storage::disk('s3')->url($course->img)
-                : 'https://via.placeholder.com/300x180?text=Kurs+Rasmi' }}" alt="{{ $course->title }}"
+                        <img src="{{ $course->thumbnail_url }}" alt="{{ $course->title }}"
                             class="img-fluid rounded">
                         <div class="course-duration">
                             <i class="fas fa-clock"></i> {{ $course->duration_hours ?? '—' }} soat
@@ -118,7 +134,7 @@
                             required></textarea>
                     </div>
                     <div style="text-align: right; margin-top: 30px;">
-                        <button type="button" class="btn-secondary"
+                        <button type="submit" class="btn-secondary"
                             onclick="document.getElementById('addCourseModal').style.display='none'"
                             style="margin-right: 15px;">
                             Bekor qilish
@@ -373,7 +389,7 @@
         .form-control:focus {
             outline: none;
             border-color: #8b5cf6;
-            background: white;
+            background: white;</script>
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
         }
 

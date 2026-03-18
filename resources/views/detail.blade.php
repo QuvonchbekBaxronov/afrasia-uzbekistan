@@ -36,16 +36,9 @@
             <div class="row mb-4">
                 <div class="col-lg-6 col-md-12 mb-4">
                     <div class="position-relative" style="border-radius: 10px; overflow: hidden; height: 100%;">
-                         @php
-                        // Xuddi shu logika boshqa kurslar uchun
-                        if ($course->img) {
-                            $courseImageUrl = (config('filesystems.default') === 's3' && Storage::disk('s3')->exists($course->img))
-                                ? Storage::disk('s3')->url($course->img)
-                                : asset('storage/' . $course->img);
-                        } else {
-                            $courseImageUrl = 'https://images.unsplash.com/photo-1516321310764-9f3c9619d7d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=85';
-                        }
-                    @endphp
+                          @php
+                            $courseImageUrl = $course->thumbnail_url;
+                        @endphp
 
                         <img class="img-fluid course-img"
                                  src="{{ $courseImageUrl }}"

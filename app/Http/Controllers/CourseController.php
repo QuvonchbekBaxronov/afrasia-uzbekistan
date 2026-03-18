@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\StudentCourse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\WatchCourseRequest;
 
 class CourseController extends Controller
 {
@@ -37,7 +38,7 @@ class CourseController extends Controller
      * Attempt to enter a course watching page — only for authenticated users.
      * Returns 401 JSON for AJAX guests, or redirects back with a flash error.
      */
-    public function watch(Request $request)
+    public function watch(WatchCourseRequest $request)
     {
         if (! Auth::check()) {
             if ($request->ajax() || $request->wantsJson()) {
@@ -48,11 +49,9 @@ class CourseController extends Controller
         }
 
 
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['success' => true, 'redirect' => route('my_course')]);
-        }
+        $validated = $request->validated();
 
-        $course_id = $request->course_id;
+        $course_id = $validated['course_id'];
 
         StudentCourse::create([
             'course_id' => $course_id,

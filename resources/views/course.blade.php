@@ -48,17 +48,9 @@
 
         @foreach ($courses as $course)
             @if ($course->course_type === 'theory')
-                @php
-                    // Kurs rasmi URL - S3 yoki Local (to'liq logika)
-                    if ($course->img) {
-                        $courseImageUrl = (config('filesystems.default') === 's3' && Storage::disk('s3')->exists($course->img))
-                            ? Storage::disk('s3')->url($course->img)
-                            : asset('storage/' . $course->img);
-                    } else {
-                        // Yorqin default rasmlar (qorong'i emas!)
-                        $courseImageUrl = 'https://images.unsplash.com/photo-1524178232363-933d15b4d95e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=85';
-                    }
-                @endphp
+@php
+    $courseImageUrl = $course->thumbnail_url;
+@endphp
 
                 <div class="row align-items-center mb-5">
                     <!-- Kurs rasmi kartochka -->
@@ -137,14 +129,7 @@
             @foreach ($courses->sortByDesc('created_at') as $course)
                 @if ($course->course_type !== 'theory')
                     @php
-                        // Xuddi shu logika boshqa kurslar uchun
-                        if ($course->img) {
-                            $courseImageUrl = (config('filesystems.default') === 's3' && Storage::disk('s3')->exists($course->img))
-                                ? Storage::disk('s3')->url($course->img)
-                                : asset('storage/' . $course->img);
-                        } else {
-                            $courseImageUrl = 'https://images.unsplash.com/photo-1516321310764-9f3c9619d7d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=85';
-                        }
+                        $courseImageUrl = $course->thumbnail_url;
                     @endphp
 
                     <div class="col-lg-4 col-md-6 pb-5">

@@ -25,6 +25,12 @@
         </div>
         @endif
 
+        @if(session('error'))
+        <div class="alert alert-danger rounded-3 mb-4" style="background:#fee2e2;color:#991b1b;">
+            <strong>{{ session('error') }}</strong>
+        </div>
+        @endif
+
         @if($errors->any())
         <div class="alert alert-danger rounded-3 mb-4">
             <ul class="mb-0">
@@ -70,7 +76,8 @@
                     <div class="form-group mb-4">
                         <label class="fw-bold"><i class="fas fa-file-video"></i> Video faylini yuklash *</label>
                         <input type="file" name="video" accept="video/*" class="form-control" required>
-                        <small class="text-muted">MP4, AVI, MOV. Maksimal hajm: 1 GB</small>
+                        <br>
+                        <small class="text-muted">Ruxsat etilgan formatlar: MP4, AVI, MOV.</small>
                     </div>
 
                     <div class="form-group mb-4">
@@ -193,38 +200,14 @@
             if (videoSection) videoSection.style.display = 'block';
         @endif
 
-        // VIDEO HAJM TEKSHIRISH – ENG MUHIM QISM
+        // VIDEO YUKLASH TAYYORGARLIGI (limitlarsiz)
         const videoInput = document.querySelector('input[name="video"]');
         const form = videoInput?.form;
 
         if (videoInput && form) {
             form.addEventListener('submit', function(e) {
-                const file = videoInput.files[0];
-                if (file) {
-                    const maxSize = 1 * 1024 * 1024 * 1024; // 1 GB = 1073741824 bytes
-                    if (file.size > maxSize) {
-                        e.preventDefault();
-                        alert('Xatolik: Video fayl hajmi 1 GB dan oshmasligi kerak!\n' +
-                              'Joriy hajm: ' + formatFileSize(file.size) +
-                              '\nIltimos, kichikroq fayl tanlang yoki videoni siqib yuklang.');
-                        return false;
-                    }
-
-                    // Qo‘shimcha: 10 MB dan kichik bo‘lsa ogohlantirish (ixtiyoriy)
-                    if (file.size < 1024 * 1024) {
-                        // Juda kichik video haqida ogohlantirish mumkin, lekin ruxsat beramiz
-                    }
-                }
+                // Hech qanday client-side cheklov yo'q
             });
-        }
-
-        // Fayl hajmini chiroyli ko‘rsatish uchun yordamchi funksiya
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
     });
 </script>

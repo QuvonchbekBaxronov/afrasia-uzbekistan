@@ -74,7 +74,7 @@
             <div class="card-body">
                 @foreach($new_users as $user)
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 12px;">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <img src="{{ $user->avatar_url }}" style="width: 50px; height: 50px; border-radius: 50%;">
                     <div>
                         <h6 style="margin: 0; font-weight: 700;">{{ $user->name }}</h6>
                         <small style="color: #64748b;">{{ $user->created_at->diffForHumans() }}</small>

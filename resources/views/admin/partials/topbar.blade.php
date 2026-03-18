@@ -2,21 +2,8 @@
 <div class="top-bar">
     <h1 class="page-title">Admin Dashboard</h1>
     <div class="user-info">
-        @php
-        // Avatar URL ni aniq belgilash (settingsdagi logika bilan bir xil)
-        $currentUser = Auth::user();
-        if ($currentUser->avatar) {
-        $avatarUrl = config('filesystems.default') === 's3' && Storage::disk('s3')->exists($currentUser->avatar)
-        ? Storage::disk('s3')->url($currentUser->avatar)
-        : asset('storage/' . $currentUser->avatar);
-        } else {
-        $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($currentUser->name) .
-        '&background=6366f1&color=fff&bold=true&fontsize=0.5&rounded=true&size=128';
-        }
-        @endphp
-
-        <img src="{{ $avatarUrl }}"
-            alt="{{ $currentUser->name }}"
+        <img src="{{ Auth::user()->avatar_url }}"
+            alt="{{ Auth::user()->name }}"
             class="avatar rounded-circle"
             style="width: 56px; height: 56px; object-fit: cover; box-shadow: 0 4px 12px rgba(99,102,241,0.3);">
 

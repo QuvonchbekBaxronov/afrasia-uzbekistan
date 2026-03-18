@@ -14,12 +14,7 @@
                        poster="{{ asset('img/video-poster.jpg') }}">
                     {{-- S3 yoki local video --}}
                     @php
-                        $videoUrl = $video->video_url;
-                        if (config('filesystems.default') === 's3' && Storage::disk('s3')->exists($video->video_url)) {
-                            $videoUrl = Storage::disk('s3')->url($video->video_url);
-                        } elseif (Str::startsWith($video->video_url, 'storage/')) {
-                            $videoUrl = asset($video->video_url);
-                        }
+                        $videoUrl = $video->resolved_url;
                     @endphp
                     <source src="{{ $videoUrl }}" type="video/mp4">
                     Video yuklanmadi. <a href="{{ $videoUrl }}" target="_blank">To'liq versiyani yuklab oling</a>

@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Fayl hajmi post_max_size dan oshib ketganda xato ko'rsatish
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckPostMaxSize::class,
+        ]);
+
         $middleware->alias([
             'is_admin' => \App\Http\Middleware\IsAdmin::class,
             'is_teacher' => \App\Http\Middleware\IsTeacher::class,
@@ -24,5 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
+            return back()->with('error', 'Yuklangan fayl hajmi server tomonidan ruxsat etilgan miqdordan oshib ketdi!');
+        });
     })->create();

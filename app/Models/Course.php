@@ -29,4 +29,24 @@ class Course extends Model
     {
         return $this->hasMany(Quiz::class);
     }
+
+    public function getThumbnailUrlAttribute()
+    {
+        if (!$this->img) {
+            return asset('assets/images/placeholder.jpg');
+        }
+
+        if (filter_var($this->img, FILTER_VALIDATE_URL)) {
+            return $this->img;
+        }
+
+        $defaultDisk = config('filesystems.default');
+        $disk = $defaultDisk === 'local' ? 'public' : $defaultDisk;
+
+        try {
+            return \Illuminate\Support\Facades\Storage::disk($disk)->url($this->img);
+        } catch (\Throwable $e) {
+            return asset('assets/images/placeholder.jpg');
+        }
+    }
 }

@@ -46,14 +46,7 @@
                 <form action="{{ route('student.settings.profile') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div style="display: flex; align-items: center; gap: 25px; margin-bottom: 30px;">
-                        @php
-                            if ($user->avatar) {
-                                $avatarUrl = Storage::disk('s3')->url($user->avatar);
-                            } else {
-                                $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($user->name ?? '') . '&background=3b82f6&color=fff&size=128';
-                            }
-                        @endphp
-                        <img src="{{ $avatarUrl }}" alt="Avatar" id="avatarPreview" style="width: 120px; height: 120px; border-radius: 50%; border: 5px solid var(--primary); object-fit:cover">
+                        <img src="{{ $user->avatar_url }}" alt="Avatar" id="avatarPreview" style="width: 120px; height: 120px; border-radius: 50%; border: 5px solid var(--primary); object-fit:cover">
                         <div style="flex:1">
                             <label class="btn btn-outline-secondary" style="padding: 10px 20px; cursor:pointer">
                                 <i class="fas fa-camera"></i> Rasmni O'zgartirish

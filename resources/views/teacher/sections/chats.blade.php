@@ -1,357 +1,321 @@
-{{-- resources/views/student/sections/chats.blade.php --}}
-@extends('student.layout')
+{{-- resources/views/teacher/sections/chats.blade.php --}}
+@extends('teacher.layout')
 
 @section('title', 'Guruh Chatlari')
 @section('page-title', 'Guruh Chatlari')
 
 @section('content')
-<div class="row g-0" style="height:calc(100vh - 150px); overflow:hidden;">
+    <div class="row g-0" style="height:calc(100vh - 150px); overflow:hidden;">
 
-    {{-- ═══════════════════════════════════════════════
-         CHAP: Guruhlar ro'yxati
-    ═══════════════════════════════════════════════ --}}
-    <div class="col-lg-4 border-end d-flex flex-column" style="height:100%;">
+        {{-- CHAP: Guruhlar ro'yxati --}}
+        <div class="col-lg-4 border-end d-flex flex-column" style="height:100%;">
 
-        <div class="p-3 border-bottom bg-white">
-            <h5 class="mb-2 fw-semibold">Guruhlar</h5>
-            <input type="text"
-                   class="form-control form-control-sm rounded-pill"
-                   placeholder="Qidirish..."
-                   id="search">
-        </div>
+            <div class="p-3 border-bottom bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 fw-semibold">Mening Guruhlarim</h5>
+                </div>
+                <input type="text" class="form-control form-control-sm rounded-pill"
+                    placeholder="Guruh nomini qidirish..." id="search">
+            </div>
 
-        <div class="flex-grow-1 overflow-auto" id="groupsList">
-            @forelse($groups as $group)
-                <a href="{{ route('student.chats.group', $group->id) }}"
-                   class="group-chat-item d-flex align-items-center p-3 border-bottom text-decoration-none
-                          {{ $selectedGroup?->id == $group->id ? 'active' : '' }}"
-                   data-group-id="{{ $group->id }}">
+            <div class="flex-grow-1 overflow-auto" id="groupsList">
+                @forelse($groups as $group)
+                    <a href="{{ route('teacher.chats.group', $group->id) }}"
+                        class="group-chat-item d-flex align-items-center p-3 border-bottom text-decoration-none {{ $selectedGroup?->id == $group->id ? 'active' : '' }}"
+                        data-group-id="{{ $group->id }}">
 
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($group->name) }}&background=random&color=fff&bold=true"
-                         class="rounded-circle me-3 flex-shrink-0" width="46" height="46" alt="{{ $group->name }}">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($group->name) }}&background=random&color=fff&bold=true"
+                            class="rounded-circle me-3 flex-shrink-0" width="46" height="46" alt="{{ $group->name }}">
 
-                    <div class="flex-grow-1 overflow-hidden">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0 text-truncate group-name">{{ $group->name }}</h6>
-                            <small class="text-muted ms-2 flex-shrink-0 message-time">
-                                {{ $group->messages->first()?->created_at->diffForHumans() ?? '' }}
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate group-name">{{ $group->name }}</h6>
+                                <small class="text-muted ms-2 flex-shrink-0 message-time">
+                                    {{ $group->messages->first()?->created_at->diffForHumans() ?? '' }}
+                                </small>
+                            </div>
+                            <small class="text-muted d-block text-truncate last-message">
+                                {{ $group->messages->first()?->message ? Str::limit($group->messages->first()->message, 40) : 'Hali xabar yo\'q' }}
                             </small>
                         </div>
-                        <small class="text-muted d-block text-truncate last-message">
-                            @if($group->messages->first()?->message)
-                                {{ Str::limit($group->messages->first()->message, 35) }}
-                            @else
-                                Xabar yo'q
-                            @endif
-                        </small>
-                    </div>
 
-                    @if(($group->messages_count ?? 0) > 0)
-                        <span class="badge bg-primary rounded-pill ms-2 flex-shrink-0 unread-badge">
-                            {{ $group->messages_count }}
-                        </span>
-                    @endif
-                </a>
-            @empty
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-comment-slash fa-3x mb-3 opacity-25"></i>
-                    <p class="mb-0">Guruhlar yo'q</p>
-                </div>
-            @endforelse
+                        @if ($group->messages_count > 0)
+                            <span class="badge bg-primary rounded-pill ms-2">{{ $group->messages_count }}</span>
+                        @endif
+                    </a>
+                @empty
+                    <div class="text-center py-5 text-muted">
+                        <i class="fas fa-users fa-3x mb-3 opacity-25"></i>
+                        <p class="mb-0">Hozircha guruhlaringiz yo'q</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- O'NG: Chat oynasi --}}
+        <div class="col-lg-8 d-flex flex-column" id="chatContainer" style="height:100%;">
+            @include('teacher.sections.chat-window')
         </div>
     </div>
-
-    {{-- ═══════════════════════════════════════════════
-         O'NG: Chat oynasi
-    ═══════════════════════════════════════════════ --}}
-    <div class="col-lg-8 d-flex flex-column" id="chatContainer" style="height:100%;">
-        @include('student.sections.chat-window')
-    </div>
-</div>
 @endsection
-
 
 @section('styles')
-<style>
-    /* ── Guruh ro'yxati ── */
-    .group-chat-item {
-        cursor: pointer;
-        transition: background 0.15s;
-        color: #212529;
-    }
-    .group-chat-item:hover  { background-color: #f8f9fa; }
-    .group-chat-item.active {
-        background-color: #e8f0fe;
-        border-left: 3px solid #0d6efd;
-    }
-
-    /* ── Xabarlar ── */
-    .message-item {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 16px;
-        align-items: flex-start;
-    }
-    .message-item.sent { flex-direction: row-reverse; }
-
-    .message-meta { margin-bottom: 4px; }
-    .message-item.sent .message-meta { text-align: right; }
-
-    .message-content {
-        display: inline-block;
-        padding: 9px 14px;
-        border-radius: 18px;
-        line-height: 1.45;
-        max-width: 400px;
-        word-break: break-word;
-        background: #f1f3f5;
-        color: #212529;
-    }
-    .message-item.sent .message-content {
-        background: #0d6efd;
-        color: #fff;
-    }
-
-    /* ── Boshqa ── */
-    #chatSendBtn:hover { opacity: 0.88; }
-</style>
+    <style>
+        .group-chat-item {
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #212529;
+        }
+        .group-chat-item:hover { background-color: #f8f9fa; }
+        .group-chat-item.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid #0d6efd;
+        }
+    </style>
 @endsection
-
 
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* ══════════════════════════════════════════
-       STATE
-    ══════════════════════════════════════════ */
     let currentGroupId = {{ $selectedGroup ? $selectedGroup->id : 'null' }};
-    let lastId         = 0;
-    let pollTimer      = null;
+    let lastId = Number(document.getElementById('lastMessageId')?.value || 0);
+    let pollTimer = null;
 
-    /* ══════════════════════════════════════════
-       GURUH LINKLAR — click interceptor
-    ══════════════════════════════════════════ */
+    // ===============================
+    // POLLING TO'XTATISH
+    // ===============================
+    function stopPolling() {
+        if (pollTimer) {
+            clearInterval(pollTimer);
+            pollTimer = null;
+        }
+    }
+
+    // ===============================
+    // GROUP CLICK
+    // ===============================
     function bindGroupLinks() {
-        document.querySelectorAll('.group-chat-item').forEach(el => {
+        document.querySelectorAll('.group-chat-item').forEach(function (el) {
             el.onclick = function (e) {
-                e.preventDefault();            // ← sahifa o'TMASLIK uchun
+                e.preventDefault();
+                stopPolling();
 
-                const url     = this.getAttribute('href');
-                const groupId = this.dataset.groupId;
+                const groupId = el.dataset.groupId;
+                const url = el.getAttribute('href');
 
                 document.querySelectorAll('.group-chat-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
+                el.classList.add('active');
 
                 fetch(url, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Accept'          : 'application/json'
+                        'Accept': 'application/json'
                     }
                 })
                 .then(async r => {
+                    if (r.status === 401 || r.status === 419) {
+                        throw { message: 'Sessiya tugagan. Qayta login qiling.' };
+                    }
                     const ct = r.headers.get('content-type') || '';
                     if (!ct.includes('application/json')) {
-                        const txt = await r.text();
-                        console.error('Server JSON emas:', txt.substring(0, 400));
-                        throw new Error('Server xatosi. Route tekshiring.');
+                        throw { message: 'Chat yuklanmadi. Sahifani yangilang.' };
                     }
-                    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                    if (!r.ok) {
+                        const err = await r.json().catch(() => ({ message: 'Server error' }));
+                        throw err;
+                    }
                     return r.json();
                 })
                 .then(data => {
                     document.getElementById('chatContainer').innerHTML = data.html;
-
                     currentGroupId = groupId;
-                    lastId         = data.last_message_id || 0;
+                    lastId = Number(data.last_message_id) || 0;
 
-                    updateGroupPreview(data);
+                    // Guruh preview yangilash
+                    if (data.last_message) {
+                        const item = document.querySelector(`.group-chat-item[data-group-id="${groupId}"]`);
+                        if (item) {
+                            const lm = item.querySelector('.last-message');
+                            const lt = item.querySelector('.message-time');
+                            if (lm) lm.textContent = data.last_message;
+                            if (lt) lt.textContent = data.last_time ?? '';
+                        }
+                    }
+
                     bindGroupLinks();
                     initChatWindow();
                 })
                 .catch(err => {
-                    console.error('Guruh yuklanmadi:', err);
-                    alert(err.message || 'Guruh yuklanmadi. Sahifani yangilang.');
+                    console.error('Load chat error', err);
+                    alert(err?.message || 'Guruh yuklanmadi.');
                 });
             };
         });
     }
 
-    /* ══════════════════════════════════════════
-       CHAT OYNASI — init
-    ══════════════════════════════════════════ */
+    // ===============================
+    // CHAT INIT
+    // ===============================
     function initChatWindow() {
-        // Eski polling ni to'xtatish
-        if (pollTimer) {
-            clearInterval(pollTimer);
-            pollTimer = null;
+        stopPolling();
+
+        const messagesBox = document.getElementById('messagesBox');
+
+        if (messagesBox) {
+            messagesBox.scrollTop = messagesBox.scrollHeight;
         }
 
-        const messagesBox      = document.getElementById('messagesBox');
-        const groupIdInput     = document.getElementById('chatGroupId');
-        const lastMessageInput = document.getElementById('lastMessageId');
-        const messageInput     = document.getElementById('chatMessageInput');
-        const sendBtn          = document.getElementById('chatSendBtn');
-
-        if (!groupIdInput) return; // guruh tanlanmagan
-
-        currentGroupId = groupIdInput.value;
-        if (lastMessageInput) lastId = Number(lastMessageInput.value || 0);
-
-        // Scroll pastga
-        if (messagesBox) messagesBox.scrollTop = messagesBox.scrollHeight;
-
-        // Yuborish
-        if (sendBtn && messageInput) {
-            setupSendMessage(sendBtn, messageInput, messagesBox, lastMessageInput);
+        // lastId yangilash
+        const lastInput = document.getElementById('lastMessageId');
+        if (lastInput && lastInput.value) {
+            lastId = Number(lastInput.value);
         }
 
-        // Polling
-        startPolling(messagesBox, lastMessageInput);
+        // Form — id="teacherChatForm" bo'lishi kerak chat-window.blade.php da
+        const form = document.getElementById('teacherChatForm');
+        if (form) {
+            const newForm = form.cloneNode(true);
+            form.parentNode.replaceChild(newForm, form);
+            setupSendMessage(newForm, messagesBox);
+        }
+
+        if (currentGroupId) {
+            startPolling(messagesBox);
+        }
     }
 
-    /* ══════════════════════════════════════════
-       XABAR YUBORISH
-    ══════════════════════════════════════════ */
-    function setupSendMessage(sendBtn, messageInput, messagesBox, lastMessageInput) {
+    // ===============================
+    // SEND MESSAGE
+    // ===============================
+    function setupSendMessage(form, messagesBox) {
+        form.onsubmit = function (e) {
+            e.preventDefault();
 
-        const doSend = () => {
-            const token   = document.querySelector('meta[name="csrf-token"]')?.content;
-            const message = messageInput.value.trim();
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+            const messageInput = form.querySelector('input[name="message"]');
+            const message = messageInput?.value?.trim();
 
-            if (!token)   { alert('CSRF token yo\'q. Sahifani yangilang.'); return; }
-            if (!message) return;
+            if (!message || !currentGroupId) return;
 
-            sendBtn.disabled = true;
+            const submitBtn = form.querySelector('[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
-            const fd = new FormData();
-            fd.append('group_id', currentGroupId);
-            fd.append('message',  message);
-
-            fetch('/student/chats/send', {
-                method : 'POST',
+            fetch(form.action, {
+                method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN'    : token,
+                    'X-CSRF-TOKEN': token,
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Accept'          : 'application/json'
+                    'Accept': 'application/json'
                 },
-                body: fd
+                body: new FormData(form)
             })
             .then(async r => {
+                if (r.status === 401 || r.status === 419) throw { message: 'Sessiya tugagan' };
                 const ct = r.headers.get('content-type') || '';
-                if (!ct.includes('application/json')) {
-                    const txt = await r.text();
-                    console.error('Non-JSON:', txt.substring(0, 300));
-                    throw new Error('Server xatosi (send)');
+                if (!ct.includes('application/json')) throw { message: 'Xabar yuborilmadi' };
+                if (!r.ok) {
+                    const err = await r.json().catch(() => ({ message: 'Server error' }));
+                    throw err;
                 }
                 return r.json();
             })
             .then(data => {
-                if (data.success && data.message_html && data.message_id) {
-                    // Takrorlanishdan saqlash
-                    if (!document.querySelector(`[data-message-id="${data.message_id}"]`) && messagesBox) {
-                        messagesBox.insertAdjacentHTML('beforeend', data.message_html);
-                        messagesBox.scrollTop = messagesBox.scrollHeight;
-                    }
-                    if (lastMessageInput) lastMessageInput.value = data.message_id;
-                    lastId = data.message_id;
+                if (data.message_html && messagesBox) {
+                    messagesBox.insertAdjacentHTML('beforeend', data.message_html);
+                    messagesBox.scrollTop = messagesBox.scrollHeight;
+                }
 
-                    updateGroupPreview(data);
-                    messageInput.value = '';
-                } else {
-                    alert(data.message || 'Xabar yuborilmadi');
+                if (messageInput) messageInput.value = '';
+
+                if (data.message_id) {
+                    lastId = Number(data.message_id);
+                    const lastInput = document.getElementById('lastMessageId');
+                    if (lastInput) lastInput.value = lastId;
+                }
+
+                // Guruh preview
+                if (data.group_id) {
+                    const item = document.querySelector(`.group-chat-item[data-group-id="${data.group_id}"]`);
+                    if (item) {
+                        const lm = item.querySelector('.last-message');
+                        const lt = item.querySelector('.message-time');
+                        if (lm && data.last_message) lm.textContent = data.last_message;
+                        if (lt && data.last_time) lt.textContent = data.last_time;
+                    }
                 }
             })
             .catch(err => {
-                console.error('Send error:', err);
-                alert(err.message || 'Xatolik yuz berdi');
+                console.error('Send error', err);
+                alert(err?.message || 'Xatolik');
             })
             .finally(() => {
-                sendBtn.disabled = false;
-                messageInput.focus();
+                if (submitBtn) submitBtn.disabled = false;
             });
-        };
-
-        sendBtn.onclick = doSend;
-        messageInput.onkeydown = e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                doSend();
-            }
         };
     }
 
-    /* ══════════════════════════════════════════
-       POLLING
-    ══════════════════════════════════════════ */
-    function startPolling(messagesBox, lastMessageInput) {
-        pollTimer = setInterval(() => {
+    // ===============================
+    // POLLING
+    // ===============================
+    function startPolling(messagesBox) {
+        pollTimer = setInterval(function () {
             if (!currentGroupId) return;
 
-            fetch(`/student/chats/${currentGroupId}/poll?last_id=${lastId}`, {
+            fetch(`/teacher/chats/${currentGroupId}/poll?last_id=${lastId}`, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Accept'          : 'application/json'
+                    'Accept': 'application/json'
                 }
             })
-            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(async r => {
+                if (!r.ok) return;
+                const ct = r.headers.get('content-type') || '';
+                if (!ct.includes('application/json')) return;
+                return r.json();
+            })
             .then(data => {
-                if (data.html) {
-                    const box = document.getElementById('messagesBox');
-                    if (box) {
-                        box.insertAdjacentHTML('beforeend', data.html);
-                        box.scrollTop = box.scrollHeight;
+                if (!data) return;
+
+                if (data.html && messagesBox) {
+                    messagesBox.insertAdjacentHTML('beforeend', data.html);
+                    messagesBox.scrollTop = messagesBox.scrollHeight;
+                }
+
+                if (data.last_message_id) {
+                    lastId = Number(data.last_message_id);
+                    const lastInput = document.getElementById('lastMessageId');
+                    if (lastInput) lastInput.value = lastId;
+                }
+
+                if (data.last_message) {
+                    const item = document.querySelector(`.group-chat-item[data-group-id="${currentGroupId}"]`);
+                    if (item) {
+                        const lm = item.querySelector('.last-message');
+                        const lt = item.querySelector('.message-time');
+                        if (lm) lm.textContent = data.last_message;
+                        if (lt) lt.textContent = data.last_time ?? '';
                     }
                 }
-
-                if (data.last_message_id && data.last_message_id > lastId) {
-                    lastId = data.last_message_id;
-                    const lmi = document.getElementById('lastMessageId');
-                    if (lmi) lmi.value = lastId;
-                }
-
-                if (data.last_message) updateGroupPreview(data);
             })
             .catch(() => {});
         }, 3000);
     }
 
-    /* ══════════════════════════════════════════
-       GURUH PREVIEW YANGILASH
-    ══════════════════════════════════════════ */
-    function updateGroupPreview(data) {
-        const gid  = data.group_id || currentGroupId;
-        const item = document.querySelector(`.group-chat-item[data-group-id="${gid}"]`);
-        if (!item) return;
-
-        const msgEl  = item.querySelector('.last-message');
-        const timeEl = item.querySelector('.message-time');
-
-        if (msgEl && data.last_message) {
-            const preview = data.last_message.length > 35
-                ? data.last_message.substring(0, 35) + '…'
-                : data.last_message;
-            msgEl.textContent = preview;
-        }
-        if (timeEl && data.last_time) {
-            timeEl.textContent = data.last_time;
-        }
-    }
-
-    /* ══════════════════════════════════════════
-       QIDIRUV
-    ══════════════════════════════════════════ */
+    // ===============================
+    // SEARCH
+    // ===============================
     document.getElementById('search')?.addEventListener('input', function () {
         const q = this.value.toLowerCase();
-        document.querySelectorAll('.group-chat-item').forEach(item => {
-            const name = item.querySelector('.group-name')?.textContent.toLowerCase() || '';
+        document.querySelectorAll('.group-chat-item').forEach(function (item) {
+            const name = item.querySelector('.group-name')?.textContent?.toLowerCase() || '';
             item.style.display = name.includes(q) ? '' : 'none';
         });
     });
 
-    /* ══════════════════════════════════════════
-       ISHGA TUSHIRISH
-    ══════════════════════════════════════════ */
+    // ===============================
+    // START
+    // ===============================
     bindGroupLinks();
     initChatWindow();
 });

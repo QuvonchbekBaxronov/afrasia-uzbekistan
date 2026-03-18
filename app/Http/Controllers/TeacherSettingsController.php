@@ -5,64 +5,56 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
+use App\Http\Requests\Teacher\UpdateTeacherProfileRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 
 class TeacherSettingsController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function edit()
     {
         $user = Auth::user();
         return view('teacher.sections.settings', compact('user'));
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateTeacherProfileRequest $request)
     {
         $user = Auth::user();
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:50',
-            'avatar' => 'nullable|image|max:2048',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('avatar')) {
             try {
-                $file = $request->file('avatar');
-
-                $path = $file->store('avatars', 's3');
-
-                if (!$path || !Storage::disk('s3')->exists($path)) {
-                    return back()->with('error', 'Avatar S3 ga saqlanmadi');
-                }
-
-                // eski avatarni o‘chirish
-                if ($user->avatar && Storage::disk('s3')->exists($user->avatar)) {
-                    Storage::disk('s3')->delete($user->avatar);
-                }
-
-                // agar public url kerak bo‘lsa
-                $user->avatar = $path;
+                $user->avatar = $this->imageService->uploadImage(
+                    $request->file('avatar'),
+                    'avatars',
+                    $user->avatar
+                );
             } catch (\Throwable $e) {
-                dd($e->getMessage()); // 👈 vaqtincha, xatoni ko‘rish uchun
+                return back()->with('error', 'Avatar yuklashda xatolik: ' . $e->getMessage());
             }
         }
 
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? $user->phone;
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? $user->phone;
         $user->save();
 
-        return back()->with('success', 'Admin profil saqlandi');
+        return back()->with('success', 'O\'qituvchi profili saqlandi');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'min:8', 'confirmed'],
-        ]);
+        $validated = $request->validated();
 
-        Auth::user()->update(['password' => bcrypt($request->password)]);
+        Auth::user()->update(['password' => bcrypt($validated['password'])]);
 
         return back()->with('success', 'Parol muvaffaqiyatli yangilandi!');
     }

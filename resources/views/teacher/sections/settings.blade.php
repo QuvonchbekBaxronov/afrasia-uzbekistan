@@ -19,9 +19,7 @@
 
                     <div style="display: flex; align-items: center; gap: 25px; margin-bottom: 30px;">
                         <img
-                            src="{{ $user->avatar 
-                                ? Storage::disk('s3')->url($user->avatar) 
-                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=10b981&color=fff&size=128' }}"
+                            src="{{ $user->avatar_url }}"
                             alt="Avatar"
                             id="avatar-preview"
                             style="width: 120px; height: 120px; border-radius: 50%; border: 5px solid var(--primary); object-fit: cover;">

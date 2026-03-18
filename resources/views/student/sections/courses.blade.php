@@ -19,12 +19,12 @@
                                     <span>{{ Str::limit($video->title ?? 'Dars ' . $video->id, 30) }}</span>
 
                                     <!-- Yangi tabda + modalda ochilishi uchun <a> ishlatamiz -->
-                                    <a href="{{ $video->signed_url }}"
+                                    <a href="{{ $video->resolved_url }}"
                                        target="_blank"
                                        class="btn btn-sm btn-outline-primary py-0 px-2 text-decoration-none"
                                        data-bs-toggle="modal"
                                        data-bs-target="#videoPreviewModal"
-                                       data-video-url="{{ $video->signed_url }}"
+                                       data-video-url="{{ $video->resolved_url }}"
                                        data-video-title="{{ $video->title ?? 'Dars ' . $video->id }}">
                                         <i class="fas fa-play"></i> Ko'rish
                                     </a>
@@ -40,11 +40,7 @@
                     <!-- Thumbnail -->
                     <div class="course-thumbnail position-relative">
                         @php
-                            $imageUrl = $course->img 
-                                ? (config('filesystems.default') === 's3' 
-                                    ? \Storage::disk('s3')->url($course->img)
-                                    : asset('storage/' . $course->img))
-                                : 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80';
+                            $imageUrl = $course->thumbnail_url;
                         @endphp
                         <img src="{{ $imageUrl }}" alt="{{ $course->title }}" class="w-100" style="height: 200px; object-fit: cover;">
                         <div class="course-duration position-absolute bottom-0 end-0 bg-dark bg-opacity-75 text-white px-3 py-1 rounded-start">

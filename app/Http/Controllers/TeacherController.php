@@ -16,9 +16,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use App\Services\VideoService;
+use App\Services\ImageService;
+use App\Http\Requests\Admin\SendChatMessageRequest;
+use App\Http\Requests\Teacher\StoreCourseRequest;
+use App\Http\Requests\Teacher\StoreQuizRequest;
+use App\Http\Requests\Teacher\StoreGroupRequest;
+use App\Http\Requests\Teacher\UpdateCourseRequest;
+use App\Http\Requests\Teacher\StoreVideoRequest;
 
 class TeacherController extends Controller
 {
+    protected $videoService;
+    protected $imageService;
+
+    public function __construct(VideoService $videoService, ImageService $imageService)
+    {
+        $this->videoService = $videoService;
+        $this->imageService = $imageService;
+    }
+
     public function dashboard()
     {
         $user = Auth::user();
@@ -146,24 +163,13 @@ class TeacherController extends Controller
         return view('teacher.sections.groups', compact('groups'));
     }
 
-    public function storeGroup(Request $request)
+    public function storeGroup(StoreGroupRequest $request)
     {
         $user = Auth::user();
+        $validated = $request->validated();
+        $validated['teacher_id'] = $user->id;
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:50',
-            'description' => 'nullable|string',
-            'subject' => 'nullable|string|max:255',
-            'lesson_time' => 'nullable|string|max:10',
-            'lesson_days' => 'nullable|string|max:255',
-            'max_students' => 'nullable|integer|min:1',
-            'status' => 'nullable|in:active,inactive,full',
-        ]);
-
-        $data['teacher_id'] = $user->id;
-
-        Group::create($data);
+        Group::create($validated);
 
         return back()->with('success', 'Guruh yaratildi');
     }
@@ -184,23 +190,14 @@ class TeacherController extends Controller
     /**
      * Update a group (teacher-owned)
      */
-    public function updateGroup(Request $request, $id)
+    public function updateGroup(StoreGroupRequest $request, $id)
     {
         $user = Auth::user();
         $group = Group::where('id', $id)->where('teacher_id', $user->id)->firstOrFail();
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'code' => 'nullable|string|max:50',
-            'description' => 'nullable|string',
-            'subject' => 'nullable|string|max:255',
-            'lesson_time' => 'nullable|string|max:10',
-            'lesson_days' => 'nullable|string|max:255',
-            'max_students' => 'nullable|integer|min:1',
-            'status' => 'nullable|in:active,inactive,full',
-        ]);
+        $validated = $request->validated();
 
-        $group->update($data);
+        $group->update($validated);
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['message' => 'Guruh yangilandi', 'group' => $group]);
@@ -234,40 +231,34 @@ class TeacherController extends Controller
         return view('teacher.sections.courses', compact('courses'));
     }
 
-    public function storeCourse(Request $request)
+    public function storeCourse(StoreCourseRequest $request)
     {
         $user = Auth::user();
-
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration_hours' => 'nullable|numeric|min:0',
-            'is_active' => 'sometimes|boolean',
-            'course_type' => 'required|in:regular,theory',
-            'img' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // 2MB maks
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('img')) {
             try {
-                $path = $request->file('img')->store('courses', 's3');
-
-                $data['img'] = $path;
+                $validated['img'] = $this->imageService->uploadImage(
+                    $request->file('img'),
+                    'courses'
+                );
             } catch (\Exception $e) {
-                return back()->with('error', 'Rasm yuklashda xatolik: ' . $e->getMessage());
+                return back()->with('error', 'Rasm yuklash muvaffaqiyatsiz tugadi.');
             }
         }
 
-        // Default qiymatlar (DB non-nullable ustunlar uchun)
-        $data['description'] = $data['description'] ?? '';
-        $data['duration_hours'] = $data['duration_hours'] ?? 0;
-        $data['sertificate_template'] = $data['sertificate_template'] ?? '';
-        $data['img'] = $data['img'] ?? null; // yoki '' agar DB da null bo‘lmasa
-        $data['is_active'] = $data['is_active'] ?? true;
-        $data['user_id'] = $user->id;
+        $validated['description'] = $validated['description'] ?? '';
+        $validated['duration_hours'] = $validated['duration_hours'] ?? 0;
+        $validated['is_active'] = $validated['is_active'] ?? true;
+        $validated['user_id'] = $user->id;
 
-        Course::create($data);
-
-        return back()->with('success', 'Kurs muvaffaqiyatli yaratildi!');
+        try {
+            Course::create($validated);
+            return back()->with('success', 'Kurs muvaffaqiyatli yaratildi!');
+        } catch (\Exception $e) {
+            Log::error('Kurs yaratish xatosi: ' . $e->getMessage());
+            return back()->with('error', 'Kursni saqlashda kutilmagan xatolik yuz berdi: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -276,7 +267,10 @@ class TeacherController extends Controller
     public function showCourse($id)
     {
         $user = Auth::user();
-        $course = Course::where('id', $id)->where('user_id', $user->id)->with('videos')->firstOrFail();
+        $course = Course::where('id', $id)->where('user_id', $user->id)->with('videos')->first();
+        if (!$course) {
+            return response()->json(['message' => 'Kurs topilmadi.'], 404);
+        }
 
         return response()->json(['course' => $course]);
     }
@@ -284,35 +278,40 @@ class TeacherController extends Controller
     /**
      * Update a course owned by the teacher
      */
-    public function updateCourse(Request $request, $id)
+    public function updateCourse(UpdateCourseRequest $request, $id)
     {
         $user = Auth::user();
-        $course = Course::where('id', $id)->where('user_id', $user->id)->firstOrFail();
+        $course = Course::where('id', $id)->where('user_id', $user->id)->first();
+        if (!$course) {
+            return back()->with('error', 'Kurs topilmadi yoki ruxsat yo\'q.');
+        }
 
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration_hours' => 'nullable|numeric',
-            'is_active' => 'sometimes|boolean',
-        ]);
+        $validated = $request->validated();
 
         if ($request->hasFile('img')) {
-            // Delete old
             try {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($course->img);
-            } catch (\Throwable $e) {
+                $validated['img'] = $this->imageService->uploadImage(
+                    $request->file('img'),
+                    'courses',
+                    $course->img
+                );
+            } catch (\Exception $e) {
+                return back()->with('error', 'Rasm yuklash muvaffaqiyatsiz tugadi.');
             }
-            $path = $request->file('img')->store('courses', 'public');
-            $data['img'] = $path;
         }
 
-        $course->update($data);
+        try {
+            $course->update($validated);
 
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['message' => 'Kurs yangilandi', 'course' => $course]);
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => 'Kurs yangilandi', 'course' => $course]);
+            }
+
+            return back()->with('success', 'Kurs yangilandi');
+        } catch (\Exception $e) {
+            Log::error('Kurs yangilash xatosi: ' . $e->getMessage());
+            return back()->with('error', 'Kursni yangilashda kutilmagan xatolik yuz berdi: ' . $e->getMessage());
         }
-
-        return back()->with('success', 'Kurs yangilandi');
     }
 
     /**
@@ -321,7 +320,10 @@ class TeacherController extends Controller
     public function destroyCourse($id)
     {
         $user = Auth::user();
-        $course = Course::where('id', $id)->where('user_id', $user->id)->firstOrFail();
+        $course = Course::where('id', $id)->where('user_id', $user->id)->first();
+        if (!$course) {
+            return back()->with('error', 'Kurs topilmadi yoki ruxsat yo\'q.');
+        }
         $course->delete();
 
         if (request()->ajax() || request()->wantsJson()) {
@@ -336,152 +338,27 @@ class TeacherController extends Controller
      */
     public function storeVideo(Request $request, $courseId)
     {
-        $course = Auth::user()->courses()->findOrFail($courseId);
-
-        // 1️⃣ Validatsiya (PHP limitini tekshirish)
-        $maxUploadSize = min(
-            $this->parseSize(ini_get('upload_max_filesize')),
-            $this->parseSize(ini_get('post_max_size')),
-            1024 * 1024 * 1024 // 1 GB
-        );
-
-        $validated = $request->validate([
-            'title'            => 'required|string|max:255',
-            'description'      => 'nullable|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'video'            => [
-                'required',
-                'file',
-                'mimes:mp4,avi,mov,webm,mpg,mpeg',
-                'max:' . ($maxUploadSize / 1024), // KB ga aylantirish
-            ],
-        ], [
-            'video.max' => 'Video hajmi ' . $this->formatBytes($maxUploadSize) . ' dan oshmasligi kerak!'
-        ]);
-
-        $file = $request->file('video');
-
-        if (!$file || !$file->isValid()) {
-            return back()->with('error', 'Video fayl yuklanmadi yoki buzilgan.');
+        $course = Auth::user()->courses()->find($courseId);
+        if (!$course) {
+            return back()->with('error', 'Kurs topilmadi.');
         }
 
-        // 2️⃣ Manual hajm tekshirish
-        if ($file->getSize() > $maxUploadSize) {
-            return back()->with('error', 'Video hajmi ' . $this->formatBytes($maxUploadSize) . ' dan oshib ketdi!');
+        if (!$request->hasFile('video')) {
+            return back()->with('error', 'Video fayl tanlanmagan.');
         }
 
         try {
-            // 3️⃣ S3 mavjudligini tekshirish
-            if (!config('filesystems.disks.s3')) {
-                throw new \Exception('S3 disk sozlanmagan! .env faylini tekshiring.');
-            }
+            $video = $this->videoService->uploadVideo(
+                $request->file('video'),
+                $request->all(),
+                $course
+            );
 
-            // 4️⃣ Test ulanish
-            try {
-                Storage::disk('s3')->exists('test'); // Connection test
-            } catch (\Exception $e) {
-                throw new \Exception('S3 ga ulanib bo\'lmadi: ' . $e->getMessage());
-            }
-
-            Log::info('Video yuklash boshlandi', [
-                'file_size' => $file->getSize(),
-                'file_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType()
-            ]);
-
-            // 5️⃣ S3 ga yuklash
-            $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
-
-            // MUHIM: putFileAs ishlatish (kattaroq fayllar uchun yaxshiroq)
-            $path = Storage::disk('s3')->putFileAs('videos', $file, $fileName);
-
-            if (!$path) {
-                throw new \Exception('S3 ga yuklash muvaffaqiyatsiz tugadi!');
-            }
-
-            // 6️⃣ Yuklangani tekshirish
-            if (!Storage::disk('s3')->exists($path)) {
-                throw new \Exception('Fayl S3 ga yuklanmadi: ' . $path);
-            }
-
-            Log::info('Video S3 ga yuklandi', ['path' => $path]);
-
-            // 7️⃣ Public qilish
-            try {
-                Storage::disk('s3')->setVisibility($path, 'public');
-            } catch (\Exception $e) {
-                Log::warning('Visibility xatosi: ' . $e->getMessage());
-            }
-
-            // 8️⃣ Bazaga saqlash
-            $video = Video::create([
-                'course_id'        => $course->id,
-                'user_id'          => Auth::id(),
-                'title'            => $validated['title'],
-                'description'      => $validated['description'] ?? null,
-                'video_url'        => $path, // videos/1234567890_filename.mp4
-                'duration_seconds' => $validated['duration_minutes'] * 60,
-            ]);
-
-            Log::info('Video bazaga saqlandi', ['video_id' => $video->id, 'path' => $path]);
-
-            return back()->with('success', 'Video muvaffaqiyatli yuklandi! (S3: ' . $path . ')');
-        } catch (\Throwable $e) {
-            Log::error('Video yuklash xatosi', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return back()->with('error', 'Xatolik: ' . $e->getMessage());
+            return back()->with('success', 'Video muvaffaqiyatli yuklandi!');
+        } catch (\Exception $e) {
+            Log::error('Video yuklash xatosi: ' . $e->getMessage());
+            return back()->with('error', 'Video yuklashda xatolik: ' . $e->getMessage());
         }
-    }
-
-    // Helper funksiyalar
-    private function parseSize($size)
-    {
-        $unit = strtoupper(substr($size, -1));
-        $value = (int) substr($size, 0, -1);
-
-        switch ($unit) {
-            case 'G':
-                return $value * 1024 * 1024 * 1024;
-            case 'M':
-                return $value * 1024 * 1024;
-            case 'K':
-                return $value * 1024;
-            default:
-                return (int) $size;
-        }
-    }
-
-    private function formatBytes($bytes, $precision = 2)
-    {
-        $units = ['B', 'KB', 'MB', 'GB'];
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-        $bytes /= pow(1024, $pow);
-        return round($bytes, $precision) . ' ' . $units[$pow];
-    }
-    public function destroyVideo($id)
-    {
-        $user = Auth::user();
-        $video = Video::findOrFail($id);
-        $course = $video->course;
-        if (!$course || $course->user_id !== $user->id) abort(403);
-
-        try {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete(str_replace('storage/', '', $video->video_url));
-        } catch (\Throwable $e) {
-        }
-
-        $video->delete();
-
-        if (request()->ajax() || request()->wantsJson()) {
-            return response()->json(['message' => 'Video o‘chirildi']);
-        }
-
-        return back()->with('success', 'Video o‘chirildi');
     }
 
     public function students()
@@ -523,12 +400,8 @@ class TeacherController extends Controller
         return view('teacher.sections.chats', compact('groups', 'selectedGroup', 'messages'));
     }
 
-    public function sendChatMessage(Request $request)
+    public function sendChatMessage(SendChatMessageRequest $request)
     {
-        $request->validate([
-            'group_id' => 'required|exists:groups,id',
-            'message' => 'required|string|max:1000',
-        ]);
 
         $group = Group::findOrFail($request->group_id);
         $user = Auth::user();
@@ -571,19 +444,28 @@ class TeacherController extends Controller
         $user = Auth::user();
         $group = Group::where('id', $id)->where('teacher_id', $user->id)->firstOrFail();
 
-        $messages = GroupMessage::with('user')->where('group_id', $id)->latest()->limit(100)->get()->reverse();
-        $html = view('admin.sections.chat-window', ['selectedGroup' => $group, 'messages' => $messages])->render();
-
-        if (request()->ajax() || request()->wantsJson()) {
-            return response()->json([
-                'html' => $html,
-                'group_id' => $group->id,
-                'last_message_id' => optional($messages->last())->id ?? null,
-            ]);
+        // AJAX emas bo'lsa — chats sahifasiga qaytaramiz
+        if (!request()->ajax() && !request()->wantsJson()) {
+            return redirect()->route('teacher.chats');
         }
 
-        // Render the same partial used by admin but pass it as `selectedGroup` to keep view expectations
-        return view('admin.sections.chat-window', ['selectedGroup' => $group, 'messages' => $messages]);
+        $messages = GroupMessage::with('user')
+            ->where('group_id', $id)
+            ->latest()
+            ->limit(100)
+            ->get()
+            ->reverse();
+
+        $html = view('admin.sections.chat-window', [
+            'selectedGroup' => $group,
+            'messages' => $messages
+        ])->render();
+
+        return response()->json([
+            'html' => $html,
+            'group_id' => $group->id,
+            'last_message_id' => optional($messages->last())->id ?? null,
+        ]);
     }
 
     public function pollGroupMessages($id, Request $request)
@@ -614,23 +496,9 @@ class TeacherController extends Controller
     }
     // app/Http/Controllers/TeacherController.php
 
-    public function storeQuiz(Request $request)
+    public function storeQuiz(StoreQuizRequest $request)
     {
-        $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'time_limit_minutes' => 'nullable|integer|min:1',
-            'passing_score_percentage' => 'required|integer|min:0|max:100',
-            'questions' => 'required|array|min:1',
-            'questions.*.question' => 'required|string',
-            'questions.*.option_a' => 'required|string',
-            'questions.*.option_b' => 'required|string',
-            'questions.*.option_c' => 'required|string',
-            'questions.*.option_d' => 'required|string',
-            'questions.*.correct_answer' => 'required|in:a,b,c,d',
-            'questions.*.points' => 'required|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
         // Quiz yaratish
         $quiz = Quiz::create([
@@ -645,7 +513,7 @@ class TeacherController extends Controller
         foreach ($validated['questions'] as $questionData) {
             Question::create([
                 'quiz_id' => $quiz->id,
-                'question' => $questionData['question'],
+                'question' => $questionData['question_text'] ?? $questionData['question'],
                 'option_a' => $questionData['option_a'],
                 'option_b' => $questionData['option_b'],
                 'option_c' => $questionData['option_c'],
@@ -675,14 +543,20 @@ class TeacherController extends Controller
 
     public function createVideo($courseId)
     {
-        $course = Auth::user()->courses()->findOrFail($courseId);
+        $course = Auth::user()->courses()->find($courseId);
+        if (!$course) {
+            return redirect()->route('teacher.courses')->with('error', 'Kurs topilmadi.');
+        }
         return view('teacher.videos.create', compact('course'));
     }
 
     // Quiz yaratish sahifasini ko'rsatish
     public function createQuiz($courseId)
     {
-        $course = Auth::user()->courses()->findOrFail($courseId);
+        $course = Auth::user()->courses()->find($courseId);
+        if (!$course) {
+            return redirect()->route('teacher.courses')->with('error', 'Kurs topilmadi.');
+        }
 
         // Faqat theory kurslarga ruxsat berish
         if ($course->course_type !== 'theory') {

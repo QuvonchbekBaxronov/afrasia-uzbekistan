@@ -12,20 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <div style="text-align: center; padding: 30px 0;">
-                        @php
-                            // Avatar URL ni aniq belgilash
-                            if ($user->avatar) {
-                                // Agar S3 disk ishlatilayotgan bo'lsa
-                                $avatarUrl = config('filesystems.default') === 's3' && Storage::disk('s3')->exists($user->avatar)
-                                    ? Storage::disk('s3')->url($user->avatar)
-                                    : asset('storage/' . $user->avatar);
-                            } else {
-                                $avatarUrl = 'https://ui-avatars.com/api/?name=' . urlencode($user->name) .
-                                             '&background=10b981&color=fff&size=150&bold=true&font-size=0.5';
-                            }
-                        @endphp
-
-                        <img src="{{ $avatarUrl }}"
+                        <img src="{{ $user->avatar_url }}"
                              alt="Admin Avatar"
                              id="avatar-preview"
                              style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover;

@@ -5,23 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\ContactRequest;
+
 class ContactController extends Controller
 {
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        $name = $request->name;
-        $email = $request->email;
-        $subject = $request->subject;
-        $message = $request->message;
+        Contact::create($request->validated());
 
-
-        Contact::create([
-            'name' => $name,
-            'email' => $email,
-            'subject' => $subject,
-            'message' => $message
-        ]);
-
-        return redirect('/contact')->with(['success' => 'Muvaffaqiyatli']);
+        return redirect('/contact')->with('success', 'Xabar muvaffaqiyatli yuborildi!');
     }
 }

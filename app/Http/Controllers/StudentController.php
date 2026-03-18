@@ -9,90 +9,79 @@ use App\Models\Quiz;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Student\UpdateStudentProfileRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Student\SubmitQuizRequest;
+use App\Http\Requests\Student\UpdateNotificationsRequest;
+use App\Http\Requests\Admin\SendChatMessageRequest;
 
 class StudentController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
     public function settings()
     {
         $user = Auth::user();
         return view('student.sections.settings', compact('user'));
     }
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateStudentProfileRequest $request)
     {
         $user = Auth::user();
+        $validated = $request->validated();
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:50',
-            'age' => 'nullable|integer|min:10|max:100',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        // Avatar yuklash S3 ga
+        // Avatar yuklash
         if ($request->hasFile('avatar')) {
             try {
-                $file = $request->file('avatar');
-
-                // S3 ga yuklash va public visibility
-                $path = $file->store('avatars', [
-                    'disk' => 's3',
-                    'visibility' => 'public',
-                ]);
-
-                // Eski avatarni o'chirish
-                if ($user->avatar && Storage::disk('s3')->exists($user->avatar)) {
-                    Storage::disk('s3')->delete($user->avatar);
-                }
-
-                $user->avatar = $path;
+                $user->avatar = $this->imageService->uploadImage(
+                    $request->file('avatar'),
+                    'avatars',
+                    $user->avatar
+                );
             } catch (\Throwable $e) {
                 return back()->with('error', 'Avatarni yuklashda xatolik: ' . $e->getMessage());
             }
         }
 
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? $user->phone;
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? $user->phone;
         $user->save();
 
         return back()->with('success', 'Profil muvaffaqiyatli yangilandi!');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => 'required',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $validated = $request->validated();
 
         $user = Auth::user();
 
-        // Joriy parolni tekshirish
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors(['current_password' => 'Joriy parol noto\'g\'ri']);
-        }
-
         $user->update([
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($validated['password'])
         ]);
 
         return back()->with('success', 'Parol muvaffaqiyatli yangilandi!');
     }
 
-    public function updateNotifications(Request $request)
+    public function updateNotifications(UpdateNotificationsRequest $request)
     {
         $user = Auth::user();
+        $validated = $request->validated();
 
         $user->update([
-            'email_notifications' => $request->has('email_notifications'),
-            'push_notifications' => $request->has('push_notifications'),
+            'email_notifications' => $validated['email_notifications'],
+            'push_notifications' => $validated['push_notifications'],
         ]);
 
         return back()->with('success', 'Bildirishnoma sozlamalari saqlandi!');
@@ -111,15 +100,7 @@ class StudentController extends Controller
             $course->progress = rand(10, 90);
 
             foreach ($course->videos as $video) {
-                if (config('filesystems.default') === 's3') {
-                    $video->signed_url = Storage::disk('s3')->temporaryUrl(
-                        $video->video_url,
-                        Carbon::now()->addHours(5),
-                        ['ResponseContentType' => 'video/mp4']
-                    );
-                } else {
-                    $video->signed_url = asset('storage/' . $video->video_url);
-                }
+                $video->signed_url = $video->resolved_url;
             }
         }
 
@@ -141,15 +122,7 @@ class StudentController extends Controller
         }
 
         foreach ($course->videos as $video) {
-            if (config('filesystems.default') === 's3') {
-                $video->signed_url = Storage::disk('s3')->temporaryUrl(
-                    $video->video_url,
-                    Carbon::now()->addHours(5),
-                    ['ResponseContentType' => 'video/mp4']
-                );
-            } else {
-                $video->signed_url = asset('storage/' . $video->video_url);
-            }
+            $video->signed_url = $video->resolved_url;
         }
 
         return view('student.sections.course-detail', compact('course'));
@@ -166,7 +139,7 @@ class StudentController extends Controller
         return view('student.quiz.take', compact('quiz'));
     }
 
-    public function submitQuiz(Request $request, $quizId)
+    public function submitQuiz(SubmitQuizRequest $request, $quizId)
     {
         $quiz = Quiz::with('questions')->findOrFail($quizId);
 
@@ -174,16 +147,13 @@ class StudentController extends Controller
             abort(403, 'Ruxsat etilmagan.');
         }
 
-        $request->validate([
-            'answers' => 'required|array',
-            'answers.*' => 'required|in:a,b,c,d',
-        ]);
+        $validated = $request->validated();
 
         $score = 0;
         $totalPoints = $quiz->questions->sum('points');
 
         foreach ($quiz->questions as $question) {
-            $userAnswer = $request->answers[$question->id] ?? null;
+            $userAnswer = $validated['answers'][$question->id] ?? null;
             if ($userAnswer && strtolower($userAnswer) === strtolower($question->correct_answer)) {
                 $score += $question->points;
             }
@@ -329,13 +299,10 @@ class StudentController extends Controller
         }
     }
 
-    public function sendChatMessage(Request $request)
+    public function sendChatMessage(SendChatMessageRequest $request)
     {
         try {
-            $request->validate([
-                'group_id' => 'required|exists:groups,id',  // faqat guruh mavjudligini tekshiradi
-                'message'  => 'required|string|max:1000'
-            ]);
+            $validated = $request->validated();
 
             $user = Auth::user();
 
@@ -343,9 +310,9 @@ class StudentController extends Controller
             $group = Group::findOrFail($request->group_id);
 
             $message = GroupMessage::create([
-                'group_id' => $group->id,
+                'group_id' => $validated['group_id'],
                 'user_id'  => $user->id,
-                'message'  => $request->message,
+                'message'  => $validated['message'],
             ]);
 
             // Load the user relationship for broadcasting and view

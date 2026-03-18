@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request as FacadesRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\VerifyCodeRequest;
 
 class AuthController extends Controller
 {
@@ -22,14 +25,9 @@ class AuthController extends Controller
         return view("auth.register");
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',  // <--- Bu qator muhim!
-            'phone'    => 'required|string|max:20',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        $validated = $request->validated();
 
         $code = rand(100000, 999999);
 
@@ -93,17 +91,10 @@ class AuthController extends Controller
     }
 
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        // 1. Validation (majburiy maydonlar va format)
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ], [
-            'email.required' => 'Email manzil majburiy.',
-            'email.email' => 'To\'g\'ri email kiriting.',
-            'password.required' => 'Parol majburiy.',
-        ]);
+        // 1. Validation (FormRequest handles this now)
+        $validated = $request->validated();
 
         $email = $request->email;
         $password = $request->password;
@@ -162,12 +153,9 @@ class AuthController extends Controller
     {
         return view('auth.verify');
     }
-    public function verify(Request $request)
+    public function verify(VerifyCodeRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'code' => 'required'
-        ]);
+        $validated = $request->validated();
 
         $user = User::where('email', $request->email)->first();
 

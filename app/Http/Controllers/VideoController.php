@@ -11,8 +11,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use App\Services\VideoService;
+
 class VideoController extends Controller
 {
+    protected $videoService;
+
+    public function __construct(VideoService $videoService)
+    {
+        $this->videoService = $videoService;
+    }
+
     /**
      * Video yuklash formasi (agar kerak bo'lsa)
      */
@@ -25,8 +34,9 @@ class VideoController extends Controller
     /**
      * Yangi video yuklash
      */
-    public function store(Request $request)
+    public function store(Request $request, $courseId)
     {
+        $course = Auth::user()->courses()->findOrFail($courseId);
 
         // 1️⃣ Validatsiya (PHP limitini tekshirish)
         $maxUploadSize = min(
@@ -55,67 +65,10 @@ class VideoController extends Controller
             return back()->with('error', 'Video fayl yuklanmadi yoki buzilgan.');
         }
 
-        // 2️⃣ Manual hajm tekshirish
-        if ($file->getSize() > $maxUploadSize) {
-            return back()->with('error', 'Video hajmi ' . $this->formatBytes($maxUploadSize) . ' dan oshib ketdi!');
-        }
-
         try {
-            // 3️⃣ S3 mavjudligini tekshirish
-            if (!config('filesystems.disks.s3')) {
-                throw new \Exception('S3 disk sozlanmagan! .env faylini tekshiring.');
-            }
+            $this->videoService->uploadVideo($file, $validated, $course);
 
-            // 4️⃣ Test ulanish
-            try {
-                Storage::disk('s3')->exists('test'); // Connection test
-            } catch (\Exception $e) {
-                throw new \Exception('S3 ga ulanib bo\'lmadi: ' . $e->getMessage());
-            }
-
-            Log::info('Video yuklash boshlandi', [
-                'file_size' => $file->getSize(),
-                'file_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType()
-            ]);
-
-            // 5️⃣ S3 ga yuklash
-            $fileName = time() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
-
-            // MUHIM: putFileAs ishlatish (kattaroq fayllar uchun yaxshiroq)
-            $path = Storage::disk('s3')->putFileAs('videos', $file, $fileName);
-
-            if (!$path) {
-                throw new \Exception('S3 ga yuklash muvaffaqiyatsiz tugadi!');
-            }
-
-            // 6️⃣ Yuklangani tekshirish
-            if (!Storage::disk('s3')->exists($path)) {
-                throw new \Exception('Fayl S3 ga yuklanmadi: ' . $path);
-            }
-
-            Log::info('Video S3 ga yuklandi', ['path' => $path]);
-
-            // 7️⃣ Public qilish
-            try {
-                Storage::disk('s3')->setVisibility($path, 'public');
-            } catch (\Exception $e) {
-                Log::warning('Visibility xatosi: ' . $e->getMessage());
-            }
-
-            // 8️⃣ Bazaga saqlash
-            $video = Video::create([
-                'course_id'        => $course->$id,
-                'user_id'          => Auth::id(),
-                'title'            => $validated['title'],
-                'description'      => $validated['description'] ?? null,
-                'video_url'        => $path, // videos/1234567890_filename.mp4
-                'duration_seconds' => $validated['duration_minutes'] * 60,
-            ]);
-
-            Log::info('Video bazaga saqlandi', ['video_id' => $video->id, 'path' => $path]);
-
-            return back()->with('success', 'Video muvaffaqiyatli yuklandi! (S3: ' . $path . ')');
+            return back()->with('success', 'Video muvaffaqiyatli yuklandi!');
         } catch (\Throwable $e) {
             Log::error('Video yuklash xatosi', [
                 'error' => $e->getMessage(),
@@ -168,18 +121,15 @@ class VideoController extends Controller
             abort(403);
         }
 
-        // Faylni o'chirish
-        $filePath = str_replace('storage/', '', $video->video_url);
-        if (Storage::disk('public')->exists($filePath)) {
-            Storage::disk('public')->delete($filePath);
+        try {
+            $this->videoService->deleteVideo($id);
+        } catch (\Throwable $e) {
+            Log::error('Video o\'chirish xatosi: ' . $e->getMessage());
         }
-
-        $video->delete();
 
         if (request()->ajax()) {
             return response()->json(['success' => true, 'message' => 'Video o\'chirildi']);
         }
 
-        return back()->with('success', 'Video o\'chirildi');
     }
 }
