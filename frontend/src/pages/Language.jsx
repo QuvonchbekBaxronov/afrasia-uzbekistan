@@ -160,20 +160,20 @@ export default function Language({ currentLang }) {
   // Smart Category Matcher
   const isCategoryMatch = (pCat, tKey) => {
     if (tKey === 'all') return true;
-    if (!pCat) return false;
+    if (!pCat) return true;
     const p = pCat.toLowerCase();
     const t = tKey.toLowerCase();
     
     if (p === t) return true;
-    if (t === 'bozor' && (p.includes('bozor') || p.includes('narx'))) return true;
-    if (t === 'sayohat' && (p.includes('sayohat') || p.includes('taksi'))) return true;
-    if (t === 'ovqat' && (p.includes('ovqat') || p.includes('restoran'))) return true;
-    if (t === 'salomlashish' && p.includes('salom')) return true;
-    if (t === 'yordam' && (p.includes('yordam') || p.includes('zudlik') || p.includes('favqulodda'))) return true;
-    if (t === 'raqamlar' && (p.includes('raqam') || p.includes('pul'))) return true;
-    if (t === 'kundalik' && p.includes('kunda')) return true;
+    if (t === 'bozor' && (p.includes('bozor') || p.includes('narx') || p.includes('mercato') || p.includes('price'))) return true;
+    if (t === 'sayohat' && (p.includes('sayohat') || p.includes('taksi') || p.includes('viagg') || p.includes('travel') || p.includes('taxi'))) return true;
+    if (t === 'ovqat' && (p.includes('ovqat') || p.includes('restoran') || p.includes('cibo') || p.includes('din') || p.includes('food'))) return true;
+    if (t === 'salomlashish' && (p.includes('salom') || p.includes('salut') || p.includes('greet'))) return true;
+    if (t === 'yordam' && (p.includes('yordam') || p.includes('zudlik') || p.includes('favqulodda') || p.includes('emerg') || p.includes('aiuto'))) return true;
+    if (t === 'raqamlar' && (p.includes('raqam') || p.includes('pul') || p.includes('num') || p.includes('mon'))) return true;
+    if (t === 'kundalik' && (p.includes('kunda') || p.includes('quotid') || p.includes('daily'))) return true;
 
-    return false;
+    return true;
   };
 
   // Search & Category Filtering
