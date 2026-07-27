@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 export default function GoUzbekistan() {
   const [allPlaces, setAllPlaces] = useState([]);
@@ -26,24 +27,50 @@ export default function GoUzbekistan() {
   });
 
   useEffect(() => {
-    axios.get(`${API_BASE}/pageBanners`)
-      .then(res => {
-        if (res.data && (res.data.goUzbekistan || res.data.regions)) {
-          setBannerUrl(res.data.goUzbekistan || res.data.regions);
+    const savedBanners = getStoredData('pageBanners', null);
+    if (savedBanners && (savedBanners.goUzbekistan || savedBanners.regions)) {
+      setBannerUrl(savedBanners.goUzbekistan || savedBanners.regions);
+    } else {
+      axios.get(`${API_BASE}/pageBanners`)
+        .then(res => {
+          if (res.data && (res.data.goUzbekistan || res.data.regions)) {
+            setBannerUrl(res.data.goUzbekistan || res.data.regions);
+          }
+        })
+        .catch(err => console.error("Failed to load banner:", err));
+    }
+
+    const savedRegions = getStoredData('regions', null);
+
+    const processRegions = (regions) => {
+      setRegionsList(regions);
+      const combined = [];
+      regions.forEach(reg => {
+        if (reg.famousPlaces && Array.isArray(reg.famousPlaces)) {
+          reg.famousPlaces.forEach(place => {
+            combined.push({
+              ...place,
+              regionId: reg.id,
+              regionName: reg.name,
+              regionName_it: reg.name_it || reg.name,
+              regionName_en: reg.name_en || reg.name,
+              regionName_uz: reg.name_uz || reg.name
+            });
+          });
         }
-      })
-      .catch(err => console.error("Failed to load banner:", err));
+      });
+      setAllPlaces(combined);
+      setLoading(false);
+    };
 
-    axios.get(`${API_BASE}/regions`)
-      .then(res => {
-        const regions = res.data || [];
-        setRegionsList(regions);
-
-        // Aggregate all famous places across all regions
-        const combined = [];
-        regions.forEach(reg => {
-          if (reg.famousPlaces && Array.isArray(reg.famousPlaces)) {
-            reg.famousPlaces.forEach(place => {
+    if (savedRegions && savedRegions.length > 0) {
+      processRegions(savedRegions);
+    } else {
+      axios.get(`${API_BASE}/regions`)
+        .then(res => processRegions(res.data || []))
+        .catch(() => setLoading(false));
+    }
+  }, []);
               combined.push({
                 ...place,
                 regionId: reg.id,

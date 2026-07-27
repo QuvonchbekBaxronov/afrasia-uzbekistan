@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 export default function RegionDetail({ currentLang }) {
   const { id } = useParams();
@@ -27,9 +28,15 @@ export default function RegionDetail({ currentLang }) {
   const placesRef = useRef(null);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/regions/${id}`)
-      .then(res => setRegion(res.data))
-      .catch(err => console.error(err));
+    const savedRegions = getStoredData('regions', []);
+    const found = savedRegions.find(r => r.id === id);
+    if (found) {
+      setRegion(found);
+    } else {
+      axios.get(`${API_BASE}/regions/${id}`)
+        .then(res => setRegion(res.data))
+        .catch(err => console.error(err));
+    }
   }, [id]);
 
   if (!region) return <div className="text-center py-40 text-xl font-serif text-slate-800">{lang === 'it' ? 'Caricamento in corso...' : lang === 'en' ? 'Loading...' : 'Yuklanmoqda...'}</div>;

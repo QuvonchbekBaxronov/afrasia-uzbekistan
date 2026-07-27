@@ -81,21 +81,28 @@ export default function Language({ currentLang }) {
   ];
 
   useEffect(() => {
-    axios.get(`${API_BASE}/phrases`)
-      .then(res => {
-        if (res.data && res.data.length > 0) {
-          setPhrases(res.data);
-        } else {
-          setPhrases(essentialTouristPhrases);
-        }
-      })
-      .catch(() => setPhrases(essentialTouristPhrases));
+    const savedPhrases = getStoredData('phrases', null);
+    if (savedPhrases && savedPhrases.length > 0) {
+      setPhrases(savedPhrases);
+    } else {
+      axios.get(`${API_BASE}/phrases`)
+        .then(res => {
+          if (res.data && res.data.length > 0) setPhrases(res.data);
+          else setPhrases(essentialTouristPhrases);
+        })
+        .catch(() => setPhrases(essentialTouristPhrases));
+    }
 
-    axios.get(`${API_BASE}/pageBanners`)
-      .then(res => {
-        if (res.data && res.data.language) setBannerUrl(res.data.language);
-      })
-      .catch(err => console.error(err));
+    const savedBanners = getStoredData('pageBanners', null);
+    if (savedBanners && savedBanners.language) {
+      setBannerUrl(savedBanners.language);
+    } else {
+      axios.get(`${API_BASE}/pageBanners`)
+        .then(res => {
+          if (res.data && res.data.language) setBannerUrl(res.data.language);
+        })
+        .catch(err => console.error(err));
+    }
   }, []);
 
   const currentPhrases = phrases.length > 0 ? phrases : essentialTouristPhrases;

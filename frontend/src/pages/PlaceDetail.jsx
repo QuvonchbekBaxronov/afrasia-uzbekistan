@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 export default function PlaceDetail({ currentLang }) {
   const { regionId, placeName } = useParams();
@@ -39,7 +40,57 @@ export default function PlaceDetail({ currentLang }) {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`${API_BASE}/regions`)
+    const savedRegions = getStoredData('regions', []);
+    const processRegionsData = (regions) => {
+      let foundRegion = null;
+      let foundPlace = null;
+
+      for (const reg of regions) {
+        if (reg.id === regionId || reg.name.toLowerCase() === regionId.toLowerCase()) {
+          foundRegion = reg;
+          if (reg.famousPlaces) {
+            foundPlace = reg.famousPlaces.find(p => 
+              p.name.toLowerCase() === decodedPlaceName.toLowerCase() ||
+              (p.name_it && p.name_it.toLowerCase() === decodedPlaceName.toLowerCase()) ||
+              (p.name_en && p.name_en.toLowerCase() === decodedPlaceName.toLowerCase())
+            );
+          }
+          break;
+        }
+      }
+
+      if (!foundPlace) {
+        for (const reg of regions) {
+          if (reg.famousPlaces) {
+            const p = reg.famousPlaces.find(pl => 
+              pl.name.toLowerCase() === decodedPlaceName.toLowerCase() ||
+              (pl.name_it && pl.name_it.toLowerCase() === decodedPlaceName.toLowerCase())
+            );
+            if (p) {
+              foundRegion = reg;
+              foundPlace = p;
+              break;
+            }
+          }
+        }
+      }
+
+      if (foundRegion && foundPlace) {
+        setRegion(foundRegion);
+        setPlace(foundPlace);
+        setSelectedPhoto(foundPlace.image);
+      }
+      setLoading(false);
+    };
+
+    if (savedRegions && savedRegions.length > 0) {
+      processRegionsData(savedRegions);
+    } else {
+      axios.get(`${API_BASE}/regions`)
+        .then(res => processRegionsData(res.data || []))
+        .catch(() => setLoading(false));
+    }
+  }, [regionId, decodedPlaceName]);
       .then(res => {
         const regions = res.data || [];
         let foundRegion = null;

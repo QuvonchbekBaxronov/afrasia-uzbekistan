@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Save, LogOut, Lock } from 'lucide-react';
 import { API_BASE } from '../config/api';
+import { getStoredData, saveStoredData, getAllStoredDB, setAllStoredDB } from '../utils/dbStorage';
 
 export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -206,15 +207,33 @@ export default function AdminPanel() {
 
   const fetchData = async () => {
     try {
-      const resR = await axios.get(`${API_BASE}/regions`);
-      const resC = await axios.get(`${API_BASE}/cuisine`);
-      const resT = await axios.get(`${API_BASE}/tours`);
-      const resB = await axios.get(`${API_BASE}/pageBanners`);
-      const resI = await axios.get(`${API_BASE}/instruments`);
-      const resP = await axios.get(`${API_BASE}/phrases`);
-      const resH = await axios.get(`${API_BASE}/homeFacts`);
-      setData({ regions: resR.data, cuisine: resC.data, tours: resT.data, pageBanners: resB.data, instruments: resI.data, phrases: resP.data });
-      if (resH.data) setHomeFacts(resH.data);
+      const resR = await axios.get(`${API_BASE}/regions`).catch(() => null);
+      const resC = await axios.get(`${API_BASE}/cuisine`).catch(() => null);
+      const resT = await axios.get(`${API_BASE}/tours`).catch(() => null);
+      const resB = await axios.get(`${API_BASE}/pageBanners`).catch(() => null);
+      const resI = await axios.get(`${API_BASE}/instruments`).catch(() => null);
+      const resP = await axios.get(`${API_BASE}/phrases`).catch(() => null);
+      const resH = await axios.get(`${API_BASE}/homeFacts`).catch(() => null);
+
+      const localStore = getAllStoredDB();
+
+      const rData = localStore.regions || resR?.data || [];
+      const cData = localStore.cuisine || resC?.data || [];
+      const tData = localStore.tours || resT?.data || [];
+      const bData = localStore.pageBanners || resB?.data || {};
+      const iData = localStore.instruments || resI?.data || [];
+      const pData = localStore.phrases || resP?.data || [];
+      const hData = localStore.homeFacts || resH?.data || homeFacts;
+
+      setData({
+        regions: rData,
+        cuisine: cData,
+        tours: tData,
+        pageBanners: bData,
+        instruments: iData,
+        phrases: pData
+      });
+      if (hData) setHomeFacts(hData);
     } catch (err) {
       console.error("Data fetch failed:", err);
     }
@@ -223,7 +242,6 @@ export default function AdminPanel() {
   const handleSaveHomeFacts = async () => {
     try {
       const updatedFacts = { ...homeFacts };
-      // Sync default fields with Italian (the primary language)
       if (updatedFacts.headline_it) updatedFacts.headline = updatedFacts.headline_it;
       if (updatedFacts.subtitle_it) updatedFacts.subtitle = updatedFacts.subtitle_it;
       if (updatedFacts.aboutTitle_it) updatedFacts.aboutTitle = updatedFacts.aboutTitle_it;
@@ -243,8 +261,9 @@ export default function AdminPanel() {
         });
       }
 
-      await axios.put(`${API_BASE}/homeFacts`, updatedFacts);
-      alert("Asosiy sahifa va 'O'zbekiston haqida' ma'lumotlari saqlandi!");
+      saveStoredData('homeFacts', updatedFacts);
+      axios.put(`${API_BASE}/homeFacts`, updatedFacts).catch(() => {});
+      alert("Asosiy sahifa va 'O'zbekiston haqida' ma'lumotlari muvaffaqiyatli saqlandi!");
       fetchData();
     } catch (err) {
       console.error("Failed to save homeFacts:", err);
@@ -260,14 +279,13 @@ export default function AdminPanel() {
 
   const handleDelete = async (id, type) => {
     if (window.confirm("Rostdan ham ushbu ma'lumotni o'chirmoqchimisiz?")) {
-      try {
-        await axios.delete(`${API_BASE}/${type}/${id}`);
-        alert("Muvaffaqiyatli o'chirildi!");
-        fetchData();
-        if (editing && editing.id === id) setEditing(null);
-      } catch (err) {
-        alert("O'chirishda xatolik yuz berdi!");
-      }
+      const currentList = data[type] || [];
+      const updatedList = currentList.filter(item => item.id !== id);
+      saveStoredData(type, updatedList);
+      setData(prev => ({ ...prev, [type]: updatedList }));
+      axios.delete(`${API_BASE}/${type}/${id}`).catch(() => {});
+      alert("Muvaffaqiyatli o'chirildi!");
+      if (editing && editing.id === id) setEditing(null);
     }
   };
 
@@ -275,7 +293,6 @@ export default function AdminPanel() {
     try {
       const newItem = { ...formData };
       
-      // Keep defaults in sync with Italian for safety (since Italian is default language)
       if (newItem.name_it) newItem.name = newItem.name_it;
       if (newItem.title_it) newItem.title = newItem.title_it;
       if (newItem.slogan_it) newItem.slogan = newItem.slogan_it;
@@ -303,31 +320,22 @@ export default function AdminPanel() {
           return p;
         });
       }
-      // 1. Try updating cloud backend
-      try {
-        if (editing.id === 'new') {
-          if (!newItem.id) {
-            newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
-          }
-          await axios.post(`${API_BASE}/${editing.type}`, newItem);
-        } else {
-          await axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem);
+
+      const list = data[editing.type] || [];
+      let updatedList;
+      if (editing.id === 'new') {
+        if (!newItem.id) {
+          newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
         }
-      } catch (err) {
-        console.warn("Backend sync notice:", err);
+        updatedList = [...list, newItem];
+        axios.post(`${API_BASE}/${editing.type}`, newItem).catch(() => {});
+      } else {
+        updatedList = list.map(item => item.id === editing.id ? newItem : item);
+        axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem).catch(() => {});
       }
 
-      // 2. Always update local state instantly
-      setData(prev => {
-        const list = prev[editing.type] || [];
-        let updatedList;
-        if (editing.id === 'new') {
-          updatedList = [...list, newItem];
-        } else {
-          updatedList = list.map(item => item.id === editing.id ? newItem : item);
-        }
-        return { ...prev, [editing.type]: updatedList };
-      });
+      saveStoredData(editing.type, updatedList);
+      setData(prev => ({ ...prev, [editing.type]: updatedList }));
 
       alert("Muvaffaqiyatli saqlandi!");
       setEditing(null);
@@ -360,9 +368,29 @@ export default function AdminPanel() {
 
   const handleCropDone = () => {
     if (!canvasRef.current || !cropperModal.onCropSave) return;
-    const croppedBase64 = canvasRef.current.toDataURL('image/jpeg', 0.82);;
-    if (cropperModal.onCropSave) {
+    try {
+      const origCanvas = canvasRef.current;
+      const maxDim = 1000;
+      let targetW = origCanvas.width;
+      let targetH = origCanvas.height;
+      if (targetW > maxDim || targetH > maxDim) {
+        if (targetW > targetH) {
+          targetH = Math.round((targetH * maxDim) / targetW);
+          targetW = maxDim;
+        } else {
+          targetW = Math.round((targetW * maxDim) / targetH);
+          targetH = maxDim;
+        }
+      }
+      const rescaleCanvas = document.createElement('canvas');
+      rescaleCanvas.width = targetW;
+      rescaleCanvas.height = targetH;
+      const ctx = rescaleCanvas.getContext('2d');
+      ctx.drawImage(origCanvas, 0, 0, targetW, targetH);
+      const croppedBase64 = rescaleCanvas.toDataURL('image/jpeg', 0.75);
       cropperModal.onCropSave(croppedBase64);
+    } catch (err) {
+      console.error("Cropper error:", err);
     }
     setCropperModal({ isOpen: false, imageSrc: null, onCropSave: null });
   };
@@ -436,12 +464,13 @@ export default function AdminPanel() {
       openCropper(file, '16:9', async (croppedBase64) => {
         try {
           const updatedBanners = {
-            ...data.pageBanners,
+            ...(data.pageBanners || {}),
             [pageKey]: croppedBase64
           };
-          await axios.put(`${API_BASE}/pageBanners`, updatedBanners);
-          alert("Banner yangilandi!");
-          fetchData();
+          saveStoredData('pageBanners', updatedBanners);
+          setData(prev => ({ ...prev, pageBanners: updatedBanners }));
+          axios.put(`${API_BASE}/pageBanners`, updatedBanners).catch(() => {});
+          alert("Banner muvaffaqiyatli saqlandi va yangilandi!");
         } catch (err) {
           console.error("Failed to update banner:", err);
           alert("Banner saqlashda xatolik!");

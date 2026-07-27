@@ -10,6 +10,7 @@ import {
 import { t } from '../utils/translations';
 
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 const regionsDropdownList = [
   { name: "Toshkent viloyati", name_it: "Regione di Tashkent", name_en: "Tashkent Region", name_uz: "Toshkent viloyati", link: "/regions/toshkent" },
@@ -69,17 +70,25 @@ export default function Home({ currentLang }) {
   const [newsItems, setNewsItems] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/homeFacts`)
-      .then(res => {
-        if (res.data && res.data.headline) {
-          setHomeFacts(res.data);
-        }
-      })
-      .catch(err => console.error("homeFacts load error:", err));
+    const savedFacts = getStoredData('homeFacts', null);
+    if (savedFacts && savedFacts.headline) {
+      setHomeFacts(savedFacts);
+    } else {
+      axios.get(`${API_BASE}/homeFacts`)
+        .then(res => {
+          if (res.data && res.data.headline) setHomeFacts(res.data);
+        })
+        .catch(err => console.error("homeFacts load error:", err));
+    }
+
+    const savedRegions = getStoredData('regions', null);
+    if (savedRegions) {
+      setData(prev => ({ ...prev, regions: savedRegions }));
+    }
 
     axios.get(`${API_BASE}/db`)
       .then(res => {
-        const regions = res.data.regions || [];
+        const regions = savedRegions || res.data.regions || [];
         const attractions = res.data.attractions || [];
         const news = res.data.news || [];
         setData({
