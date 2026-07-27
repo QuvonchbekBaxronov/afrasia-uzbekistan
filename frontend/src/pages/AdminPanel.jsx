@@ -207,33 +207,16 @@ export default function AdminPanel() {
 
   const fetchData = async () => {
     try {
-      const resR = await axios.get(`${API_BASE}/regions`).catch(() => null);
-      const resC = await axios.get(`${API_BASE}/cuisine`).catch(() => null);
-      const resT = await axios.get(`${API_BASE}/tours`).catch(() => null);
-      const resB = await axios.get(`${API_BASE}/pageBanners`).catch(() => null);
-      const resI = await axios.get(`${API_BASE}/instruments`).catch(() => null);
-      const resP = await axios.get(`${API_BASE}/phrases`).catch(() => null);
-      const resH = await axios.get(`${API_BASE}/homeFacts`).catch(() => null);
-
-      const localStore = getAllStoredDB();
-
-      const rData = localStore.regions || resR?.data || [];
-      const cData = localStore.cuisine || resC?.data || [];
-      const tData = localStore.tours || resT?.data || [];
-      const bData = localStore.pageBanners || resB?.data || {};
-      const iData = localStore.instruments || resI?.data || [];
-      const pData = localStore.phrases || resP?.data || [];
-      const hData = localStore.homeFacts || resH?.data || homeFacts;
-
+      const db = getAllStoredDB();
       setData({
-        regions: rData,
-        cuisine: cData,
-        tours: tData,
-        pageBanners: bData,
-        instruments: iData,
-        phrases: pData
+        regions: db.regions || [],
+        cuisine: db.cuisine || [],
+        tours: db.tours || [],
+        pageBanners: db.pageBanners || {},
+        instruments: db.instruments || [],
+        phrases: db.phrases || []
       });
-      if (hData) setHomeFacts(hData);
+      if (db.homeFacts) setHomeFacts(db.homeFacts);
     } catch (err) {
       console.error("Data fetch failed:", err);
     }

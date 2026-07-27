@@ -1,5 +1,5 @@
 // Data persistence manager for Afrasia Uzbekistan
-// Combines Initial Data with LocalAdmin Overrides so data is NEVER blank and 100% persistent
+// Combines Initial Data with LocalAdmin Overrides so data is NEVER 0/blank
 
 import { initialDb } from '../data/initialDbData';
 
@@ -34,14 +34,27 @@ export const saveStoredData = (key, value) => {
 export const getAllStoredDB = () => {
   try {
     const store = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    const getValidList = (key) => {
+      if (store[key] && Array.isArray(store[key]) && store[key].length > 0) {
+        return store[key];
+      }
+      return initialDb[key] || [];
+    };
+    const getValidObj = (key) => {
+      if (store[key] && typeof store[key] === 'object' && Object.keys(store[key]).length > 0) {
+        return store[key];
+      }
+      return initialDb[key] || {};
+    };
+
     return {
-      regions: (store.regions && store.regions.length > 0) ? store.regions : (initialDb.regions || []),
-      cuisine: (store.cuisine && store.cuisine.length > 0) ? store.cuisine : (initialDb.cuisine || []),
-      tours: (store.tours && store.tours.length > 0) ? store.tours : (initialDb.tours || []),
-      pageBanners: (store.pageBanners && Object.keys(store.pageBanners).length > 0) ? store.pageBanners : (initialDb.pageBanners || {}),
-      instruments: (store.instruments && store.instruments.length > 0) ? store.instruments : (initialDb.instruments || []),
-      phrases: (store.phrases && store.phrases.length > 0) ? store.phrases : (initialDb.phrases || []),
-      homeFacts: (store.homeFacts && store.homeFacts.headline) ? store.homeFacts : (initialDb.homeFacts || {})
+      regions: getValidList('regions'),
+      cuisine: getValidList('cuisine'),
+      tours: getValidList('tours'),
+      pageBanners: getValidObj('pageBanners'),
+      instruments: getValidList('instruments'),
+      phrases: getValidList('phrases'),
+      homeFacts: getValidObj('homeFacts')
     };
   } catch (err) {
     return initialDb;
