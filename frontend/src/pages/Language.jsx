@@ -7,65 +7,65 @@ import {
   PhoneCall, Coffee, Car, MapPin, Check, Copy
 } from 'lucide-react';
 import { t } from '../utils/translations';
-
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
+
+// REAL PRACTICAL TOURIST PHRASES (Curated for Tourists in Uzbekistan)
+const essentialTouristPhrases = [
+  // 1. BOZOR VA NARX-NAVO (Bargaining & Shopping)
+  { id: 101, uz: "Narxi qancha?", en: "How much does it cost?", it: "Quanto costa?", category: "Bozor va Narx", pronunciation: "Nahr-KHI kahn-CHAH?", context: "Bozorda / Do'konda" },
+  { id: 102, uz: "Arzonroq qilib bering", en: "Can you make it cheaper?", it: "Mi fa un prezzo più basso?", category: "Bozor va Narx", pronunciation: "Ahr-zohn-ROHK kee-LEENG", context: "Bozorda savdolashganda" },
+  { id: 103, uz: "Chegirma bormi?", en: "Is there a discount?", it: "C'è uno sconto?", category: "Bozor va Narx", pronunciation: "Cheh-geer-MAH bohr-MEE?", context: "Xaridda" },
+  { id: 104, uz: "Karta bilan to'lasa bo'ladimi?", en: "Can I pay by card?", it: "Posso pagare con carta?", category: "Bozor va Narx", pronunciation: "Kahr-TAH bee-LAHN toh-lah-SAH boh-lah-dee-MEE?", context: "To'lovda" },
+  { id: 105, uz: "Naqd pul bera olamanmi?", en: "Can I pay with cash?", it: "Posso pagare in contanti?", category: "Bozor va Narx", pronunciation: "Nahkd POOL beh-RAH oh-lah-mahn-MEE?", context: "To'lovda" },
+  { id: 106, uz: "Bu nima?", en: "What is this?", it: "Che cos'è questo?", category: "Bozor va Narx", pronunciation: "Boo NEE-mah?", context: "Bozorda / Esdalik sovg'alarida" },
+
+  // 2. TAKSI VA SAYOHAT (Taxi & Getting Around)
+  { id: 201, uz: "Taksi kerak", en: "I need a taxi", it: "Ho bisogno di un taxi", category: "Taksi va Sayohat", pronunciation: "Tahk-SEE keh-RAHK", context: "Ko'chada / Aeroportda" },
+  { id: 202, uz: "Aeroportga qancha beray?", en: "How much to the airport?", it: "Quanto costa per l'aeroporto?", category: "Taksi va Sayohat", pronunciation: "Ah-eh-roh-POHRT-gah kahn-CHAH beh-RYE?", context: "Taksida" },
+  { id: 203, uz: "Meni shu manzilga olib boring", en: "Take me to this address", it: "Mi porti a questo indirizzo", category: "Taksi va Sayohat", pronunciation: "Meh-NEE shoo mahn-zeel-GAH oh-LEEB boh-REENG", context: "Taksida" },
+  { id: 204, uz: "Shu yerda to'xtating", en: "Stop right here please", it: "Fermi qui per favore", category: "Taksi va Sayohat", pronunciation: "Shoo YEHR-dah tohk-TAH-teeng", context: "Taksida" },
+  { id: 205, uz: "Vokzal qaerda?", en: "Where is the train station?", it: "Dov'è la stazione dei treni?", category: "Taksi va Sayohat", pronunciation: "Vohk-ZAHL kah-EHR-dah?", context: "Yo'l so'raganda" },
+  { id: 206, uz: "Mehmonxona qaerda?", en: "Where is the hotel?", it: "Dov'è l'albergo?", category: "Taksi va Sayohat", pronunciation: "Meh-mohn-KHOH-nah kah-EHR-dah?", context: "Yo'lda" },
+  { id: 207, uz: "Qancha vaqt ketadi?", en: "How long does it take?", it: "Quanto tempo ci vuole?", category: "Taksi va Sayohat", pronunciation: "Kahn-CHAH vahkt keh-TAH-dee?", context: "Yo'lda" },
+
+  // 3. RESTORAN VA OVQATLANISH (Dining & Food)
+  { id: 301, uz: "Menyu bering, iltimos", en: "Can I have the menu, please?", it: "Il menu, per favore", category: "Restoran va Ovqat", pronunciation: "Mehn-YOO beh-REENG eel-tee-MOHS", context: "Restoranda" },
+  { id: 302, uz: "Osh bering", en: "Please give me Plov (Uzbek pilaf)", it: "Un Plov per favore", category: "Restoran va Ovqat", pronunciation: "Ohsh beh-REENG", context: "Oshxonada" },
+  { id: 303, uz: "Ko'k choy bering", en: "Green tea please", it: "Tè verde per favore", category: "Restoran va Ovqat", pronunciation: "Kohk choy beh-REENG", context: "Choyxonada" },
+  { id: 304, uz: "Muzli suv bering", en: "I'd like cold water", it: "Acqua fredda per favore", category: "Restoran va Ovqat", pronunciation: "Mooz-LEE soov beh-REENG", context: "Restoranda" },
+  { id: 305, uz: "Juda mazali!", en: "It is very delicious!", it: "È buonissimo!", category: "Restoran va Ovqat", pronunciation: "JOO-dah mah-zah-LEE!", context: "Taomdan keyin" },
+  { id: 306, uz: "Hisobni keltiring", en: "Can I have the bill please?", it: "Il conto, per favore", category: "Restoran va Ovqat", pronunciation: "Hee-SOHB-nee kehl-tee-REENG", context: "To'lovda" },
+  { id: 307, uz: "Xojatxona qaerda?", en: "Where is the restroom?", it: "Dov'è il bagno?", category: "Restoran va Ovqat", pronunciation: "Khoh-jaht-KHOH-nah kah-EHR-dah?", context: "Jamoat joyida" },
+  { id: 308, uz: "Wi-Fi paroli nima?", en: "What is the Wi-Fi password?", it: "Qual è la password del Wi-Fi?", category: "Restoran va Ovqat", pronunciation: "Vee-Fee pah-roh-LEE nee-MAH?", context: "Kafeda" },
+
+  // 4. SALOMLASHISH VA ODOB (Greetings & Manners)
+  { id: 401, uz: "Assalomu alaykum", en: "Hello / Peace be upon you", it: "Ciao / Salve", category: "Salomlashish", pronunciation: "Ahs-sah-LAH-moo ah-LAY-koom", context: "Ko'rishganda" },
+  { id: 402, uz: "Va alaykum assalom", en: "Hello (reply to greeting)", it: "E a te la pace (risposta)", category: "Salomlashish", pronunciation: "Vah ah-LAY-koom ahs-sah-LAHM", context: "Javob berishda" },
+  { id: 403, uz: "Rahmat!", en: "Thank you!", it: "Grazie!", category: "Salomlashish", pronunciation: "Rahk-MAHT!", context: "Rahmat aytganda" },
+  { id: 404, uz: "Katta rahmat!", en: "Thank you very much!", it: "Grazie mille!", category: "Salomlashish", pronunciation: "Kaht-TAH rahk-MAHT!", context: "Minnatdorchilikda" },
+  { id: 405, uz: "Kechirasiz", en: "Excuse me / Sorry", it: "Mi scusi", category: "Salomlashish", pronunciation: "Keh-chee-RAH-seez", context: "Uzr so'raganda" },
+  { id: 406, uz: "Marhamat", en: "You're welcome / Please", it: "Prego / Benvenuto", category: "Salomlashish", pronunciation: "Mahr-hah-MAHT", context: "Taklif etganda" },
+  { id: 407, uz: "Xayr, salomat bo'ling", en: "Goodbye, stay well", it: "Arrivederci", category: "Salomlashish", pronunciation: "KHY-er sah-loh-MAHT boh-leeng", context: "Xayrlashganda" },
+  { id: 408, uz: "Ismingiz nima?", en: "What is your name?", it: "Come ti chiami?", category: "Salomlashish", pronunciation: "Ees-meen-geez nee-MAH?", context: "Tanishganda" },
+  { id: 409, uz: "Mening ismim...", en: "My name is...", it: "Mi chiamo...", category: "Salomlashish", pronunciation: "Meh-neeng ees-MEEM...", context: "Tanishganda" },
+
+  // 5. YORDAM VA FAVQULODDA (Emergency & Help)
+  { id: 501, uz: "Yordam bering!", en: "Help me please!", it: "Aiuto per favore!", category: "Yordam va Zudlik", pronunciation: "Yohr-DAHM beh-REENG!", context: "Favqulodda" },
+  { id: 502, uz: "Menga tez yordam kerak", en: "I need an ambulance", it: "Ho bisogno di un'ambulanza", category: "Yordam va Zudlik", pronunciation: "Mehn-GAH tehz yohr-DAHM keh-RAHK", context: "Shoshilinch" },
+  { id: 503, uz: "Men adashib qoldim", en: "I am lost", it: "Mi sono perso", category: "Yordam va Zudlik", pronunciation: "Mehn ah-dah-SHEEB kohl-DEEM", context: "Yo'l yo'qotganda" },
+  { id: 504, uz: "Politsiya / Militsiya", en: "Police", it: "Polizia", category: "Yordam va Zudlik", pronunciation: "Poh-lee-TSEE-yah", context: "Favqulodda" },
+  { id: 505, uz: "Dorixona qaerda?", en: "Where is the pharmacy?", it: "Dov'è la farmacia?", category: "Yordam va Zudlik", pronunciation: "Doh-ree-KHOH-nah kah-EHR-dah?", context: "Dorixonaga" },
+
+  // 6. RAQAMLAR VA SANOQ (Numbers & Counting)
+  { id: 601, uz: "Bir, Ikki, Uch", en: "One, Two, Three (1, 2, 3)", it: "Uno, Due, Tre (1, 2, 3)", category: "Raqamlar", pronunciation: "Beer, Eek-kee, Ooch", context: "Sanoqda" },
+  { id: 602, uz: "To'rt, Besh, Olti", en: "Four, Five, Six (4, 5, 6)", it: "Quattro, Cinque, Sei (4, 5, 6)", category: "Raqamlar", pronunciation: "Tohrt, Behsh, Ohl-tee", context: "Sanoqda" },
+  { id: 603, uz: "O'n ming so'm", en: "10,000 UZS", it: "10.000 UZS", category: "Raqamlar", pronunciation: "Ohn meeng sohm", context: "Pulda" },
+  { id: 604, uz: "Yuz ming so'm", en: "100,000 UZS", it: "100.000 UZS", category: "Raqamlar", pronunciation: "Yooz meeng sohm", context: "Pulda" }
+];
 
 export default function Language({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  
-  // REAL PRACTICAL TOURIST PHRASES (Curated for Tourists in Uzbekistan)
-  const essentialTouristPhrases = [
-    // 1. BOZOR VA NARX-NAVO (Bargaining & Shopping)
-    { id: 101, uz: "Narxi qancha?", en: "How much does it cost?", it: "Quanto costa?", category: "Bozor va Narx", pronunciation: "Nahr-KHI kahn-CHAH?", context: "Bozorda / Do'konda" },
-    { id: 102, uz: "Arzonroq qilib bering", en: "Can you make it cheaper?", it: "Mi fa un prezzo più basso?", category: "Bozor va Narx", pronunciation: "Ahr-zohn-ROHK kee-LEENG", context: "Bozorda savdolashganda" },
-    { id: 103, uz: "Chegirma bormi?", en: "Is there a discount?", it: "C'è uno sconto?", category: "Bozor va Narx", pronunciation: "Cheh-geer-MAH bohr-MEE?", context: "Xaridda" },
-    { id: 104, uz: "Karta bilan to'lasa bo'ladimi?", en: "Can I pay by card?", it: "Posso pagare con carta?", category: "Bozor va Narx", pronunciation: "Kahr-TAH bee-LAHN toh-lah-SAH boh-lah-dee-MEE?", context: "To'lovda" },
-    { id: 105, uz: "Naqd pul bera olamanmi?", en: "Can I pay with cash?", it: "Posso pagare in contanti?", category: "Bozor va Narx", pronunciation: "Nahkd POOL beh-RAH oh-lah-mahn-MEE?", context: "To'lovda" },
-    { id: 106, uz: "Bu nima?", en: "What is this?", it: "Che cos'è questo?", category: "Bozor va Narx", pronunciation: "Boo NEE-mah?", context: "Bozorda / Esdalik sovg'alarida" },
-
-    // 2. TAKSI VA SAYOHAT (Taxi & Getting Around)
-    { id: 201, uz: "Taksi kerak", en: "I need a taxi", it: "Ho bisogno di un taxi", category: "Taksi va Sayohat", pronunciation: "Tahk-SEE keh-RAHK", context: "Ko'chada / Aeroportda" },
-    { id: 202, uz: "Aeroportga qancha beray?", en: "How much to the airport?", it: "Quanto costa per l'aeroporto?", category: "Taksi va Sayohat", pronunciation: "Ah-eh-roh-POHRT-gah kahn-CHAH beh-RYE?", context: "Taksida" },
-    { id: 203, uz: "Meni shu manzilga olib boring", en: "Take me to this address", it: "Mi porti a questo indirizzo", category: "Taksi va Sayohat", pronunciation: "Meh-NEE shoo mahn-zeel-GAH oh-LEEB boh-REENG", context: "Taksida" },
-    { id: 204, uz: "Shu yerda to'xtating", en: "Stop right here please", it: "Fermi qui per favore", category: "Taksi va Sayohat", pronunciation: "Shoo YEHR-dah tohk-TAH-teeng", context: "Taksida" },
-    { id: 205, uz: "Vokzal qaerda?", en: "Where is the train station?", it: "Dov'è la stazione dei treni?", category: "Taksi va Sayohat", pronunciation: "Vohk-ZAHL kah-EHR-dah?", context: "Yo'l so'raganda" },
-    { id: 206, uz: "Mehmonxona qaerda?", en: "Where is the hotel?", it: "Dov'è l'albergo?", category: "Taksi va Sayohat", pronunciation: "Meh-mohn-KHOH-nah kah-EHR-dah?", context: "Yo'lda" },
-    { id: 207, uz: "Qancha vaqt ketadi?", en: "How long does it take?", it: "Quanto tempo ci vuole?", category: "Taksi va Sayohat", pronunciation: "Kahn-CHAH vahkt keh-TAH-dee?", context: "Yo'lda" },
-
-    // 3. RESTORAN VA OVQATLANISH (Dining & Food)
-    { id: 301, uz: "Menyu bering, iltimos", en: "Can I have the menu, please?", it: "Il menu, per favore", category: "Restoran va Ovqat", pronunciation: "Mehn-YOO beh-REENG eel-tee-MOHS", context: "Restoranda" },
-    { id: 302, uz: "Osh bering", en: "Please give me Plov (Uzbek pilaf)", it: "Un Plov per favore", category: "Restoran va Ovqat", pronunciation: "Ohsh beh-REENG", context: "Oshxonada" },
-    { id: 303, uz: "Ko'k choy bering", en: "Green tea please", it: "Tè verde per favore", category: "Restoran va Ovqat", pronunciation: "Kohk choy beh-REENG", context: "Choyxonada" },
-    { id: 304, uz: "Muzli suv bering", en: "I'd like cold water", it: "Acqua fredda per favore", category: "Restoran va Ovqat", pronunciation: "Mooz-LEE soov beh-REENG", context: "Restoranda" },
-    { id: 305, uz: "Juda mazali!", en: "It is very delicious!", it: "È buonissimo!", category: "Restoran va Ovqat", pronunciation: "JOO-dah mah-zah-LEE!", context: "Taomdan keyin" },
-    { id: 306, uz: "Hisobni keltiring", en: "Can I have the bill please?", it: "Il conto, per favore", category: "Restoran va Ovqat", pronunciation: "Hee-SOHB-nee kehl-tee-REENG", context: "To'lovda" },
-    { id: 307, uz: "Xojatxona qaerda?", en: "Where is the restroom?", it: "Dov'è il bagno?", category: "Restoran va Ovqat", pronunciation: "Khoh-jaht-KHOH-nah kah-EHR-dah?", context: "Jamoat joyida" },
-    { id: 308, uz: "Wi-Fi paroli nima?", en: "What is the Wi-Fi password?", it: "Qual è la password del Wi-Fi?", category: "Restoran va Ovqat", pronunciation: "Vee-Fee pah-roh-LEE nee-MAH?", context: "Kafeda" },
-
-    // 4. SALOMLASHISH VA ODOB (Greetings & Manners)
-    { id: 401, uz: "Assalomu alaykum", en: "Hello / Peace be upon you", it: "Ciao / Salve", category: "Salomlashish", pronunciation: "Ahs-sah-LAH-moo ah-LAY-koom", context: "Ko'rishganda" },
-    { id: 402, uz: "Va alaykum assalom", en: "Hello (reply to greeting)", it: "E a te la pace (risposta)", category: "Salomlashish", pronunciation: "Vah ah-LAY-koom ahs-sah-LAHM", context: "Javob berishda" },
-    { id: 403, uz: "Rahmat!", en: "Thank you!", it: "Grazie!", category: "Salomlashish", pronunciation: "Rahk-MAHT!", context: "Rahmat aytganda" },
-    { id: 404, uz: "Katta rahmat!", en: "Thank you very much!", it: "Grazie mille!", category: "Salomlashish", pronunciation: "Kaht-TAH rahk-MAHT!", context: "Minnatdorchilikda" },
-    { id: 405, uz: "Kechirasiz", en: "Excuse me / Sorry", it: "Mi scusi", category: "Salomlashish", pronunciation: "Keh-chee-RAH-seez", context: "Uzr so'raganda" },
-    { id: 406, uz: "Marhamat", en: "You're welcome / Please", it: "Prego / Benvenuto", category: "Salomlashish", pronunciation: "Mahr-hah-MAHT", context: "Taklif etganda" },
-    { id: 407, uz: "Xayr, salomat bo'ling", en: "Goodbye, stay well", it: "Arrivederci", category: "Salomlashish", pronunciation: "KHY-er sah-loh-MAHT boh-leeng", context: "Xayrlashganda" },
-    { id: 408, uz: "Ismingiz nima?", en: "What is your name?", it: "Come ti chiami?", category: "Salomlashish", pronunciation: "Ees-meen-geez nee-MAH?", context: "Tanishganda" },
-    { id: 409, uz: "Mening ismim...", en: "My name is...", it: "Mi chiamo...", category: "Salomlashish", pronunciation: "Meh-neeng ees-MEEM...", context: "Tanishganda" },
-
-    // 5. YORDAM VA FAVQULODDA (Emergency & Help)
-    { id: 501, uz: "Yordam bering!", en: "Help me please!", it: "Aiuto per favore!", category: "Yordam va Zudlik", pronunciation: "Yohr-DAHM beh-REENG!", context: "Favqulodda" },
-    { id: 502, uz: "Menga tez yordam kerak", en: "I need an ambulance", it: "Ho bisogno di un'ambulanza", category: "Yordam va Zudlik", pronunciation: "Mehn-GAH tehz yohr-DAHM keh-RAHK", context: "Shoshilinch" },
-    { id: 503, uz: "Men adashib qoldim", en: "I am lost", it: "Mi sono perso", category: "Yordam va Zudlik", pronunciation: "Mehn ah-dah-SHEEB kohl-DEEM", context: "Yo'l yo'qotganda" },
-    { id: 504, uz: "Politsiya / Militsiya", en: "Police", it: "Polizia", category: "Yordam va Zudlik", pronunciation: "Poh-lee-TSEE-yah", context: "Favqulodda" },
-    { id: 505, uz: "Dorixona qaerda?", en: "Where is the pharmacy?", it: "Dov'è la farmacia?", category: "Yordam va Zudlik", pronunciation: "Doh-ree-KHOH-nah kah-EHR-dah?", context: "Dorixonaga" },
-
-    // 6. RAQAMLAR VA SANOQ (Numbers & Counting)
-    { id: 601, uz: "Bir, Ikki, Uch", en: "One, Two, Three (1, 2, 3)", it: "Uno, Due, Tre (1, 2, 3)", category: "Raqamlar", pronunciation: "Beer, Eek-kee, Ooch", context: "Sanoqda" },
-    { id: 602, uz: "To'rt, Besh, Olti", en: "Four, Five, Six (4, 5, 6)", it: "Quattro, Cinque, Sei (4, 5, 6)", category: "Raqamlar", pronunciation: "Tohrt, Behsh, Ohl-tee", context: "Sanoqda" },
-    { id: 603, uz: "O'n ming so'm", en: "10,000 UZS", it: "10.000 UZS", category: "Raqamlar", pronunciation: "Ohn meeng sohm", context: "Pulda" },
-    { id: 604, uz: "Yuz ming so'm", en: "100,000 UZS", it: "100.000 UZS", category: "Raqamlar", pronunciation: "Yooz meeng sohm", context: "Pulda" }
-  ];
 
   const [phrases, setPhrases] = useState(() => {
     const p = getStoredData('phrases', null);
@@ -106,7 +106,7 @@ export default function Language({ currentLang }) {
       .catch(err => console.error(err));
   }, []);
 
-  const currentPhrases = phrases.length > 0 ? phrases : essentialTouristPhrases;
+  const currentPhrases = (phrases && phrases.length > 0) ? phrases : essentialTouristPhrases;
 
   // Speak Uzbek text function (Native Speech Synthesis for iOS/Android/Desktop)
   const speakUzbekText = (text, id, customAudioUrl = null) => {
@@ -177,12 +177,13 @@ export default function Language({ currentLang }) {
   };
 
   // Search & Category Filtering
-  const filteredPhrases = currentPhrases.filter(p => {
+  const filteredPhrases = (currentPhrases || []).filter(p => {
+    if (!p || !p.uz) return false;
     const matchCategory = isCategoryMatch(p.category, activeCategory);
     const q = searchQuery.toLowerCase().trim();
     const matchQuery = !q || 
-      p.uz.toLowerCase().includes(q) || 
-      p.en.toLowerCase().includes(q) || 
+      (p.uz && p.uz.toLowerCase().includes(q)) || 
+      (p.en && p.en.toLowerCase().includes(q)) || 
       (p.it && p.it.toLowerCase().includes(q)) || 
       (p.pronunciation && p.pronunciation.toLowerCase().includes(q)) ||
       (p.context && p.context.toLowerCase().includes(q));
@@ -278,7 +279,8 @@ export default function Language({ currentLang }) {
   };
 
   // Active Flashcard item
-  const currentFlashcard = filteredPhrases[flashcardIndex % Math.max(1, filteredPhrases.length)] || currentPhrases[0];
+  const safePhrasesList = (filteredPhrases.length > 0 ? filteredPhrases : currentPhrases);
+  const currentFlashcard = safePhrasesList[flashcardIndex % Math.max(1, safePhrasesList.length)] || essentialTouristPhrases[0];
 
   return (
     <div className="bg-[#f8fafc] min-h-screen text-slate-800 pb-20 font-sans">
@@ -390,6 +392,7 @@ export default function Language({ currentLang }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredPhrases.map((phrase) => {
+                if (!phrase) return null;
                 const isPlaying = playingId === phrase.id;
                 const isCopied = copiedId === phrase.id;
                 return (
@@ -461,11 +464,11 @@ export default function Language({ currentLang }) {
         )}
 
         {/* MODE 2: FLASHCARD VIEW */}
-        {viewMode === 'flashcard' && filteredPhrases.length > 0 && (
+        {viewMode === 'flashcard' && currentFlashcard && (
           <div className="max-w-md mx-auto space-y-4">
             
             <div className="flex items-center justify-between text-xs font-bold text-slate-500 px-1">
-              <span>{lang === 'it' ? 'Carta' : lang === 'en' ? 'Card' : 'Kartochka'} { (flashcardIndex % filteredPhrases.length) + 1 } / { filteredPhrases.length }</span>
+              <span>{lang === 'it' ? 'Carta' : lang === 'en' ? 'Card' : 'Kartochka'} { (flashcardIndex % Math.max(1, safePhrasesList.length)) + 1 } / { Math.max(1, safePhrasesList.length) }</span>
               <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2.5 py-0.5 rounded-full font-bold">{getPhraseCategoryTranslation(currentFlashcard.category)}</span>
             </div>
 
@@ -536,7 +539,7 @@ export default function Language({ currentLang }) {
             <div className="flex items-center justify-between gap-2">
               <button 
                 onClick={() => {
-                  setFlashcardIndex(prev => (prev - 1 + filteredPhrases.length) % filteredPhrases.length);
+                  setFlashcardIndex(prev => (prev - 1 + safePhrasesList.length) % safePhrasesList.length);
                   setIsFlipped(false);
                 }}
                 className="flex-1 py-2.5 bg-white border border-slate-200 rounded-xl font-bold text-xs text-slate-700 flex items-center justify-center gap-1 shadow-sm hover:bg-slate-50"
@@ -553,7 +556,7 @@ export default function Language({ currentLang }) {
 
               <button 
                 onClick={() => {
-                  setFlashcardIndex(prev => (prev + 1) % filteredPhrases.length);
+                  setFlashcardIndex(prev => (prev + 1) % safePhrasesList.length);
                   setIsFlipped(false);
                 }}
                 className="flex-1 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-md"
