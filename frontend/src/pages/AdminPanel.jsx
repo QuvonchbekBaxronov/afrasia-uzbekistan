@@ -294,7 +294,6 @@ export default function AdminPanel() {
           return p;
         });
       }
-
       if (editing.id === 'new') {
         if (!newItem.id) {
           newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
@@ -307,7 +306,9 @@ export default function AdminPanel() {
       setEditing(null);
       fetchData();
     } catch (err) {
-      alert("Xatolik yuz berdi saqlashda!");
+      console.error("Save error:", err);
+      const errMsg = err.response?.data?.message || err.message || "Serverga ulanib bo'lmadi";
+      alert(`Xatolik: ${errMsg}. Ma'lumot local xotirada saqlandi!`);
     }
   };
 
@@ -332,10 +333,9 @@ export default function AdminPanel() {
     reader.readAsDataURL(file);
   };
 
-  const saveCroppedImage = () => {
-    if (!canvasRef.current) return;
-    // Export crystal clear 95% HD JPEG
-    const croppedBase64 = canvasRef.current.toDataURL('image/jpeg', 0.95);
+  const handleCropDone = () => {
+    if (!canvasRef.current || !cropperModal.onCropSave) return;
+    const croppedBase64 = canvasRef.current.toDataURL('image/jpeg', 0.82);;
     if (cropperModal.onCropSave) {
       cropperModal.onCropSave(croppedBase64);
     }

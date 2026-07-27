@@ -100,7 +100,7 @@ export default function Language({ currentLang }) {
 
   const currentPhrases = phrases.length > 0 ? phrases : essentialTouristPhrases;
 
-  // Speak Uzbek text function
+  // Speak Uzbek text function (Native Speech Synthesis for iOS/Android/Desktop)
   const speakUzbekText = (text, id, customAudioUrl = null) => {
     setPlayingId(id);
 
@@ -109,29 +109,13 @@ export default function Language({ currentLang }) {
       audio.play()
         .then(() => {
           audio.onended = () => setPlayingId(null);
-          audio.onerror = () => fallbackGoogleTTS(text, id);
-        })
-        .catch(() => fallbackGoogleTTS(text, id));
-      return;
-    }
-
-    fallbackGoogleTTS(text, id);
-  };
-
-  const fallbackGoogleTTS = (text, id) => {
-    try {
-      const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=uz&client=tw-ob`;
-      const audio = new Audio(ttsUrl);
-      
-      audio.play()
-        .then(() => {
-          audio.onended = () => setPlayingId(null);
           audio.onerror = () => fallbackSpeech(text, id);
         })
         .catch(() => fallbackSpeech(text, id));
-    } catch (err) {
-      fallbackSpeech(text, id);
+      return;
     }
+
+    fallbackSpeech(text, id);
   };
 
   const fallbackSpeech = (text, id) => {
