@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { t } from '../utils/translations';
 import axios from 'axios';
 
+import { API_BASE } from '../config/api';
+
 export default function About({ currentLang }) {
   const lang = currentLang?.code || 'it';
   const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1600&q=80");
@@ -59,13 +61,13 @@ export default function About({ currentLang }) {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && res.data.about) setBannerUrl(res.data.about);
       })
       .catch(err => console.error(err));
 
-    axios.get('http://localhost:3001/homeFacts')
+    axios.get(`${API_BASE}/homeFacts`)
       .then(res => {
         if (res.data) {
           setAboutData(prev => ({

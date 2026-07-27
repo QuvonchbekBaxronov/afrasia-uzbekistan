@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { t } from '../utils/translations';
 
+import { API_BASE } from '../config/api';
+
 const regionsDropdownList = [
   { name: "Toshkent viloyati", name_it: "Regione di Tashkent", name_en: "Tashkent Region", name_uz: "Toshkent viloyati", link: "/regions/toshkent" },
   { name: "Samarqand viloyati", name_it: "Regione di Samarcanda", name_en: "Samarkand Region", name_uz: "Samarqand viloyati", link: "/regions/samarqand" },
@@ -67,7 +69,7 @@ export default function Home({ currentLang }) {
   const [newsItems, setNewsItems] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/homeFacts')
+    axios.get(`${API_BASE}/homeFacts`)
       .then(res => {
         if (res.data && res.data.headline) {
           setHomeFacts(res.data);
@@ -75,7 +77,7 @@ export default function Home({ currentLang }) {
       })
       .catch(err => console.error("homeFacts load error:", err));
 
-    axios.get('http://localhost:3001/db')
+    axios.get(`${API_BASE}/db`)
       .then(res => {
         const regions = res.data.regions || [];
         const attractions = res.data.attractions || [];

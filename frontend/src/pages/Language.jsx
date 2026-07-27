@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { t } from '../utils/translations';
 
+import { API_BASE } from '../config/api';
+
 export default function Language({ currentLang }) {
   const lang = currentLang?.code || 'it';
   const [phrases, setPhrases] = useState([]);
@@ -79,7 +81,7 @@ export default function Language({ currentLang }) {
   ];
 
   useEffect(() => {
-    axios.get('http://localhost:3001/phrases')
+    axios.get(`${API_BASE}/phrases`)
       .then(res => {
         if (res.data && res.data.length > 0) {
           setPhrases(res.data);
@@ -89,7 +91,7 @@ export default function Language({ currentLang }) {
       })
       .catch(() => setPhrases(essentialTouristPhrases));
 
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && res.data.language) setBannerUrl(res.data.language);
       })

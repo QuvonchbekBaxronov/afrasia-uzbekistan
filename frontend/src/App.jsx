@@ -39,7 +39,7 @@ export default function App() {
 
   useEffect(() => {
     if (searchModalOpen && !searchDbData) {
-      axios.get('http://localhost:3001/db')
+      axios.get(`${API_BASE}/db`)
         .then(res => setSearchDbData(res.data))
         .catch(err => console.error("Failed to load search db data:", err));
     }

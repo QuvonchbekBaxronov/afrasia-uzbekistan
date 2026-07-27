@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function Tours({ currentLang }) {
   const lang = currentLang?.code || 'it';
@@ -10,7 +11,7 @@ export default function Tours({ currentLang }) {
   const [bannerUrl, setBannerUrl] = useState("/uz_banner.png");
 
   useEffect(() => {
-    axios.get('http://localhost:3001/tours')
+    axios.get(`${API_BASE}/tours`)
       .then(res => {
         setTours(res.data);
         setLoading(false);
@@ -20,7 +21,7 @@ export default function Tours({ currentLang }) {
         setLoading(false);
       });
 
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && res.data.tours) {
           setBannerUrl(res.data.tours);

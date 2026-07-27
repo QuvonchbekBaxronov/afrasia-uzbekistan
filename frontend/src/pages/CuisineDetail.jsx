@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function CuisineDetail({ currentLang }) {
   const { id } = useParams();
@@ -9,7 +10,7 @@ export default function CuisineDetail({ currentLang }) {
   const [dish, setDish] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/cuisine/${id}`)
+    axios.get(`${API_BASE}/cuisine/${id}`)
       .then(res => setDish(res.data))
       .catch(err => console.error(err));
   }, [id]);

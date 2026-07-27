@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function RegionDetail({ currentLang }) {
   const { id } = useParams();
@@ -26,7 +27,7 @@ export default function RegionDetail({ currentLang }) {
   const placesRef = useRef(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/regions/${id}`)
+    axios.get(`${API_BASE}/regions/${id}`)
       .then(res => setRegion(res.data))
       .catch(err => console.error(err));
   }, [id]);

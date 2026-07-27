@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE } from '../config/api';
 
 export default function GoUzbekistan() {
   const [allPlaces, setAllPlaces] = useState([]);
@@ -25,7 +26,7 @@ export default function GoUzbekistan() {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && (res.data.goUzbekistan || res.data.regions)) {
           setBannerUrl(res.data.goUzbekistan || res.data.regions);
@@ -33,7 +34,7 @@ export default function GoUzbekistan() {
       })
       .catch(err => console.error("Failed to load banner:", err));
 
-    axios.get('http://localhost:3001/regions')
+    axios.get(`${API_BASE}/regions`)
       .then(res => {
         const regions = res.data || [];
         setRegionsList(regions);

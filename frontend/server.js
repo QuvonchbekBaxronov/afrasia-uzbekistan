@@ -1,19 +1,20 @@
 import jsonServer from 'json-server';
 import express from 'express';
+import cors from 'cors';
 
 const server = jsonServer.create();
 const router = jsonServer.router('db.json');
 
-// json-server o'zining standart body-parser'ini o'chiramiz
 const middlewares = jsonServer.defaults({ bodyParser: false });
 
-// O'rniga o'zimizning 50MB limitli parser'imizni qo'yamiz
+server.use(cors({ origin: '*' }));
 server.use(express.json({ limit: '50mb' }));
 server.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 server.use(middlewares);
 server.use(router);
 
-server.listen(3001, () => {
-  console.log('JSON Server is running on port 3001 with 50MB limit');
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+  console.log(`JSON Server is running on port ${PORT} with 50MB limit`);
 });

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function PlaceDetail({ currentLang }) {
   const { regionId, placeName } = useParams();
@@ -38,7 +39,7 @@ export default function PlaceDetail({ currentLang }) {
 
   useEffect(() => {
     setLoading(true);
-    axios.get('http://localhost:3001/regions')
+    axios.get(`${API_BASE}/regions`)
       .then(res => {
         const regions = res.data || [];
         let foundRegion = null;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 // Extract YouTube video ID from various URL formats
 const getYoutubeId = (url) => {
@@ -22,11 +23,11 @@ export default function Art({ currentLang }) {
   const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/instruments')
+    axios.get(`${API_BASE}/instruments`)
       .then(res => setInstruments(res.data))
       .catch(err => console.error(err));
 
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && res.data.art) setBannerUrl(res.data.art);
       })

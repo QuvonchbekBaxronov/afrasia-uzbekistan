@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function Cuisine({ currentLang }) {
   const lang = currentLang?.code || 'it';
@@ -9,11 +10,11 @@ export default function Cuisine({ currentLang }) {
   const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80");
 
   useEffect(() => {
-    axios.get('http://localhost:3001/cuisine')
+    axios.get(`${API_BASE}/cuisine`)
       .then(res => setCuisine(res.data))
       .catch(err => console.error(err));
 
-    axios.get('http://localhost:3001/pageBanners')
+    axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
         if (res.data && res.data.cuisine) setBannerUrl(res.data.cuisine);
       })

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Save, LogOut, Lock } from 'lucide-react';
+import { API_BASE } from '../config/api';
 
 export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -196,13 +197,13 @@ export default function AdminPanel() {
 
   const fetchData = async () => {
     try {
-      const resR = await axios.get('http://localhost:3001/regions');
-      const resC = await axios.get('http://localhost:3001/cuisine');
-      const resT = await axios.get('http://localhost:3001/tours');
-      const resB = await axios.get('http://localhost:3001/pageBanners');
-      const resI = await axios.get('http://localhost:3001/instruments');
-      const resP = await axios.get('http://localhost:3001/phrases');
-      const resH = await axios.get('http://localhost:3001/homeFacts');
+      const resR = await axios.get(`${API_BASE}/regions`);
+      const resC = await axios.get(`${API_BASE}/cuisine`);
+      const resT = await axios.get(`${API_BASE}/tours`);
+      const resB = await axios.get(`${API_BASE}/pageBanners`);
+      const resI = await axios.get(`${API_BASE}/instruments`);
+      const resP = await axios.get(`${API_BASE}/phrases`);
+      const resH = await axios.get(`${API_BASE}/homeFacts`);
       setData({ regions: resR.data, cuisine: resC.data, tours: resT.data, pageBanners: resB.data, instruments: resI.data, phrases: resP.data });
       if (resH.data) setHomeFacts(resH.data);
     } catch (err) {
@@ -233,7 +234,7 @@ export default function AdminPanel() {
         });
       }
 
-      await axios.put('http://localhost:3001/homeFacts', updatedFacts);
+      await axios.put(`${API_BASE}/homeFacts`, updatedFacts);
       alert("Asosiy sahifa va 'O'zbekiston haqida' ma'lumotlari saqlandi!");
       fetchData();
     } catch (err) {
@@ -251,7 +252,7 @@ export default function AdminPanel() {
   const handleDelete = async (id, type) => {
     if (window.confirm("Rostdan ham ushbu ma'lumotni o'chirmoqchimisiz?")) {
       try {
-        await axios.delete(`http://localhost:3001/${type}/${id}`);
+        await axios.delete(`${API_BASE}/${type}/${id}`);
         alert("Muvaffaqiyatli o'chirildi!");
         fetchData();
         if (editing && editing.id === id) setEditing(null);
@@ -298,9 +299,9 @@ export default function AdminPanel() {
         if (!newItem.id) {
           newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
         }
-        await axios.post(`http://localhost:3001/${editing.type}`, newItem);
+        await axios.post(`${API_BASE}/${editing.type}`, newItem);
       } else {
-        await axios.put(`http://localhost:3001/${editing.type}/${editing.id}`, newItem);
+        await axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem);
       }
       alert('Muvaffaqiyatli saqlandi!');
       setEditing(null);
@@ -413,7 +414,7 @@ export default function AdminPanel() {
             ...data.pageBanners,
             [pageKey]: croppedBase64
           };
-          await axios.put('http://localhost:3001/pageBanners', updatedBanners);
+          await axios.put(`${API_BASE}/pageBanners`, updatedBanners);
           alert("Banner yangilandi!");
           fetchData();
         } catch (err) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
+import { API_BASE } from '../config/api';
 
 export default function TourDetail({ currentLang }) {
   const { id } = useParams();
@@ -13,7 +14,7 @@ export default function TourDetail({ currentLang }) {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://localhost:3001/tours/${id}`)
+    axios.get(`${API_BASE}/tours/${id}`)
       .then(res => {
         setTour(res.data);
         setLoading(false);
@@ -23,7 +24,7 @@ export default function TourDetail({ currentLang }) {
         setLoading(false);
       });
 
-    axios.get('http://localhost:3001/tours')
+    axios.get(`${API_BASE}/tours`)
       .then(res => {
         setAllTours(res.data.filter(t => t.id !== id));
       })
