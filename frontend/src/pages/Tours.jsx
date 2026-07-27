@@ -3,23 +3,28 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 export default function Tours({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [tours, setTours] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [bannerUrl, setBannerUrl] = useState("/uz_banner.png");
+  const [tours, setTours] = useState(() => getStoredData('tours', []));
+  const [loading, setLoading] = useState(false);
+  const [bannerUrl, setBannerUrl] = useState(() => {
+    const b = getStoredData('pageBanners', {});
+    return b.tours || "/uz_banner.png";
+  });
 
   useEffect(() => {
+    const savedTours = getStoredData('tours', []);
+    if (savedTours && savedTours.length > 0) {
+      setTours(savedTours);
+    }
+
     axios.get(`${API_BASE}/tours`)
       .then(res => {
-        setTours(res.data);
-        setLoading(false);
+        if (res.data && res.data.length > 0) setTours(res.data);
       })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+      .catch(err => console.error("Tours load fallback:", err));
 
     axios.get(`${API_BASE}/pageBanners`)
       .then(res => {

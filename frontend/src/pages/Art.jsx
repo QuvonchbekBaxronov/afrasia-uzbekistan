@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 // Extract YouTube video ID from various URL formats
 const getYoutubeId = (url) => {
@@ -18,14 +19,24 @@ const getYoutubeId = (url) => {
 
 export default function Art({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [instruments, setInstruments] = useState([]);
-  const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80");
+  const [instruments, setInstruments] = useState(() => getStoredData('instruments', []));
+  const [bannerUrl, setBannerUrl] = useState(() => {
+    const b = getStoredData('pageBanners', {});
+    return b.art || "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80";
+  });
   const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
+    const savedInstruments = getStoredData('instruments', []);
+    if (savedInstruments && savedInstruments.length > 0) {
+      setInstruments(savedInstruments);
+    }
+
     axios.get(`${API_BASE}/instruments`)
-      .then(res => setInstruments(res.data))
-      .catch(err => console.error(err));
+      .then(res => {
+        if (res.data && res.data.length > 0) setInstruments(res.data);
+      })
+      .catch(err => console.error("Instruments load fallback:", err));
 
     axios.get(`${API_BASE}/pageBanners`)
       .then(res => {

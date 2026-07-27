@@ -3,16 +3,27 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
+import { getStoredData } from '../utils/dbStorage';
 
 export default function Cuisine({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [cuisine, setCuisine] = useState([]);
-  const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80");
+  const [cuisine, setCuisine] = useState(() => getStoredData('cuisine', []));
+  const [bannerUrl, setBannerUrl] = useState(() => {
+    const b = getStoredData('pageBanners', {});
+    return b.cuisine || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80";
+  });
 
   useEffect(() => {
+    const savedCuisine = getStoredData('cuisine', []);
+    if (savedCuisine && savedCuisine.length > 0) {
+      setCuisine(savedCuisine);
+    }
+
     axios.get(`${API_BASE}/cuisine`)
-      .then(res => setCuisine(res.data))
-      .catch(err => console.error(err));
+      .then(res => {
+        if (res.data && res.data.length > 0) setCuisine(res.data);
+      })
+      .catch(err => console.error("Cuisine load fallback:", err));
 
     axios.get(`${API_BASE}/pageBanners`)
       .then(res => {
