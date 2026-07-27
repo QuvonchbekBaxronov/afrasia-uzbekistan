@@ -268,6 +268,12 @@ export const translations = {
   }
 };
 
+export const languages = [
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'uz', name: "O'zbekcha", flag: '🇺🇿' },
+  { code: 'en', name: 'English', flag: '🇬🇧' }
+];
+
 export const t = (key, langCode) => {
   const lang = translations[langCode] || translations['it'];
   return lang[key] || translations['it'][key] || key;

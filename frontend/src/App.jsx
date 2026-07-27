@@ -1,21 +1,30 @@
+import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { 
+  Globe, Search, Eye, Volume2, ChevronDown, Menu, X, 
+  MapPin, Compass, Utensils, Music, BookOpen, User, PhoneCall,
+  Sparkles, ExternalLink, Heart, Check, ArrowRight
+} from 'lucide-react';
+
 import Home from './pages/Home';
 import Regions from './pages/Regions';
 import RegionDetail from './pages/RegionDetail';
-import Cuisine from './pages/Cuisine';
-import CuisineDetail from './pages/CuisineDetail';
+import PlaceDetail from './pages/PlaceDetail';
 import Tours from './pages/Tours';
 import TourDetail from './pages/TourDetail';
-import AdminPanel from './pages/AdminPanel';
-import About from './pages/About';
+import Cuisine from './pages/Cuisine';
+import CuisineDetail from './pages/CuisineDetail';
 import Art from './pages/Art';
 import Language from './pages/Language';
+import About from './pages/About';
 import GoUzbekistan from './pages/GoUzbekistan';
-import PlaceDetail from './pages/PlaceDetail';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import AdminPanel from './pages/AdminPanel';
+
 import { useAccessibility } from './context/AccessibilityContext';
-import { t } from './utils/translations';
+import { languages, t } from './utils/translations';
+import { API_BASE } from './config/api';
+import { getAllStoredDB } from './utils/dbStorage';
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -35,15 +44,22 @@ export default function App() {
   // Global Search Modal States
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchDbData, setSearchDbData] = useState(null);
+  const [searchDbData, setSearchDbData] = useState(() => getAllStoredDB());
 
   useEffect(() => {
-    if (searchModalOpen && !searchDbData) {
-      axios.get(`${API_BASE}/db`)
-        .then(res => setSearchDbData(res.data))
-        .catch(err => console.error("Failed to load search db data:", err));
+    if (searchModalOpen) {
+      const localDB = getAllStoredDB();
+      if (localDB && localDB.regions && localDB.regions.length > 0) {
+        setSearchDbData(localDB);
+      } else {
+        axios.get(`${API_BASE}/db`)
+          .then(res => {
+            if (res.data) setSearchDbData(res.data);
+          })
+          .catch(err => console.error("Failed to load search db data:", err));
+      }
     }
-  }, [searchModalOpen, searchDbData]);
+  }, [searchModalOpen]);
   
   const { pathname } = useLocation();
   const isHeroPage = pathname === '/';
@@ -183,8 +199,8 @@ export default function App() {
     return { regions, places, cuisine, instruments };
   };
 
-  const searchResults = getSearchResults();
-  const totalResultsCount = searchResults.regions.length + searchResults.places.length + searchResults.cuisine.length + searchResults.instruments.length;
+  const searchResults = getSearchResults() || { regions: [], places: [], cuisine: [], instruments: [] };
+  const totalResultsCount = (searchResults.regions?.length || 0) + (searchResults.places?.length || 0) + (searchResults.cuisine?.length || 0) + (searchResults.instruments?.length || 0);
 
   return (
     <div className={`flex flex-col min-h-screen font-sans ${siteColor !== 'normal' ? 'accessibility-mode' : ''}`}>
