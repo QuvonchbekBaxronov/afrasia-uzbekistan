@@ -12,20 +12,7 @@ import { API_BASE } from '../config/api';
 
 export default function Language({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [phrases, setPhrases] = useState([]);
-  const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1600&q=80");
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'flashcard'
   
-  // Audio Playback state
-  const [playingId, setPlayingId] = useState(null);
-  const [copiedId, setCopiedId] = useState(null);
-
-  // Flashcards state
-  const [flashcardIndex, setFlashcardIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-
   // REAL PRACTICAL TOURIST PHRASES (Curated for Tourists in Uzbekistan)
   const essentialTouristPhrases = [
     // 1. BOZOR VA NARX-NAVO (Bargaining & Shopping)
@@ -80,6 +67,26 @@ export default function Language({ currentLang }) {
     { id: 604, uz: "Yuz ming so'm", en: "100,000 UZS", it: "100.000 UZS", category: "Raqamlar", pronunciation: "Yooz meeng sohm", context: "Pulda" }
   ];
 
+  const [phrases, setPhrases] = useState(() => {
+    const p = getStoredData('phrases', null);
+    if (p && Array.isArray(p) && p.length > 0) return p;
+    return essentialTouristPhrases;
+  });
+
+  const [bannerUrl, setBannerUrl] = useState(() => {
+    const b = getStoredData('pageBanners', {});
+    return b.language || "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1600&q=80";
+  });
+
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+  
+  const [playingId, setPlayingId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+  const [flashcardIndex, setFlashcardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+
   useEffect(() => {
     const savedPhrases = getStoredData('phrases', null);
     if (savedPhrases && savedPhrases.length > 0) {
@@ -88,21 +95,15 @@ export default function Language({ currentLang }) {
       axios.get(`${API_BASE}/phrases`)
         .then(res => {
           if (res.data && res.data.length > 0) setPhrases(res.data);
-          else setPhrases(essentialTouristPhrases);
         })
-        .catch(() => setPhrases(essentialTouristPhrases));
+        .catch(() => {});
     }
 
-    const savedBanners = getStoredData('pageBanners', null);
-    if (savedBanners && savedBanners.language) {
-      setBannerUrl(savedBanners.language);
-    } else {
-      axios.get(`${API_BASE}/pageBanners`)
-        .then(res => {
-          if (res.data && res.data.language) setBannerUrl(res.data.language);
-        })
-        .catch(err => console.error(err));
-    }
+    axios.get(`${API_BASE}/pageBanners`)
+      .then(res => {
+        if (res.data && res.data.language) setBannerUrl(res.data.language);
+      })
+      .catch(err => console.error(err));
   }, []);
 
   const currentPhrases = phrases.length > 0 ? phrases : essentialTouristPhrases;
