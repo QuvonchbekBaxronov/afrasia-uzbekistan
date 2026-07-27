@@ -474,6 +474,47 @@ export default function AdminPanel() {
     );
   }
 
+  const handleExportBackup = () => {
+    const backupObj = {
+      regions: data.regions,
+      cuisine: data.cuisine,
+      tours: data.tours,
+      instruments: data.instruments,
+      phrases: data.phrases,
+      pageBanners: data.pageBanners,
+      homeFacts: homeFacts,
+      exportedAt: new Date().toISOString()
+    };
+    const jsonStr = JSON.stringify(backupObj, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `afrasia_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportBackup = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const imported = JSON.parse(evt.target.result);
+        if (window.confirm("Zaxira faylidan barcha ma'lumotlarni tiklashni tasdiqlaysizmi?")) {
+          if (imported.regions) await axios.put(`${API_BASE}/db`, imported).catch(() => {});
+          alert("Zaxiradan barcha ma'lumotlar muvaffaqiyatli tiklandi!");
+          fetchData();
+        }
+      } catch (err) {
+        alert("Zaxira faylini o'qishda xatolik yuz berdi!");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   return (
     <div className="bg-slate-50/50 py-8 min-h-[80vh]">
       <div className="container mx-auto px-4 lg:px-8">
@@ -484,13 +525,29 @@ export default function AdminPanel() {
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Admin Boshqaruv Paneli</h1>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">Loyihadagi barcha ma'lumotlarni tahrirlash va yangilash bo'limi</p>
           </div>
-          <button 
-            onClick={handleLogout} 
-            className="bg-white hover:bg-slate-100 text-slate-700 font-semibold px-4 py-2 rounded-xl text-xs sm:text-sm transition-colors border border-slate-200 shadow-sm self-start sm:self-auto flex items-center gap-1.5"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Chiqish</span>
-          </button>
+          
+          <div className="flex flex-wrap items-center gap-2">
+            <button 
+              onClick={handleExportBackup} 
+              className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-semibold px-3 py-2 rounded-xl text-xs transition-colors border border-emerald-200 shadow-sm flex items-center gap-1.5"
+              title="Barcha kiritilgan ma'lumotlarni kompyuterga saqlab olish"
+            >
+              <span>📥 Zaxira Yuklab Olish</span>
+            </button>
+
+            <label className="bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold px-3 py-2 rounded-xl text-xs transition-colors border border-blue-200 shadow-sm flex items-center gap-1.5 cursor-pointer">
+              <span>📤 Zaxirani Qaytarish</span>
+              <input type="file" accept=".json" onChange={handleImportBackup} className="hidden" />
+            </label>
+
+            <button 
+              onClick={handleLogout} 
+              className="bg-white hover:bg-slate-100 text-slate-700 font-semibold px-4 py-2 rounded-xl text-xs transition-colors border border-slate-200 shadow-sm flex items-center gap-1.5"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Chiqish</span>
+            </button>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
