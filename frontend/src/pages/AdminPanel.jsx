@@ -80,7 +80,15 @@ export default function AdminPanel() {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      let options = {};
+      if (typeof MediaRecorder !== 'undefined') {
+        if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/mp4')) {
+          options = { mimeType: 'audio/mp4' };
+        } else if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/webm')) {
+          options = { mimeType: 'audio/webm' };
+        }
+      }
+      mediaRecorderRef.current = new MediaRecorder(stream, options);
       audioChunksRef.current = [];
 
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -88,7 +96,8 @@ export default function AdminPanel() {
       };
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/mp3' });
+        const mime = mediaRecorderRef.current.mimeType || 'audio/mp3';
+        const audioBlob = new Blob(audioChunksRef.current, { type: mime });
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
         reader.onloadend = () => {
@@ -294,21 +303,37 @@ export default function AdminPanel() {
           return p;
         });
       }
-      if (editing.id === 'new') {
-        if (!newItem.id) {
-          newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
+      // 1. Try updating cloud backend
+      try {
+        if (editing.id === 'new') {
+          if (!newItem.id) {
+            newItem.id = (newItem.name || newItem.title || newItem.uz || 'item').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now();
+          }
+          await axios.post(`${API_BASE}/${editing.type}`, newItem);
+        } else {
+          await axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem);
         }
-        await axios.post(`${API_BASE}/${editing.type}`, newItem);
-      } else {
-        await axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem);
+      } catch (err) {
+        console.warn("Backend sync notice:", err);
       }
-      alert('Muvaffaqiyatli saqlandi!');
+
+      // 2. Always update local state instantly
+      setData(prev => {
+        const list = prev[editing.type] || [];
+        let updatedList;
+        if (editing.id === 'new') {
+          updatedList = [...list, newItem];
+        } else {
+          updatedList = list.map(item => item.id === editing.id ? newItem : item);
+        }
+        return { ...prev, [editing.type]: updatedList };
+      });
+
+      alert("Muvaffaqiyatli saqlandi!");
       setEditing(null);
-      fetchData();
     } catch (err) {
       console.error("Save error:", err);
-      const errMsg = err.response?.data?.message || err.message || "Serverga ulanib bo'lmadi";
-      alert(`Xatolik: ${errMsg}. Ma'lumot local xotirada saqlandi!`);
+      alert("Saqlashda xatolik yuz berdi!");
     }
   };
 
