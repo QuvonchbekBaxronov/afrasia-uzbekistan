@@ -91,7 +91,6 @@ export default function PlaceDetail({ currentLang }) {
         .catch(() => setLoading(false));
     }
   }, [regionId, decodedPlaceName]);
-
   useEffect(() => {
     if (place) {
       const storageKey = `comments_${place.name.replace(/\s+/g, '_')}`;
