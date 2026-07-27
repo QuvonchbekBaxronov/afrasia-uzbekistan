@@ -71,22 +71,6 @@ export default function GoUzbekistan() {
         .catch(() => setLoading(false));
     }
   }, []);
-              combined.push({
-                ...place,
-                regionId: reg.id,
-                regionName: reg.name
-              });
-            });
-          }
-        });
-        setAllPlaces(combined);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Failed to load regions:", err);
-        setLoading(false);
-      });
-  }, []);
 
   useEffect(() => {
     return () => {

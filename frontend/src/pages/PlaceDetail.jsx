@@ -91,94 +91,49 @@ export default function PlaceDetail({ currentLang }) {
         .catch(() => setLoading(false));
     }
   }, [regionId, decodedPlaceName]);
-      .then(res => {
-        const regions = res.data || [];
-        let foundRegion = null;
-        let foundPlace = null;
 
-        for (const reg of regions) {
-          if (reg.id === regionId || reg.name.toLowerCase() === regionId.toLowerCase()) {
-            foundRegion = reg;
-            if (reg.famousPlaces && Array.isArray(reg.famousPlaces)) {
-              foundPlace = reg.famousPlaces.find(p => 
-                p.name.toLowerCase() === decodedPlaceName.toLowerCase() ||
-                p.name.toLowerCase().includes(decodedPlaceName.toLowerCase()) ||
-                decodedPlaceName.toLowerCase().includes(p.name.toLowerCase())
-              );
+  useEffect(() => {
+    if (place) {
+      const storageKey = `comments_${place.name.replace(/\s+/g, '_')}`;
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (saved.length > 0) {
+          setComments(saved);
+        } else {
+          const defaultComments = [
+            {
+              id: 1,
+              author: "Marco Rossi",
+              country: "Italy 🇮🇹",
+              rating: 5,
+              date: "2026-06-15",
+              text: "Bellissimo posto! La storia e l'architettura sono straordinarie."
+            },
+            {
+              id: 2,
+              author: "Sarah Jenkins",
+              country: "United Kingdom 🇬🇧",
+              rating: 5,
+              date: "2026-07-02",
+              text: "An absolute masterpiece of Uzbekistan architecture. Highly recommended!"
+            },
+            {
+              id: 3,
+              author: "Jasur Bekmirov",
+              country: "O'zbekiston 🇺🇿",
+              rating: 5,
+              date: "2026-07-10",
+              text: "Juda ajoyib va muqaddas maskan! Oilamiz bilan tashrif buyurdik."
             }
-            break;
-          }
+          ];
+          setComments(defaultComments);
+          localStorage.setItem(storageKey, JSON.stringify(defaultComments));
         }
-
-        if (!foundPlace) {
-          for (const reg of regions) {
-            if (reg.famousPlaces && Array.isArray(reg.famousPlaces)) {
-              const p = reg.famousPlaces.find(item => 
-                item.name.toLowerCase() === decodedPlaceName.toLowerCase()
-              );
-              if (p) {
-                foundPlace = p;
-                foundRegion = reg;
-                break;
-              }
-            }
-          }
-        }
-
-        setRegion(foundRegion);
-        setPlace(foundPlace);
-        if (foundPlace) {
-          setSelectedPhoto(foundPlace.image);
-        }
-        setLoading(false);
-
-        // Load comments from localStorage
-        if (foundPlace) {
-          const storageKey = `comments_${foundPlace.name.replace(/\s+/g, '_')}`;
-          try {
-            const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-            if (saved.length > 0) {
-              setComments(saved);
-            } else {
-              const defaultComments = [
-                {
-                  id: 1,
-                  author: "Marco Rossi",
-                  country: "Italy 🇮🇹",
-                  rating: 5,
-                  date: "2026-06-15",
-                  text: "Bellissimo posto! La storia e l'architettura sono straordinarie."
-                },
-                {
-                  id: 2,
-                  author: "Sarah Jenkins",
-                  country: "United Kingdom 🇬🇧",
-                  rating: 5,
-                  date: "2026-07-02",
-                  text: "An absolute masterpiece of Uzbekistan architecture. Highly recommended!"
-                },
-                {
-                  id: 3,
-                  author: "Jasur Bekmirov",
-                  country: "O'zbekiston 🇺🇿",
-                  rating: 5,
-                  date: "2026-07-10",
-                  text: "Juda ajoyib va muqaddas maskan! Oilamiz bilan tashrif buyurdik."
-                }
-              ];
-              setComments(defaultComments);
-              localStorage.setItem(storageKey, JSON.stringify(defaultComments));
-            }
-          } catch {
-            setComments([]);
-          }
-        }
-      })
-      .catch(err => {
-        console.error("Failed to load place details:", err);
-        setLoading(false);
-      });
-  }, [regionId, decodedPlaceName]);
+      } catch {
+        setComments([]);
+      }
+    }
+  }, [place]);
 
   // Add a new comment
   const handleAddComment = (e) => {
