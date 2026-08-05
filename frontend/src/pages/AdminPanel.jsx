@@ -14,8 +14,9 @@ export default function AdminPanel() {
     regions: [], 
     cuisine: [], 
     tours: [], 
-    instruments: [], 
     phrases: [], 
+    uzbekLessons: [],
+    uzbekQuizzes: [],
     pageBanners: { tours: '', regions: '', cuisine: '', about: '', art: '', language: '' } 
   });
   
@@ -214,6 +215,8 @@ export default function AdminPanel() {
       const resI = await axios.get(`${API_BASE}/instruments`).catch(() => null);
       const resP = await axios.get(`${API_BASE}/phrases`).catch(() => null);
       const resH = await axios.get(`${API_BASE}/homeFacts`).catch(() => null);
+      const resUL = await axios.get(`${API_BASE}/uzbekLessons`).catch(() => null);
+      const resUQ = await axios.get(`${API_BASE}/uzbekQuizzes`).catch(() => null);
 
       const localStore = getAllStoredDB();
 
@@ -224,6 +227,8 @@ export default function AdminPanel() {
       const iData = localStore.instruments || resI?.data || [];
       const pData = localStore.phrases || resP?.data || [];
       const hData = localStore.homeFacts || resH?.data || homeFacts;
+      const ulData = localStore.uzbekLessons || resUL?.data || [];
+      const uqData = localStore.uzbekQuizzes || resUQ?.data || [];
 
       setData({
         regions: rData,
@@ -231,7 +236,9 @@ export default function AdminPanel() {
         tours: tData,
         pageBanners: bData,
         instruments: iData,
-        phrases: pData
+        phrases: pData,
+        uzbekLessons: ulData,
+        uzbekQuizzes: uqData
       });
       if (hData) setHomeFacts(hData);
     } catch (err) {
@@ -851,6 +858,70 @@ export default function AdminPanel() {
               </ul>
             </div>
 
+            {/* 7. O'zbek Darslari */}
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div className="flex justify-between items-center mb-3 bg-slate-900 text-white p-3 rounded-xl">
+                <h2 className="font-bold text-sm">O'zbek Darslari ({data.uzbekLessons?.length || 0})</h2>
+                <button 
+                  onClick={() => {
+                    setEditing({ id: 'new', type: 'uzbekLessons' });
+                    setFormData({ title: '', description: '' });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }} 
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition-all shadow-sm"
+                >
+                  + Qo'shish
+                </button>
+              </div>
+              <ul className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {data.uzbekLessons?.map(l => (
+                  <li key={l.id} className="flex justify-between items-center bg-slate-50/70 p-2.5 rounded-xl border border-slate-100 hover:border-slate-300 transition-colors">
+                    <span className="font-medium text-slate-800 text-sm truncate mr-2">{l.title}</span>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button onClick={() => handleEdit(l, 'uzbekLessons')} className="text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1 rounded-lg transition-colors shadow-sm">
+                        Tahrirlash
+                      </button>
+                      <button onClick={() => handleDelete(l.id, 'uzbekLessons')} className="text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1 rounded-lg transition-colors shadow-sm">
+                        O'chirish
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* 8. O'zbek Testlari */}
+            <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+              <div className="flex justify-between items-center mb-3 bg-slate-900 text-white p-3 rounded-xl">
+                <h2 className="font-bold text-sm">O'zbek Testlari ({data.uzbekQuizzes?.length || 0})</h2>
+                <button 
+                  onClick={() => {
+                    setEditing({ id: 'new', type: 'uzbekQuizzes' });
+                    setFormData({ lessonId: '', question: '', options: [], correctAnswer: '' });
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }} 
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition-all shadow-sm"
+                >
+                  + Qo'shish
+                </button>
+              </div>
+              <ul className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {data.uzbekQuizzes?.map(q => (
+                  <li key={q.id} className="flex justify-between items-center bg-slate-50/70 p-2.5 rounded-xl border border-slate-100 hover:border-slate-300 transition-colors">
+                    <span className="font-medium text-slate-800 text-sm truncate mr-2">{q.question}</span>
+                    <div className="flex gap-1.5 shrink-0">
+                      <button onClick={() => handleEdit(q, 'uzbekQuizzes')} className="text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1 rounded-lg transition-colors shadow-sm">
+                        Tahrirlash
+                      </button>
+                      <button onClick={() => handleDelete(q.id, 'uzbekQuizzes')} className="text-xs bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1 rounded-lg transition-colors shadow-sm">
+                        O'chirish
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
 
           {/* Right Main Form Section */}
@@ -870,7 +941,7 @@ export default function AdminPanel() {
                 </div>
                 
                 <div className="space-y-5 mb-8">
-                  {editing.type !== 'phrases' && (
+                  {editing.type !== 'phrases' && editing.type !== 'uzbekLessons' && editing.type !== 'uzbekQuizzes' && (
                     <>
                       <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
                         <span className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Sarlavha / Nomi (Multi-Language)</span>
@@ -1429,6 +1500,47 @@ export default function AdminPanel() {
                             </button>
                           </div>
                         )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Uzbek Lessons Specific */}
+                  {editing.type === 'uzbekLessons' && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Dars Nomi (Title)</label>
+                        <input className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm font-bold" placeholder="Masalan: Salomlashish" value={formData.title || ''} onChange={e => updateField('title', e.target.value)} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tavsif (Description)</label>
+                        <textarea className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm h-32" placeholder="Masalan: Ushbu darsda biz..." value={formData.description || ''} onChange={e => updateField('description', e.target.value)} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Uzbek Quizzes Specific */}
+                  {editing.type === 'uzbekQuizzes' && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Qaysi darsga tegishli? (Lesson ID)</label>
+                        <select className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm font-bold" value={formData.lessonId || ''} onChange={e => updateField('lessonId', e.target.value)}>
+                          <option value="">Darsni tanlang...</option>
+                          {data.uzbekLessons?.map(l => (
+                            <option key={l.id} value={l.id}>{l.title}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Savol (Question)</label>
+                        <input className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm font-bold" placeholder="Masalan: Rahmat qanday tarjima qilinadi?" value={formData.question || ''} onChange={e => updateField('question', e.target.value)} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Variantlar (Options - vergul bilan ajrating)</label>
+                        <input className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm" placeholder="Masalan: Ciao, Grazie, Prego" value={formData.options ? formData.options.join(', ') : ''} onChange={e => updateField('options', e.target.value.split(',').map(s => s.trim()))} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">To'g'ri javob (Correct Answer)</label>
+                        <input className="w-full border border-slate-200 bg-slate-50/50 p-3 rounded-xl text-sm font-bold text-emerald-700" placeholder="Masalan: Grazie" value={formData.correctAnswer || ''} onChange={e => updateField('correctAnswer', e.target.value)} />
                       </div>
                     </div>
                   )}
@@ -2132,7 +2244,7 @@ export default function AdminPanel() {
               </button>
               <button 
                 type="button" 
-                onClick={saveCroppedImage} 
+                onClick={handleCropDone} 
                 className="px-6 py-2.5 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all"
               >
                 Qirqish va Saqlash (95% HD)

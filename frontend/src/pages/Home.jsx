@@ -69,6 +69,32 @@ export default function Home({ currentLang }) {
 
   const [newsItems, setNewsItems] = useState([]);
 
+  const [weather, setWeather] = useState({ temp: 33, wind: 14, condition: 'weatherSunny', isLoaded: false });
+
+  useEffect(() => {
+    // Fetch Tashkent weather from free Open-Meteo API
+    axios.get('https://api.open-meteo.com/v1/forecast?latitude=41.2995&longitude=69.2401&current=temperature_2m,wind_speed_10m,weather_code&wind_speed_unit=ms')
+      .then(res => {
+        const current = res.data.current;
+        const code = current.weather_code;
+        let condKey = 'weatherSunny';
+        
+        if (code >= 1 && code <= 3) condKey = 'weatherCloudy';
+        else if (code >= 45 && code <= 48) condKey = 'weatherCloudy';
+        else if (code >= 51 && code <= 67) condKey = 'weatherRainy';
+        else if (code >= 71 && code <= 86) condKey = 'weatherSnowy';
+        else if (code >= 80 && code <= 99) condKey = 'weatherRainy';
+
+        setWeather({
+          temp: Math.round(current.temperature_2m),
+          wind: Math.round(current.wind_speed_10m),
+          condition: condKey,
+          isLoaded: true
+        });
+      })
+      .catch(err => console.error("Weather fetch error:", err));
+  }, []);
+
   useEffect(() => {
     const savedFacts = getStoredData('homeFacts', null);
     if (savedFacts && savedFacts.headline) {
@@ -287,11 +313,13 @@ export default function Home({ currentLang }) {
                 <Sun className="w-5 h-5 animate-[spin_20s_linear_infinite]" />
               </div>
               <div>
-                <span className="text-xl font-serif font-bold text-slate-900 leading-none">33°C</span>
+                <span className="text-xl font-serif font-bold text-slate-900 leading-none">{weather.temp}°C</span>
                 <span className="block text-[9px] font-extrabold tracking-wider uppercase text-slate-700 mt-0.5">
                   {t('toshkentShahri', currentLang.code)}
                 </span>
-                <span className="block text-[9px] text-slate-400">{t('weatherSunny', currentLang.code)} • 14 m/s</span>
+                <span className="block text-[9px] text-slate-400">
+                  {t(weather.condition, currentLang.code) || weather.condition.replace('weather', '')} • {weather.wind} m/s
+                </span>
               </div>
             </div>
           </div>
@@ -400,7 +428,7 @@ export default function Home({ currentLang }) {
               {uzbMapPaths.map((reg) => {
                 const isSelected = activeRegion?.id === reg.id;
                 const isHovered = hoveredRegion?.id === reg.id;
-                const displayName = reg.displayName || reg.name;
+                const displayName = reg["displayName_" + lang] || reg.displayName || reg.name;
 
                 return (
                   <g 

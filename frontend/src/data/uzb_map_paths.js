@@ -7,7 +7,10 @@ export const uzbMapPaths = [
     "labelX": 765,
     "labelY": 280,
     "color": "#e5d58d",
-    "displayName": "TOSHKENT SHAHRI"
+    "displayName": "TOSHKENT SHAHRI",
+    "displayName_uz": "TOSHKENT SHAHRI",
+    "displayName_en": "TASHKENT CITY",
+    "displayName_it": "CITTÀ DI TASHKENT"
   },
   {
     "id": "namangan",
@@ -17,7 +20,10 @@ export const uzbMapPaths = [
     "labelX": 875,
     "labelY": 295,
     "color": "#f3c6b6",
-    "displayName": "NAMANGAN"
+    "displayName": "NAMANGAN",
+    "displayName_uz": "NAMANGAN",
+    "displayName_en": "NAMANGAN",
+    "displayName_it": "NAMANGAN"
   },
   {
     "id": "toshkent",
@@ -27,7 +33,10 @@ export const uzbMapPaths = [
     "labelX": 795,
     "labelY": 250,
     "color": "#dacb80",
-    "displayName": "TOSHKENT"
+    "displayName": "TOSHKENT",
+    "displayName_uz": "TOSHKENT",
+    "displayName_en": "TASHKENT REGION",
+    "displayName_it": "REGIONE DI TASHKENT"
   },
   {
     "id": "fargona",
@@ -37,7 +46,10 @@ export const uzbMapPaths = [
     "labelX": 875,
     "labelY": 350,
     "color": "#f8da64",
-    "displayName": "FARG'ONA"
+    "displayName": "FARG'ONA",
+    "displayName_uz": "FARG'ONA",
+    "displayName_en": "FERGANA",
+    "displayName_it": "FERGANA"
   },
   {
     "id": "andijon",
@@ -47,7 +59,10 @@ export const uzbMapPaths = [
     "labelX": 935,
     "labelY": 322,
     "color": "#bad769",
-    "displayName": "ANDIJON"
+    "displayName": "ANDIJON",
+    "displayName_uz": "ANDIJON",
+    "displayName_en": "ANDIJAN",
+    "displayName_it": "ANDIJAN"
   },
   {
     "id": "guliston",
@@ -57,7 +72,10 @@ export const uzbMapPaths = [
     "labelX": 730,
     "labelY": 330,
     "color": "#b4cf63",
-    "displayName": "SIRDARYO"
+    "displayName": "SIRDARYO",
+    "displayName_uz": "SIRDARYO",
+    "displayName_en": "SYRDARYA",
+    "displayName_it": "SYRDARYA"
   },
   {
     "id": "jizzax",
@@ -67,7 +85,10 @@ export const uzbMapPaths = [
     "labelX": 680,
     "labelY": 350,
     "color": "#ab99bf",
-    "displayName": "JIZZAX"
+    "displayName": "JIZZAX",
+    "displayName_uz": "JIZZAX",
+    "displayName_en": "JIZZAKH",
+    "displayName_it": "JIZZAKH"
   },
   {
     "id": "navoiy",
@@ -77,7 +98,10 @@ export const uzbMapPaths = [
     "labelX": 500,
     "labelY": 255,
     "color": "#f7ab45",
-    "displayName": "NAVOIY"
+    "displayName": "NAVOIY",
+    "displayName_uz": "NAVOIY",
+    "displayName_en": "NAVOIY",
+    "displayName_it": "NAVOIY"
   },
   {
     "id": "samarqand",
@@ -87,7 +111,10 @@ export const uzbMapPaths = [
     "labelX": 595,
     "labelY": 375,
     "color": "#fef172",
-    "displayName": "SAMARQAND"
+    "displayName": "SAMARQAND",
+    "displayName_uz": "SAMARQAND",
+    "displayName_en": "SAMARKAND",
+    "displayName_it": "SAMARCANDA"
   },
   {
     "id": "qarshi",
@@ -97,7 +124,10 @@ export const uzbMapPaths = [
     "labelX": 585,
     "labelY": 445,
     "color": "#f9c3ae",
-    "displayName": "QASHQADARYO"
+    "displayName": "QASHQADARYO",
+    "displayName_uz": "QASHQADARYO",
+    "displayName_en": "KASHKADARYA",
+    "displayName_it": "KASHKADARYA"
   },
   {
     "id": "termiz",
@@ -107,7 +137,10 @@ export const uzbMapPaths = [
     "labelX": 665,
     "labelY": 485,
     "color": "#9ec254",
-    "displayName": "SURXONDARYO"
+    "displayName": "SURXONDARYO",
+    "displayName_uz": "SURXONDARYO",
+    "displayName_en": "SURKHANDARYA",
+    "displayName_it": "SURKHANDARYA"
   },
   {
     "id": "buxoro",
@@ -117,7 +150,10 @@ export const uzbMapPaths = [
     "labelX": 455,
     "labelY": 365,
     "color": "#c9b068",
-    "displayName": "BUXORO"
+    "displayName": "BUXORO",
+    "displayName_uz": "BUXORO",
+    "displayName_en": "BUKHARA",
+    "displayName_it": "BUKHARA"
   },
   {
     "id": "xiva",
@@ -127,7 +163,10 @@ export const uzbMapPaths = [
     "labelX": 295,
     "labelY": 285,
     "color": "#b3d463",
-    "displayName": "XORAZM"
+    "displayName": "XORAZM",
+    "displayName_uz": "XORAZM",
+    "displayName_en": "KHOREZM",
+    "displayName_it": "KHOREZM"
   },
   {
     "id": "nukus",
@@ -137,6 +176,9 @@ export const uzbMapPaths = [
     "labelX": 220,
     "labelY": 215,
     "color": "#b49bc5",
-    "displayName": "QARAQALPAQSTAN"
+    "displayName": "QARAQALPAQSTAN",
+    "displayName_uz": "QARAQALPAQSTAN",
+    "displayName_en": "KARAKALPAKSTAN",
+    "displayName_it": "KARAKALPAKSTAN"
   }
 ];

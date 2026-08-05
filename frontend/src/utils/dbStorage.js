@@ -4,9 +4,17 @@
 import { initialDb } from '../data/initialDbData';
 
 const STORAGE_KEY = 'afrasia_db_store';
+const VERSION_KEY = 'afrasia_db_version';
+const CURRENT_VERSION = 'v2'; // Bumped to force clear old single-language data
 
 export const getStoredData = (key, fallback = null) => {
   try {
+    const ver = localStorage.getItem(VERSION_KEY);
+    if (ver !== CURRENT_VERSION) {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
+      return initialDb[key] || fallback || [];
+    }
     const store = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if (store[key] && Array.isArray(store[key]) && store[key].length > 0) {
       return store[key];

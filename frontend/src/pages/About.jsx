@@ -80,14 +80,14 @@ export default function About({ currentLang }) {
   }, []);
 
   const displayFacts = aboutData.facts && aboutData.facts.length > 0 ? aboutData.facts : [
-    { subtitle: "Rasmiy nomi", title: "O'zbekiston Respublikasi" },
-    { subtitle: "Poytaxti", title: "Toshkent" },
-    { subtitle: "Maydoni", title: "448 978 km²" },
-    { subtitle: "Aholisi", title: "36 million+ (2024)" },
-    { subtitle: "Rasmiy tili", title: "O'zbek tili" },
-    { subtitle: "Valyutasi", title: "O'zbek so'mi (UZS)" },
-    { subtitle: "Vaqt mintaqasi", title: "UTC +5" },
-    { subtitle: "Mustaqillik kuni", title: "1991-yil 1-sentabr" }
+    { subtitle_uz: "Rasmiy nomi", title_uz: "O'zbekiston Respublikasi", subtitle_en: "Official Name", title_en: "Republic of Uzbekistan", subtitle_it: "Nome Ufficiale", title_it: "Repubblica dell'Uzbekistan" },
+    { subtitle_uz: "Poytaxti", title_uz: "Toshkent", subtitle_en: "Capital", title_en: "Tashkent", subtitle_it: "Capitale", title_it: "Tashkent" },
+    { subtitle_uz: "Maydoni", title_uz: "448 978 km²", subtitle_en: "Area", title_en: "448,978 km²", subtitle_it: "Area", title_it: "448.978 km²" },
+    { subtitle_uz: "Aholisi", title_uz: "36 million+ (2024)", subtitle_en: "Population", title_en: "36 million+ (2024)", subtitle_it: "Popolazione", title_it: "Oltre 36 milioni (2024)" },
+    { subtitle_uz: "Rasmiy tili", title_uz: "O'zbek tili", subtitle_en: "Official Language", title_en: "Uzbek", subtitle_it: "Lingua Ufficiale", title_it: "Uzbeko" },
+    { subtitle_uz: "Valyutasi", title_uz: "O'zbek so'mi (UZS)", subtitle_en: "Currency", title_en: "Uzbek som (UZS)", subtitle_it: "Valuta", title_it: "Som uzbeko (UZS)" },
+    { subtitle_uz: "Vaqt mintaqasi", title_uz: "UTC +5", subtitle_en: "Time Zone", title_en: "UTC +5", subtitle_it: "Fuso Orario", title_it: "UTC +5" },
+    { subtitle_uz: "Mustaqillik kuni", title_uz: "1991-yil 1-sentabr", subtitle_en: "Independence Day", title_en: "September 1, 1991", subtitle_it: "Giorno dell'Indipendenza", title_it: "1 Settembre 1991" }
   ];
 
   const mapRegions = [

@@ -772,8 +772,6 @@ export default function App() {
 
             {/* Concise Contact Info & Discrete Admin Panel Link */}
             <div className="text-xs text-slate-200 text-center md:text-right space-y-1 shrink-0">
-              <div>Email: <span className="font-bold text-white">baxronovquvonchbek11@gmail.com</span></div>
-              <div>Telefon: <span className="font-bold text-white">+998 94 433 88 48</span></div>
               <div className="pt-1">
                 <Link 
                   to="/admin" 
