@@ -8,7 +8,7 @@ export default function GoUzbekistan() {
   const [allPlaces, setAllPlaces] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1600&q=80");
+  const [bannerUrl, setBannerUrl] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -245,7 +245,7 @@ export default function GoUzbekistan() {
                   {/* Image Showcase */}
                   <div className="h-56 overflow-hidden relative">
                     <img 
-                      src={place.image || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=800&q=80'} 
+                      src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                       alt={place.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -343,7 +343,7 @@ export default function GoUzbekistan() {
             {/* Modal Header Banner Image */}
             <div className="relative h-72 sm:h-96 w-full">
               <img 
-                src={selectedPlace.image || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1200&q=80'} 
+                src={selectedPlace.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                 alt={selectedPlace.name} 
                 className="w-full h-full object-cover"
               />

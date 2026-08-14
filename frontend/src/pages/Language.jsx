@@ -74,7 +74,7 @@ export default function Language({ currentLang }) {
 
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.language || "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1600&q=80";
+    return b.language || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   });
 
   // Main Tabs State: 'phrases', 'lessons', 'history'

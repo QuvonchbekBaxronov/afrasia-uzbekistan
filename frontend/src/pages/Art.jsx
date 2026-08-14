@@ -22,7 +22,7 @@ export default function Art({ currentLang }) {
   const [instruments, setInstruments] = useState(() => getStoredData('instruments', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.art || "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80";
+    return b.art || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   });
   const [activeVideo, setActiveVideo] = useState(null);
 

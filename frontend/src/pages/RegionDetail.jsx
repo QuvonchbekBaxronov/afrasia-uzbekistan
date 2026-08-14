@@ -335,7 +335,7 @@ export default function RegionDetail({ currentLang }) {
                           {/* Image & Badges */}
                           <div className="h-52 overflow-hidden relative">
                             <img 
-                              src={place.image || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=800&q=80'} 
+                              src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                               alt={placeName} 
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />

@@ -1721,7 +1721,7 @@ export default function AdminPanel() {
             </span>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <img 
-                src={homeFacts.aboutImage || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1200&q=80'} 
+                src={homeFacts.aboutImage || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                 alt="About Showcase" 
                 className="h-28 w-full sm:w-48 object-cover rounded-xl border border-slate-200 shadow-sm shrink-0" 
               />
@@ -1878,7 +1878,7 @@ export default function AdminPanel() {
                 
                 {/* Photo & File Upload */}
                 <div className="space-y-2">
-                  <img src={homeFacts.historyOriginsImage || 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=600&q=80'} alt="Origins" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
+                  <img src={homeFacts.historyOriginsImage || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} alt="Origins" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
                   <label className="block text-[10px] font-extrabold text-slate-600 uppercase">Fayldan Rasm Yuklash va Qirqish:</label>
                   <input type="file" accept="image/*" className="text-xs w-full bg-slate-50 p-2 border border-slate-200 rounded-xl cursor-pointer" onChange={e => handleTopicImageUpload(e, 'historyOriginsImage')} />
                   <input type="text" placeholder="yoki Rasm URL manzili..." className="w-full p-2 border border-slate-200 rounded-xl text-xs" value={homeFacts.historyOriginsImage || ''} onChange={e => setHomeFacts({ ...homeFacts, historyOriginsImage: e.target.value })} />

@@ -10,7 +10,7 @@ export default function Regions({ currentLang }) {
   const [regions, setRegions] = useState(() => getStoredData('regions', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.regions || "https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1600&q=80";
+    return b.regions || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   });
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function Regions({ currentLang }) {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={reg.image || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=800&q=80'} 
+                    src={reg.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                     alt={name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />

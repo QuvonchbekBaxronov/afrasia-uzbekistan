@@ -394,7 +394,7 @@ export default function MapOfUzbekistan() {
           <div className="group relative rounded-2xl overflow-hidden shadow-md aspect-[4/3] bg-dark flex flex-col justify-end p-6 cursor-pointer">
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
             <img 
-              src="https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=500&q=80" 
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
               alt="Traveler Guide" 
               className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 group-hover:scale-105"
             />

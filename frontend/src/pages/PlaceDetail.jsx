@@ -279,7 +279,7 @@ export default function PlaceDetail({ currentLang }) {
             <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm space-y-3">
               <div className="h-80 sm:h-[460px] w-full relative bg-slate-900 rounded-lg overflow-hidden">
                 <img 
-                  src={selectedPhoto || place.image || 'https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1200&q=80'} 
+                  src={selectedPhoto || place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
                   alt={placeTitle} 
                   className="w-full h-full object-cover transition-all duration-300"
                 />

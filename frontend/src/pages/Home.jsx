@@ -61,7 +61,7 @@ export default function Home({ currentLang }) {
     population: '2.6M',
     monuments: '1,800+',
     places: '350+',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80',
+    image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
     labelX: 740,
     labelY: 200,
     link: '/regions/toshkent'
@@ -172,7 +172,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Samarcanda' : lang === 'en' ? 'Samarkand' : 'Samarqand',
       subtitle: lang === 'it' ? 'La perla della Via della Seta' : lang === 'en' ? 'Pearl of the Silk Road' : "Ipak yo'li durri",
-      img: getRegionImage('samarqand', 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=600&q=80'),
+      img: getRegionImage('samarqand', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
       link: '/regions/samarqand',
       badge1: 'UNESCO',
       badge2: lang === 'it' ? 'Storia' : lang === 'en' ? 'History' : 'Tarix'
@@ -196,7 +196,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Tashkent' : lang === 'en' ? 'Tashkent' : 'Toshkent',
       subtitle: lang === 'it' ? 'Capitale moderna' : lang === 'en' ? 'Modern capital' : 'Zamonaviy poytaxt',
-      img: getRegionImage('toshkent', 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80'),
+      img: getRegionImage('toshkent', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
       link: '/regions/toshkent',
       badge1: lang === 'it' ? 'Città' : lang === 'en' ? 'City' : 'Shahar',
       badge2: lang === 'it' ? 'Modernità' : lang === 'en' ? 'Modern' : 'Zamonaviy'
@@ -527,7 +527,7 @@ export default function Home({ currentLang }) {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=400&q=80';
+                      e.target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
@@ -636,12 +636,12 @@ export default function Home({ currentLang }) {
                   className="group relative rounded-2xl overflow-hidden h-48 shadow-sm border border-slate-200/80 block transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <img 
-                    src={place.image || 'https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=400&q=80'}
+                    src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}
                     alt={place["name_" + lang] || place.name || place["title_" + lang] || place.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1596484552834-6a58f850e0a1?auto=format&fit=crop&w=400&q=80';
+                      e.target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>

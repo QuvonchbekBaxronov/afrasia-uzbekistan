@@ -10,7 +10,7 @@ export default function Cuisine({ currentLang }) {
   const [cuisine, setCuisine] = useState(() => getStoredData('cuisine', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.cuisine || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80";
+    return b.cuisine || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
   });
 
   useEffect(() => {
