@@ -26,8 +26,8 @@ export const translations = {
     quickLinks: "Link Rapidi",
     contactUs: "Contattaci",
     address: "Tashkent, Uzbekistan",
-    phone: "Telefono: +998 71 123 45 67",
-    email: "Email: info@afrasia.uz",
+    phone: "Telefono: +998 94 433 88 48",
+    email: "Email: baxronovquvonchbek11@gmail.com",
     rights: "Tutti i diritti riservati.",
 
     // General UI / Buttons
@@ -38,6 +38,9 @@ export const translations = {
     watchVideo: "Guarda il video",
     toshkentShahri: "Città di Tashkent",
     weatherSunny: "Soleggiato",
+    weatherCloudy: "Nuvoloso",
+    weatherRainy: "Piovoso",
+    weatherSnowy: "Nevoso",
     popularDestinations: "Destinazioni popolari",
     allDestinations: "Tutte le destinazioni",
     heritage: "Eredità unica",
@@ -85,6 +88,19 @@ export const translations = {
     listen: "Ascolta",
     categoryAll: "Tutti",
 
+    // Learn Uzbek (Quizzes)
+    learnUzbek: "Impara l'uzbeco",
+    lessonsAndTests: "Lezioni e Test",
+    testHistoryTab: "Cronologia dei Test",
+    startTest: "Inizia il Test",
+    submitTest: "Invia Test",
+    score: "Punteggio",
+    questions: "Domande",
+    noLessons: "Nessuna lezione disponibile",
+    noHistory: "Nessuna cronologia dei test",
+    date: "Data",
+    level: "Livello",
+
     // Admin Panel Link
     adminPanel: "Admin Panel"
   },
@@ -115,8 +131,8 @@ export const translations = {
     quickLinks: "Quick Links",
     contactUs: "Contact Us",
     address: "Tashkent, Uzbekistan",
-    phone: "Phone: +998 71 123 45 67",
-    email: "Email: info@afrasia.uz",
+    phone: "Phone: +998 94 433 88 48",
+    email: "Email: baxronovquvonchbek11@gmail.com",
     rights: "All rights reserved.",
 
     // General UI / Buttons
@@ -127,6 +143,9 @@ export const translations = {
     watchVideo: "Watch Video",
     toshkentShahri: "Tashkent City",
     weatherSunny: "Sunny",
+    weatherCloudy: "Cloudy",
+    weatherRainy: "Rainy",
+    weatherSnowy: "Snowy",
     popularDestinations: "Popular Destinations",
     allDestinations: "All Destinations",
     heritage: "Unique Heritage",
@@ -174,6 +193,19 @@ export const translations = {
     listen: "Listen",
     categoryAll: "All",
 
+    // Learn Uzbek (Quizzes)
+    learnUzbek: "Learn Uzbek",
+    lessonsAndTests: "Lessons & Tests",
+    testHistoryTab: "Test History",
+    startTest: "Start Test",
+    submitTest: "Submit Test",
+    score: "Score",
+    questions: "Questions",
+    noLessons: "No lessons available",
+    noHistory: "No test history yet",
+    date: "Date",
+    level: "Level",
+
     // Admin Panel Link
     adminPanel: "Admin Panel"
   },
@@ -204,8 +236,8 @@ export const translations = {
     quickLinks: "Tezkor havolalar",
     contactUs: "Bog'lanish",
     address: "Toshkent shahri, O'zbekiston",
-    phone: "Tel: +998 71 123 45 67",
-    email: "Email: info@afrasia.uz",
+    phone: "Tel: +998 94 433 88 48",
+    email: "Email: baxronovquvonchbek11@gmail.com",
     rights: "Barcha huquqlar himoyalangan.",
 
     // General UI / Buttons
@@ -216,6 +248,9 @@ export const translations = {
     watchVideo: "Videoni tomosha qilish",
     toshkentShahri: "Toshkent shahri",
     weatherSunny: "Quyoshli",
+    weatherCloudy: "Bulutli",
+    weatherRainy: "Yomg'irli",
+    weatherSnowy: "Qorli",
     popularDestinations: "Mashhur yo'nalishlar",
     allDestinations: "Barcha yo'nalishlar",
     heritage: "Betakror meros",
@@ -262,6 +297,19 @@ export const translations = {
     context: "Qo'llanish joyi",
     listen: "Tinglash",
     categoryAll: "Barchasi",
+
+    // Learn Uzbek (Quizzes)
+    learnUzbek: "O'zbek tilini o'rganish",
+    lessonsAndTests: "Darslar va Testlar",
+    testHistoryTab: "Test Tarixi",
+    startTest: "Testni boshlash",
+    submitTest: "Testni yakunlash",
+    score: "Natija",
+    questions: "Savollar",
+    noLessons: "Hozircha darslar yo'q",
+    noHistory: "Hozircha test tarixi yo'q",
+    date: "Sana",
+    level: "Daraja",
 
     // Admin Panel Link
     adminPanel: "Admin Panel"

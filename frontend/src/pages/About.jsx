@@ -6,7 +6,7 @@ import { API_BASE } from '../config/api';
 
 export default function About({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [bannerUrl, setBannerUrl] = useState("https://images.unsplash.com/photo-1596422846543-75c6fc197f0a?auto=format&fit=crop&w=1600&q=80");
+  const [bannerUrl, setBannerUrl] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
   const [aboutData, setAboutData] = useState({
     aboutHeroTitle_it: "Informazioni sull'Uzbekistan",
     aboutHeroTitle_en: "About Uzbekistan",
@@ -32,7 +32,7 @@ export default function About({ currentLang }) {
     historyOrigins_it: "L'Uzbekistan è una culla della civiltà situata al centro della Via della Seta.",
     historyOrigins_en: "Uzbekistan is a cradle of civilization situated at the heart of the Silk Road.",
     historyOrigins_uz: "O'zbekiston — Buyuk Ipak yo'li markazida joylashgan qadimiy sivilizatsiyalar beshigi.",
-    historyOriginsImage: "https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=600&q=80",
+    historyOriginsImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
     religionFaithTitle_it: "Religione e Storia Spirituale",
     religionFaithTitle_en: "Religion & Spiritual Heritage",
     religionFaithTitle_uz: "Din va E'tiqod Tarixi",
@@ -80,14 +80,14 @@ export default function About({ currentLang }) {
   }, []);
 
   const displayFacts = aboutData.facts && aboutData.facts.length > 0 ? aboutData.facts : [
-    { subtitle: "Rasmiy nomi", title: "O'zbekiston Respublikasi" },
-    { subtitle: "Poytaxti", title: "Toshkent" },
-    { subtitle: "Maydoni", title: "448 978 km²" },
-    { subtitle: "Aholisi", title: "36 million+ (2024)" },
-    { subtitle: "Rasmiy tili", title: "O'zbek tili" },
-    { subtitle: "Valyutasi", title: "O'zbek so'mi (UZS)" },
-    { subtitle: "Vaqt mintaqasi", title: "UTC +5" },
-    { subtitle: "Mustaqillik kuni", title: "1991-yil 1-sentabr" }
+    { subtitle_uz: "Rasmiy nomi", title_uz: "O'zbekiston Respublikasi", subtitle_en: "Official Name", title_en: "Republic of Uzbekistan", subtitle_it: "Nome Ufficiale", title_it: "Repubblica dell'Uzbekistan" },
+    { subtitle_uz: "Poytaxti", title_uz: "Toshkent", subtitle_en: "Capital", title_en: "Tashkent", subtitle_it: "Capitale", title_it: "Tashkent" },
+    { subtitle_uz: "Maydoni", title_uz: "448 978 km²", subtitle_en: "Area", title_en: "448,978 km²", subtitle_it: "Area", title_it: "448.978 km²" },
+    { subtitle_uz: "Aholisi", title_uz: "36 million+ (2024)", subtitle_en: "Population", title_en: "36 million+ (2024)", subtitle_it: "Popolazione", title_it: "Oltre 36 milioni (2024)" },
+    { subtitle_uz: "Rasmiy tili", title_uz: "O'zbek tili", subtitle_en: "Official Language", title_en: "Uzbek", subtitle_it: "Lingua Ufficiale", title_it: "Uzbeko" },
+    { subtitle_uz: "Valyutasi", title_uz: "O'zbek so'mi (UZS)", subtitle_en: "Currency", title_en: "Uzbek som (UZS)", subtitle_it: "Valuta", title_it: "Som uzbeko (UZS)" },
+    { subtitle_uz: "Vaqt mintaqasi", title_uz: "UTC +5", subtitle_en: "Time Zone", title_en: "UTC +5", subtitle_it: "Fuso Orario", title_it: "UTC +5" },
+    { subtitle_uz: "Mustaqillik kuni", title_uz: "1991-yil 1-sentabr", subtitle_en: "Independence Day", title_en: "September 1, 1991", subtitle_it: "Giorno dell'Indipendenza", title_it: "1 Settembre 1991" }
   ];
 
   const mapRegions = [
@@ -116,7 +116,7 @@ export default function About({ currentLang }) {
           text_it: "Durante le campagne di Alessandro Magno, Samarcanda (Maracanda) era famosa per le sue fortezze e il commercio.",
           text_en: "During Alexander the Great's campaigns, Samarkand (Maracanda) stood as a world-famous fortress along the Silk Road.",
           text_uz: "Buyuk Iskandar yurishi davrida Samarqand (Marakanda) dunyoga mashhur savdo va madaniyat markazi bo'lgan.",
-          image: "https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=600&q=80"
+          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
         },
         { 
           id: 2,
@@ -125,7 +125,7 @@ export default function About({ currentLang }) {
           text_it: "L'arrivo dell'Islam avviò uno straordinario sviluppo scientifico e architettonico.",
           text_en: "The arrival of Islamic culture marked a golden era in mathematics, astronomy, and architecture.",
           text_uz: "Islom madaniyati kirib kelishi bilan matematika, astronomiya va me'morchilik rivojlandi.",
-          image: "https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=600&q=80"
+          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
         },
         { 
           id: 3,
@@ -152,7 +152,7 @@ export default function About({ currentLang }) {
           text_it: "L'Uzbekistan ottiene l'indipendenza e valorizza il suo ricco patrimonio storico.",
           text_en: "The Republic of Uzbekistan declared independence, preserving its rich history for the world.",
           text_uz: "O'zbekiston Respublikasi mustaqillikka erishib, boy madaniyatini tikladi.",
-          image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=600&q=80"
+          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
         }
       ];
 
@@ -225,7 +225,7 @@ export default function About({ currentLang }) {
             <div className="bg-white rounded-2xl overflow-hidden border border-slate-150 shadow-sm hover:shadow-lg transition-all group flex flex-col">
               <div className="h-48 overflow-hidden relative">
                 <img 
-                  src={aboutData.historyOriginsImage || "https://images.unsplash.com/photo-1588392382834-a891154bca4d?auto=format&fit=crop&w=600&q=80"} 
+                  src={aboutData.historyOriginsImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="} 
                   alt="Origins" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                 />
