@@ -346,8 +346,39 @@ export default function PlaceDetail({ currentLang }) {
 
                 <div className="flex justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
                   <span className="text-slate-500 font-medium">{lang === 'it' ? 'Tipo di luogo:' : lang === 'en' ? 'Place Type:' : 'Joy turi:'}</span>
-                  <span className="font-bold text-slate-900">{place.category || 'Diqqatga sazovor'}</span>
+                  <span className="font-bold text-slate-900">{place["category_" + lang] || place.category || 'Diqqatga sazovor'}</span>
                 </div>
+
+                {(place.latitude || (place.coordinates && place.coordinates.lat)) && (
+                  <div className="flex justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span className="text-slate-500 font-medium">{lang === 'it' ? 'Coordinate GPS:' : lang === 'en' ? 'GPS Coordinates:' : 'Koordinatalar:'}</span>
+                    <span className="font-mono text-slate-800 text-[11px] font-bold">
+                      {place.latitude || place.coordinates.lat}, {place.longitude || place.coordinates.lng}
+                    </span>
+                  </div>
+                )}
+
+                {(place["bestSeason_" + lang] || place.bestSeason) && (
+                  <div className="flex justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span className="text-slate-500 font-medium">{lang === 'it' ? 'Periodo consigliato:' : lang === 'en' ? 'Recommended Season:' : 'Tavsiya mavsumi:'}</span>
+                    <span className="font-bold text-slate-900 text-right">{place["bestSeason_" + lang] || place.bestSeason}</span>
+                  </div>
+                )}
+
+                {place.tags && place.tags.length > 0 && (
+                  <div className="pt-2">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider block mb-1.5">
+                      {lang === 'it' ? 'Caratteristiche:' : lang === 'en' ? 'Highlights:' : 'Teglar va qulayliklar:'}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {place.tags.map((tg, tidx) => (
+                        <span key={tidx} className="bg-emerald-50 text-emerald-800 border border-emerald-100 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                          #{tg}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {place.mapUrl && (

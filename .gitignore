@@ -13,3 +13,4 @@ svg_paths.json
 frontend/node_modules
 frontend/dist
 frontend/db_backup.json
+bin/

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "usr_mock_1791188324006",
+    "email": "baxronovquvonchbek11@gmail.com",
+    "name": "s",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    "phone": "+998 90 123 45 67",
+    "bio": "Afrasia sayyohi va Ipak Yo'li madaniyati ixlosmandi.",
+    "role": "USER",
+    "locale": "uz",
+    "xp": 120,
+    "streak": 3,
+    "hearts": 5,
+    "savedPlaces": [
+      "hazrati-imom",
+      "tashkent-city-heritage"
+    ],
+    "isEmailVerified": true,
+    "createdAt": "2026-10-05T08:18:44.006Z",
+    "lastLoginAt": "2026-10-05T08:37:49.506Z",
+    "updatedAt": "2026-10-05T08:37:49.506Z"
+  }
+]

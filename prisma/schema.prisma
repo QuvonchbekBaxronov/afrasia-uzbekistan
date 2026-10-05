@@ -1,0 +1,171 @@
+// Prisma Schema for Afrasia Uzbekistan Platform
+// Models for Google Auth, User Profile, Favorites, Tour Bookings, and Duolingo Learning Engine
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+  GUIDE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum ExerciseType {
+  READING
+  WRITING
+  LISTENING
+  SPEAKING
+  MATCHING
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String
+  avatar        String?
+  googleId      String?        @unique @map("google_id")
+  role          Role           @default(USER)
+  locale        String         @default("it")
+  
+  // Gamification Metrics
+  xp            Int            @default(0)
+  streak        Int            @default(1)
+  hearts        Int            @default(5)
+  lastActiveAt  DateTime       @default(now()) @map("last_active_at")
+  
+  // Relations
+  savedPlaces   SavedPlace[]
+  tourBookings  TourBooking[]
+  userProgress  UserProgress[]
+  
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model SavedPlace {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  placeId   String   @map("place_id")
+  placeType String   @default("place") @map("place_type") // "place" or "tour"
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, placeId])
+  @@map("saved_places")
+}
+
+model TourBooking {
+  id               String        @id @default(uuid())
+  bookingReference String        @unique @map("booking_reference") // e.g. AFR-2026-XXXXXX
+  userId           String        @map("user_id")
+  tourId           String        @map("tour_id")
+  tourTitle        String        @map("tour_title")
+  bookingDate      DateTime      @map("booking_date")
+  adultsCount      Int           @default(1) @map("adults_count")
+  childrenCount    Int           @default(0) @map("children_count")
+  totalPrice       Decimal       @map("total_price") @db.Decimal(10, 2)
+  currency         String        @default("EUR")
+  status           BookingStatus @default(CONFIRMED)
+  notes            String?
+  customerPhone    String?       @map("customer_phone")
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  @@map("tour_bookings")
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  code        String   @unique // e.g. "it-uz" (Italian to Uzbek)
+  title       String
+  sourceLang  String   @map("source_lang") // "it"
+  targetLang  String   @map("target_lang") // "uz"
+  description String?
+  units       Unit[]
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("courses")
+}
+
+model Unit {
+  id          String   @id @default(uuid())
+  courseId    String   @map("course_id")
+  unitNumber  Int      @map("unit_number")
+  titleIt     String   @map("title_it")
+  titleEn     String   @map("title_en")
+  titleUz     String   @map("title_uz")
+  icon        String   @default("⭐")
+  colorTheme  String   @default("emerald") @map("color_theme")
+  grammarRule String?  @map("grammar_rule") @db.Text
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@unique([courseId, unitNumber])
+  @@map("units")
+}
+
+model Lesson {
+  id           String         @id @default(uuid())
+  unitId       String         @map("unit_id")
+  orderNumber  Int            @map("order_number")
+  titleIt      String         @map("title_it")
+  titleEn      String         @map("title_en")
+  titleUz      String         @map("title_uz")
+  xpReward     Int            @default(15) @map("xp_reward")
+  unit         Unit           @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  exercises    Exercise[]
+  userProgress UserProgress[]
+  createdAt    DateTime       @default(now()) @map("created_at")
+
+  @@unique([unitId, orderNumber])
+  @@map("lessons")
+}
+
+model Exercise {
+  id             String       @id @default(uuid())
+  lessonId       String       @map("lesson_id")
+  orderNumber    Int          @map("order_number")
+  type           ExerciseType
+  promptIt       String       @map("prompt_it")
+  promptUz       String?      @map("prompt_uz")
+  audioUrl       String?      @map("audio_url")
+  phonetic       String?
+  expectedAnswer String       @map("expected_answer")
+  optionsJson    Json?        @map("options_json") // multiple choice options or word bank chips
+  lesson         Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@map("exercises")
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  lessonId    String   @map("lesson_id")
+  isCompleted Boolean  @default(false) @map("is_completed")
+  score       Int      @default(100)
+  starsEarned Int      @default(3) @map("stars_earned")
+  completedAt DateTime @default(now()) @map("completed_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("user_progress")
+}

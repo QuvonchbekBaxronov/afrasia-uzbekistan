@@ -16,10 +16,13 @@ import TourDetail from './pages/TourDetail';
 import Cuisine from './pages/Cuisine';
 import CuisineDetail from './pages/CuisineDetail';
 import Art from './pages/Art';
+import HeritageCulture from './pages/HeritageCulture';
 import Language from './pages/Language';
 import About from './pages/About';
 import GoUzbekistan from './pages/GoUzbekistan';
 import AdminPanel from './pages/AdminPanel';
+import Profile from './pages/Profile';
+import { useAuth } from './context/AuthContext';
 
 import { useAccessibility } from './context/AccessibilityContext';
 import { languages, t } from './utils/translations';
@@ -36,6 +39,7 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { user, setAuthModalOpen } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
@@ -269,18 +273,15 @@ export default function App() {
             {t('tours', currentLang.code)}
           </Link>
 
-          <Link to="/art" className="font-bold hover:text-teal-600 transition-colors text-[11px] xl:text-xs uppercase tracking-wider whitespace-nowrap">
-            {t('art', currentLang.code)}
-          </Link>
-
-          <Link to="/cuisine" className="font-bold hover:text-teal-600 transition-colors text-[11px] xl:text-xs uppercase tracking-wider whitespace-nowrap">
-            {t('cuisine', currentLang.code)}
+          <Link to="/culture" className="font-bold hover:text-teal-600 transition-colors text-[11px] xl:text-xs uppercase tracking-wider whitespace-nowrap">
+            {currentLang.code === 'it' ? 'Cultura & Cucina' : currentLang.code === 'en' ? 'Culture & Food' : 'Madaniyat & Taomlar'}
           </Link>
 
           <Link to="/language" className="font-bold hover:text-teal-600 transition-colors text-[11px] xl:text-xs uppercase tracking-wider whitespace-nowrap">
             {t('language', currentLang.code)}
           </Link>
         </nav>
+
 
         {/* DESKTOP RIGHT SIDE ICONS: Search, Accessibility, Language */}
         <div className="hidden lg:flex items-center gap-2 xl:gap-3">
@@ -383,7 +384,22 @@ export default function App() {
               </div>
             )}
           </div>
+
+          {/* User Profile / Cabinet Link */}
+          <Link 
+            to="/profile" 
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full border transition-all ${
+              isWhiteTextHeader 
+                ? 'bg-white/20 hover:bg-white/30 text-white border-white/30' 
+                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-200 shadow-sm'
+            }`}
+            title="Profil & Sevimlilar"
+          >
+            <User className="w-3.5 h-3.5 text-emerald-700" />
+            <span className="font-bold text-xs">{currentLang.code === 'it' ? 'I Miei Luoghi' : currentLang.code === 'en' ? 'My Places' : 'Profil & Sevimlilar'}</span>
+          </Link>
         </div>
+
 
       {/* MOBILE HEADER BUTTONS & HAMBURGER TRIGGER */}
       <div className="lg:hidden flex items-center gap-2">
@@ -494,6 +510,16 @@ export default function App() {
             </Link>
 
             <Link 
+              to="/language/academy" 
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-90 active:bg-emerald-800 rounded-2xl flex items-center gap-2 transition-all border border-emerald-400/40 col-span-2 justify-center font-bold text-xs"
+            >
+              <span>🎓</span>
+              <span>{currentLang.code === 'it' ? 'Accademia di Lingua Uzbeka (A1-A2)' : 'O\'zbek Tili Akademiyasi (A1-A2)'}</span>
+            </Link>
+
+
+            <Link 
               to="/go-uzbekistan" 
               onClick={() => setMobileMenuOpen(false)}
               className="p-3 bg-emerald-400 text-slate-950 font-black rounded-2xl flex items-center gap-2 transition-all shadow-md col-span-2 justify-center"
@@ -512,8 +538,21 @@ export default function App() {
             </Link>
           </div>
 
+          {/* User Profile / Auth Action for Mobile */}
+          <div className="pt-2 border-t border-white/15">
+            <Link
+              to="/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full p-2.5 bg-white/15 hover:bg-white/25 border border-white/20 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-white transition-all shadow-sm"
+            >
+              <User className="w-4 h-4 text-emerald-300" />
+              <span>{currentLang.code === 'it' ? 'I Miei Luoghi & Profilo' : 'Profil & Sevimlilar'}</span>
+            </Link>
+          </div>
+
           {/* Compact Language Selector Chips */}
           <div className="pt-2 border-t border-white/15 flex items-center justify-between gap-2">
+
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-teal-200">
               🌐 {t('language', currentLang.code)}:
             </span>
@@ -721,17 +760,21 @@ export default function App() {
           <Route path="/" element={<Home currentLang={currentLang} />} />
           <Route path="/regions" element={<Regions currentLang={currentLang} />} />
           <Route path="/regions/:id" element={<RegionDetail currentLang={currentLang} />} />
-          <Route path="/cuisine" element={<Cuisine currentLang={currentLang} />} />
+          <Route path="/culture" element={<HeritageCulture currentLang={currentLang} />} />
+          <Route path="/cuisine" element={<HeritageCulture currentLang={currentLang} />} />
           <Route path="/cuisine/:id" element={<CuisineDetail currentLang={currentLang} />} />
           <Route path="/tours" element={<Tours currentLang={currentLang} />} />
           <Route path="/tours/:id" element={<TourDetail currentLang={currentLang} />} />
           <Route path="/about" element={<About currentLang={currentLang} />} />
-          <Route path="/art" element={<Art currentLang={currentLang} />} />
+          <Route path="/art" element={<HeritageCulture currentLang={currentLang} />} />
           <Route path="/language" element={<Language currentLang={currentLang} />} />
+          <Route path="/language/academy" element={<Language currentLang={currentLang} />} />
           <Route path="/go-uzbekistan" element={<GoUzbekistan currentLang={currentLang} />} />
           <Route path="/place/:regionId/:placeName" element={<PlaceDetail currentLang={currentLang} />} />
+          <Route path="/profile" element={<Profile currentLang={currentLang} />} />
           <Route path="/admin" element={<AdminPanel currentLang={currentLang} />} />
         </Routes>
+
       </div>
 
       {/* Compact & Clean Footer with Uzbek Pattern Backdrop */}
