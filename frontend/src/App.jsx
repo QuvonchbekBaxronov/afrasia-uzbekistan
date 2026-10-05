@@ -69,6 +69,7 @@ export default function App() {
   const isDarkHeroPage = 
     pathname.startsWith('/regions') ||
     pathname.startsWith('/tours') ||
+    pathname.startsWith('/culture') ||
     pathname.startsWith('/cuisine') ||
     pathname.startsWith('/art') ||
     pathname.startsWith('/about') ||
@@ -689,7 +690,7 @@ export default function App() {
       )}
     </header>
 
-      {!isHeroPage && !pathname.includes('/tours') && !pathname.includes('/regions') && !pathname.includes('/cuisine') && !pathname.includes('/about') && !pathname.includes('/art') && !pathname.includes('/language') && !pathname.includes('/go-uzbekistan') && !pathname.includes('/place') && (
+      {!isHeroPage && !pathname.includes('/tours') && !pathname.includes('/regions') && !pathname.includes('/culture') && !pathname.includes('/cuisine') && !pathname.includes('/about') && !pathname.includes('/art') && !pathname.includes('/language') && !pathname.includes('/go-uzbekistan') && !pathname.includes('/place') && (
         <div className="bg-[#fcfcfc] border-b border-gray-100 mt-[70px] py-4">
           <div className="container mx-auto px-4 lg:px-8 flex items-center gap-2 text-xs md:text-sm text-gray-500 font-semibold font-sans">
             <Link to="/" className="hover:text-primary transition-colors">{t('home', currentLang.code)}</Link>
