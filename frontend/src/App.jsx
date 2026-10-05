@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { 
   Globe, Search, Eye, Volume2, ChevronDown, Menu, X, 
-  MapPin, Compass, Utensils, Music, BookOpen, User, PhoneCall,
+  MapPin, Compass, Utensils, Music, BookOpen, PhoneCall,
   Sparkles, ExternalLink, Heart, Check, ArrowRight
 } from 'lucide-react';
 
@@ -21,8 +21,6 @@ import Language from './pages/Language';
 import About from './pages/About';
 import GoUzbekistan from './pages/GoUzbekistan';
 import AdminPanel from './pages/AdminPanel';
-import Profile from './pages/Profile';
-import { useAuth } from './context/AuthContext';
 
 import { useAccessibility } from './context/AccessibilityContext';
 import { languages, t } from './utils/translations';
@@ -39,7 +37,6 @@ function ScrollToTop() {
 }
 
 export default function App() {
-  const { user, setAuthModalOpen } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langMenuOpen, setLangMenuOpen] = useState(false);
@@ -384,20 +381,6 @@ export default function App() {
               </div>
             )}
           </div>
-
-          {/* User Profile / Cabinet Link */}
-          <Link 
-            to="/profile" 
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full border transition-all ${
-              isWhiteTextHeader 
-                ? 'bg-white/20 hover:bg-white/30 text-white border-white/30' 
-                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border-emerald-200 shadow-sm'
-            }`}
-            title="Profil & Sevimlilar"
-          >
-            <User className="w-3.5 h-3.5 text-emerald-700" />
-            <span className="font-bold text-xs">{currentLang.code === 'it' ? 'I Miei Luoghi' : currentLang.code === 'en' ? 'My Places' : 'Profil & Sevimlilar'}</span>
-          </Link>
         </div>
 
 
@@ -535,18 +518,6 @@ export default function App() {
             >
               <span>ℹ️</span>
               <span>{t('aboutHeroTitle', currentLang.code)}</span>
-            </Link>
-          </div>
-
-          {/* User Profile / Auth Action for Mobile */}
-          <div className="pt-2 border-t border-white/15">
-            <Link
-              to="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full p-2.5 bg-white/15 hover:bg-white/25 border border-white/20 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-white transition-all shadow-sm"
-            >
-              <User className="w-4 h-4 text-emerald-300" />
-              <span>{currentLang.code === 'it' ? 'I Miei Luoghi & Profilo' : 'Profil & Sevimlilar'}</span>
             </Link>
           </div>
 
@@ -771,7 +742,6 @@ export default function App() {
           <Route path="/language/academy" element={<Language currentLang={currentLang} />} />
           <Route path="/go-uzbekistan" element={<GoUzbekistan currentLang={currentLang} />} />
           <Route path="/place/:regionId/:placeName" element={<PlaceDetail currentLang={currentLang} />} />
-          <Route path="/profile" element={<Profile currentLang={currentLang} />} />
           <Route path="/admin" element={<AdminPanel currentLang={currentLang} />} />
         </Routes>
 
