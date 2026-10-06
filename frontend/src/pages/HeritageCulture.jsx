@@ -1075,362 +1075,384 @@ export default function HeritageCulture({ currentLang }) {
           className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5"
         >
           {selectedItemModal.type === 'dish' ? (
-            /* ENRICHED DISH MODAL (Light, Spacious & Professional) */
+            /* ENRICHED DISH MODAL (Split-Screen Culinary Showcase) */
             <div 
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl max-w-2xl sm:max-w-3xl lg:max-w-4xl w-full overflow-hidden shadow-2xl border border-slate-200 animate-scale-up max-h-[92vh] flex flex-col"
+              className="bg-white rounded-3xl max-w-4xl lg:max-w-5xl w-full overflow-hidden shadow-2xl border border-slate-200/90 animate-scale-up max-h-[92vh] flex flex-col"
             >
-              {/* Full Unobstructed Food Image Header */}
-              <div className="relative w-full h-64 sm:h-72 md:h-80 bg-slate-100 shrink-0 overflow-hidden">
-                <img 
-                  src={selectedItemModal.image} 
-                  alt={selectedItemModal[`name_${lang}`] || selectedItemModal.name_uz}
-                  className="w-full h-full object-cover"
-                />
-                <button
-                  onClick={() => setSelectedItemModal(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center transition-all cursor-pointer z-20 hover:scale-105"
-                  title="Close"
-                >
-                  <X className="w-5 h-5 stroke-[2.5]" />
-                </button>
-              </div>
-
-              {/* Clean Minimalist Title & Metadata Section (Below Image) */}
-              <div className="px-6 sm:px-8 pt-5 pb-4 border-b border-slate-100 bg-white shrink-0">
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200">
+              {/* Slim Minimalist Top Bar */}
+              <div className="px-5 sm:px-6 py-3.5 bg-slate-50/90 border-b border-slate-200/80 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 bg-emerald-100/70 px-2.5 py-1 rounded-md">
                     {lang === 'it' ? 'Patrimonio Culinario' : lang === 'en' ? 'Culinary Heritage' : 'Milliy Gastronomiya'}
                   </span>
-                  <span className="text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1 rounded border border-slate-200 font-medium">
-                    {selectedItemModal[`region_${lang}`] || selectedItemModal.region_uz}
-                  </span>
-                  <span className="text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1 rounded border border-slate-200 font-medium">
-                    {selectedItemModal.cookTime}
-                  </span>
-                  {selectedItemModal[`servings_${lang}`] && (
-                    <span className="text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1 rounded border border-slate-200 font-medium">
-                      {selectedItemModal[`servings_${lang}`]}
-                    </span>
-                  )}
-                  <span className="text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1 rounded border border-slate-200 font-medium">
-                    {selectedItemModal.calories}
+                  <span className="text-xs text-slate-500 font-medium hidden sm:inline">
+                    • {selectedItemModal[`region_${lang}`] || selectedItemModal.region_uz}
                   </span>
                 </div>
-                <h3 className="font-serif font-bold text-2xl sm:text-3xl text-slate-900 leading-tight">
-                  {selectedItemModal[`name_${lang}`] || selectedItemModal.name_uz}
-                </h3>
-              </div>
-
-              {/* Minimalist Tab Selector (Clean Typography, Zero Emojis) */}
-              {selectedItemModal.steps_uz && (
-                <div className="flex border-b border-slate-200 bg-white px-6 sm:px-8 gap-4 sm:gap-6 overflow-x-auto shrink-0 scrollbar-none">
-                  <button
-                    onClick={() => setDishModalTab('recipe')}
-                    className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                      dishModalTab === 'recipe'
-                        ? 'border-[#0c594d] text-[#0c594d] font-bold'
-                        : 'border-transparent text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {lang === 'it' ? 'Ricetta (8 Passaggi)' : lang === 'en' ? 'Recipe (8 Steps)' : '8 Bosqichli Retsept'}
-                  </button>
-                  <button
-                    onClick={() => setDishModalTab('ingredients')}
-                    className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                      dishModalTab === 'ingredients'
-                        ? 'border-[#0c594d] text-[#0c594d] font-bold'
-                        : 'border-transparent text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {lang === 'it' ? 'Ingredienti' : lang === 'en' ? 'Ingredients' : 'Masalliqlar'}
-                  </button>
-                  <button
-                    onClick={() => setDishModalTab('rice')}
-                    className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                      dishModalTab === 'rice'
-                        ? 'border-[#0c594d] text-[#0c594d] font-bold'
-                        : 'border-transparent text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {lang === 'it' ? 'Segreti dello Chef' : lang === 'en' ? 'Chef Secrets & Technique' : 'Pazandachilik Sirlari'}
-                  </button>
-                  <button
-                    onClick={() => setDishModalTab('story')}
-                    className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
-                      dishModalTab === 'story'
-                        ? 'border-[#0c594d] text-[#0c594d] font-bold'
-                        : 'border-transparent text-slate-500 hover:text-slate-800'
-                    }`}
-                  >
-                    {lang === 'it' ? 'Storia & Tradizione' : lang === 'en' ? 'Heritage & Story' : 'Tarixi va Tavsif'}
-                  </button>
-                </div>
-              )}
-
-              {/* Modal Body (Scrollable) */}
-              <div className="p-6 sm:p-8 space-y-6 text-sm overflow-y-auto grow">
-                {selectedItemModal.steps_uz ? (
-                  <>
-                    {/* TAB 1: 8 BOSQICHLI RETSEPT */}
-                    {dishModalTab === 'recipe' && (
-                      <div className="space-y-4 animate-fade-in">
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                          <div>
-                            <h4 className="font-serif font-black text-slate-900 text-base sm:text-lg">
-                              {lang === 'it' ? 'Metodo di Preparazione Passo dopo Passo' : lang === 'en' ? 'Step-by-Step Cooking Directions' : 'Bosqichma-bosqich Tayyorlash Usuli'}
-                            </h4>
-                            <p className="text-xs text-slate-500 font-light">
-                              {selectedItemModal.category === 'pastry'
-                                ? (lang === 'it' ? '8 passaggi per una sfoglia perfetta e ripieno incredibilmente succoso.' : lang === 'en' ? '8 clear steps for crispy flaky pastry and succulent meat filling.' : 'Qarsildoq qatlama va sersuv qiyma hosil qilishning 8 ta aniq bosqichi.')
-                                : (lang === 'it' ? '8 fasi dettagliate dal soffritto dorato alla perfetta cottura finale.' : lang === 'en' ? '8 clear stages from searing ingredients to final gentle perfection.' : 'Dastlabki tayyorgarlikdan tortishgacha bo\'lgan 8 ta aniq bosqich.')}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          {(selectedItemModal[`steps_${lang}`] || selectedItemModal.steps_uz || []).map((step, idx) => (
-                            <div 
-                              key={idx} 
-                              className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 hover:border-emerald-300 transition-colors flex gap-3.5 items-start"
-                            >
-                              <div className="w-7 h-7 rounded-full bg-[#0c594d] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs mt-0.5">
-                                {idx + 1}
-                              </div>
-                              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-                                {step}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Master Tip Box (Clean Minimalist, No Emojis) */}
-                        <div className="p-4 bg-amber-50/90 rounded-2xl border border-amber-200 text-xs text-amber-900">
-                          <p className="leading-relaxed">
-                            <strong className="text-amber-950 font-bold">{lang === 'it' ? 'Regola d\'oro del Maestro Oshpaz:' : lang === 'en' ? 'Master Chef Golden Rule:' : 'Oshpazning Oltin Qoidasi:'}</strong>{' '}
-                            {selectedItemModal.category === 'pastry'
-                              ? (lang === 'it' ? 'Non tritare mai la carne a macchina: tagliarla a cubetti al coltello mantiene il succo naturale intrappolato all\'interno!' : lang === 'en' ? 'Never grind the meat in a machine: hand-dicing keeps the succulent juices bursting inside each bite!' : 'Go\'shtni aslo qiymalagichdan chiqarmang: pichoqda mayda to\'g\'rash barcha shira va sersuvlikni somsa ichida saqlab qoladi!')
-                              : (lang === 'it' ? 'Durante la fase di damlash (vaporizzazione finale), non sollevare mai il coperchio per 10-15 minuti!' : lang === 'en' ? 'During the damlash (final steaming), never open the lid for 10-15 minutes!' : 'Damlash jarayonida qozon qopqog\'ini 10-15 daqiqa davomida aslo ochmang!')}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 2: MASALLIQLAR */}
-                    {dishModalTab === 'ingredients' && (
-                      <div className="space-y-5 animate-fade-in">
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                          <div>
-                            <h4 className="font-serif font-black text-slate-900 text-base sm:text-lg">
-                              {lang === 'it' ? 'Ingredienti Ufficiali' : lang === 'en' ? 'Official Ingredients' : 'To\'liq Masalliqlar Ro\'yxati'}
-                            </h4>
-                            <p className="text-xs text-slate-500 font-light">
-                              {lang === 'it' 
-                                ? 'Misurazioni precise testate per garantire equilibrio aromatico e fragranza.' 
-                                : lang === 'en' 
-                                  ? 'Exact tested measurements for authentic flavor and crisp texture.' 
-                                  : 'Mukammal ta\'m va me\'yor uchun aniq o\'lchangan masalliqlar.'}
-                            </p>
-                          </div>
-                          <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                            {selectedItemModal[`servings_${lang}`] || selectedItemModal.servings_uz}
-                          </span>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                          {(selectedItemModal[`ingredients_${lang}`] || selectedItemModal.ingredients_uz || []).map((ing, i) => (
-                            <div 
-                              key={i} 
-                              className="p-3 bg-slate-50 rounded-xl border border-slate-200/70 flex items-center gap-3 text-xs sm:text-sm text-slate-800"
-                            >
-                              <div className="w-5 h-5 rounded-full bg-emerald-100 text-[#0c594d] flex items-center justify-center shrink-0">
-                                <Check className="w-3 h-3 stroke-[3]" />
-                              </div>
-                              <span className="font-medium">{ing}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-1.5 font-light">
-                          <p className="font-semibold text-slate-800">
-                            {lang === 'it' ? 'Note pratiche per la preparazione:' : lang === 'en' ? 'Practical cooking notes:' : 'Pazandachilik bo\'yicha amaliy maslahatlar:'}
-                          </p>
-                          <ul className="list-disc list-inside space-y-1">
-                            {selectedItemModal.category === 'pastry' ? (
-                              <>
-                                <li>{lang === 'it' ? 'Pasta sfoglia: confezione da 10 quadrati già pronta (puff pastry) di ottima qualità.' : lang === 'en' ? 'Puff pastry: pack of 10 ready-rolled squares of good quality.' : 'Qatlama xamir: 10 ta tayyor kvadratli sifatli puff pastry.'}</li>
-                                <li>{lang === 'it' ? 'Carne: fresco agnello o manzo magro tagliato finemente al coltello.' : lang === 'en' ? 'Meat: fresh lamb or lean beef, hand-diced very finely.' : 'Go\'sht: yangi qo\'y yoki lahm mol go\'shti, o\'tkir pichoqda maydalangan.'}</li>
-                                <li>{lang === 'it' ? 'Cipolle: 2 grandi cipolle dolci per donare abbondante succosità.' : lang === 'en' ? 'Onions: 2 large sweet onions to create rich natural broth inside.' : 'Piyoz: sersuvlik uchun 2 dona yirik shirin piyoz.'}</li>
-                              </>
-                            ) : (
-                              <>
-                                <li>{lang === 'it' ? 'Carne: preferibile fresco agnello con osso o tenero manzo.' : lang === 'en' ? 'Meat: fresh bone-in lamb or tender marbled beef.' : 'Go\'sht: yangi qo\'y yoki yumshoq mol go\'shti.'}</li>
-                                <li>{lang === 'it' ? 'Zafferano e cumino: usare solo cumino zira di montagna per aroma autentico.' : lang === 'en' ? 'Spices: whole mountain cumin (zira) yields unforgettable fragrance.' : 'Ziravorlar: sara tog\' zirasi va maydalangan kashnich urug\'i.'}</li>
-                                <li>{lang === 'it' ? 'Verdure fresche: tagliare in modo uniforme per garantire cottura perfetta.' : lang === 'en' ? 'Vegetables: slice uniformly to ensure even cooking.' : 'Sabzavotlar: bir xil shaklda to\'g\'rash bir tekis pishish garovidir.'}</li>
-                              </>
-                            )}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 3: PAZANDACHILIK SIRLARI (Zero Emojis) */}
-                    {dishModalTab === 'rice' && (
-                      <div className="space-y-4 animate-fade-in">
-                        <div className="pb-2 border-b border-slate-100">
-                          <h4 className="font-serif font-black text-slate-900 text-base sm:text-lg">
-                            {lang === 'it' ? 'Segreti dello Chef & Tecnica Tradizionale' : lang === 'en' ? 'Chef Secrets & Traditional Technique' : 'Pazandachilik Sirlari va Maxsus Texnika'}
-                          </h4>
-                          <p className="text-xs text-slate-500 font-light">
-                            {lang === 'it' ? 'Consigli pratici e regole essenziali per ottenere un risultato perfetto.' : lang === 'en' ? 'Practical tips and essential guidelines for authentic results.' : 'Taomni mukammal darajada pishirish uchun amaliy va sinalgan sirlar.'}
-                          </p>
-                        </div>
-
-                        {/* Card 1 */}
-                        <div className="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
-                          <h5 className="text-xs font-bold text-slate-900">
-                            {selectedItemModal.category === 'pastry'
-                              ? (lang === 'it' ? 'Segreti della Pasta Sfoglia (Puff Pastry & Porzionatura)' : lang === 'en' ? 'Puff Pastry Secrets & Proper Sizing' : 'Qatlama Xamir (Puff Pastry) va Bo\'laklash Siri')
-                              : (lang === 'it' ? 'Scelta delle Materie Prime & Varietà' : lang === 'en' ? 'Ingredient Selection & Varieties' : 'Asosiy Masalliqlar va Tanlash Qo\'llanmasi')}
-                          </h5>
-                          <p className="text-xs text-slate-600 leading-relaxed font-light">
-                            {selectedItemModal[`riceGuide_${lang}`] || selectedItemModal.riceGuide_uz}
-                          </p>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
-                          <h5 className="text-xs font-bold text-slate-900">
-                            {selectedItemModal.category === 'pastry'
-                              ? (lang === 'it' ? 'Temperatura del Forno a Due Stadi (215°C poi 175°C)' : lang === 'en' ? 'Two-Stage Oven Baking (420°F then 350°F)' : 'Duxovka Harorati: Ikki Bosqichli Pishirish')
-                              : (lang === 'it' ? 'Calore, Fuoco e Metodo di Cottura' : lang === 'en' ? 'Heat Control & Cooking Methods' : 'Olov Harorati va Idish Tanlash')}
-                          </h5>
-                          <p className="text-xs text-slate-600 leading-relaxed font-light">
-                            {selectedItemModal[`cookerGuide_${lang}`] || selectedItemModal.cookerGuide_uz}
-                          </p>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
-                          <h5 className="text-xs font-bold text-slate-900">
-                            {selectedItemModal.category === 'pastry'
-                              ? (lang === 'it' ? 'Ripieno Succoso al Coltello e Cipolla Dolce' : lang === 'en' ? 'Succulent Hand-Diced Meat & Onion Juices' : 'Sersuv Qiyma: Go\'shtni Pichoqda To\'g\'rash Siri')
-                              : (lang === 'it' ? 'Tecnica di Taglio e Preparazione' : lang === 'en' ? 'Cutting Technique & Preparation' : 'To\'g\'rash Texnikasi va Masalliqlar')}
-                          </h5>
-                          <p className="text-xs text-slate-600 leading-relaxed font-light">
-                            {selectedItemModal[`carrotsGuide_${lang}`] || selectedItemModal.carrotsGuide_uz}
-                          </p>
-                        </div>
-
-                        {/* Card 4 */}
-                        <div className="p-4 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
-                          <h5 className="text-xs font-bold text-slate-900">
-                            {selectedItemModal.category === 'pastry'
-                              ? (lang === 'it' ? 'Doratura all\'Uovo & Semi Tradizionali' : lang === 'en' ? 'Golden Egg Wash & Traditional Seeds' : 'Yarqiroq Tuxum va Qora Sedana Sirlari')
-                              : (lang === 'it' ? 'Aromi, Ziravorlar e Finitura' : lang === 'en' ? 'Aromatics, Spices & Finishing Touches' : 'Ziravorlar va Xushbo\'y Qo\'shimchalar')}
-                          </h5>
-                          <p className="text-xs text-slate-600 leading-relaxed font-light">
-                            {selectedItemModal[`aromaticsGuide_${lang}`] || selectedItemModal.aromaticsGuide_uz}
-                          </p>
-                        </div>
-
-                        {/* Card 5: Core Chef Secrets */}
-                        <div className="p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200 space-y-2">
-                          <h5 className="text-xs font-bold text-[#0c594d]">
-                            {lang === 'it' ? 'I Segreti Fondamentali dello Chef' : lang === 'en' ? 'Core Master Secrets' : 'Oshpazning Bosh Sirlari'}
-                          </h5>
-                          <p className="text-xs text-emerald-950 leading-relaxed font-normal">
-                            {selectedItemModal[`secret_${lang}`] || selectedItemModal.secret_uz}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* TAB 4: TARIXI VA TAVSIF */}
-                    {dishModalTab === 'story' && (
-                      <div className="space-y-4 animate-fade-in">
-                        <div className="pb-2 border-b border-slate-100">
-                          <h4 className="font-serif font-black text-slate-900 text-base sm:text-lg">
-                            {lang === 'it' ? 'Storia, Tradizione & Patrimonio' : lang === 'en' ? 'Heritage, Culture & Legacy' : 'Tarixi, Madaniyati va An\'analari'}
-                          </h4>
-                          <p className="text-xs text-slate-500 font-light">
-                            {lang === 'it' 
-                              ? 'Il sapore autentico dell\'ospitalità e della cucina tradizionale uzbeka.' 
-                              : lang === 'en' 
-                                ? 'The timeless taste of Uzbek hospitality and culinary heritage.' 
-                                : 'O\'zbek dasturxonining asriy an\'anasi va madaniy merosi.'}
-                          </p>
-                        </div>
-
-                        <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
-                          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-light">
-                            {selectedItemModal[`story_${lang}`] || selectedItemModal.story_uz}
-                          </p>
-                          <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-light">
-                            {selectedItemModal[`history_${lang}`] || selectedItemModal.history_uz}
-                          </p>
-                        </div>
-
-                        {/* Source Credit */}
-                        {selectedItemModal.sourceUrl && (
-                          <div className="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-100 flex items-center justify-between text-xs text-emerald-900">
-                            <span className="font-medium">
-                              {lang === 'it' ? 'Retsept va ma\'lumotlar arbuz.com tajribasi asosida' : lang === 'en' ? 'Recipe & experience based on arbuz.com culinary guide' : 'Retsept va ma\'lumotlar arbuz.com tajribasi asosida'}
-                            </span>
-                            <a 
-                              href={selectedItemModal.sourceUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-xs font-bold text-[#0c594d] hover:underline flex items-center gap-1"
-                            >
-                              <span>{selectedItemModal.sourceUrl.replace('https://', '')}</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  /* Standard dish modal (if no steps are configured yet) */
-                  <div className="space-y-4">
-                    <p className="text-slate-600 leading-relaxed font-light">
-                      {selectedItemModal[`history_${lang}`] || selectedItemModal.history_uz}
-                    </p>
-
-                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/80">
-                      <span className="text-xs font-bold text-amber-900 block mb-1">
-                        {lang === 'it' ? 'Il Segreto dello Chef:' : 'Oshpazning Sirlari:'}
-                      </span>
-                      <p className="text-xs text-amber-800 italic">
-                        {selectedItemModal[`secret_${lang}`] || selectedItemModal.secret_uz}
-                      </p>
-                    </div>
-
-                    <div>
-                      <span className="text-xs font-bold text-slate-800 block mb-2">
-                        {lang === 'it' ? 'Ingredienti Tradizionali:' : 'Asosiy Masalliqlar:'}
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {(selectedItemModal[`ingredients_${lang}`] || selectedItemModal.ingredients_uz || []).map((ing, i) => (
-                          <span key={i} className="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg">
-                            {ing}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Bottom Footer Actions */}
-              <div className="p-4 sm:p-5 border-t border-slate-100 bg-white flex justify-end shrink-0">
                 <button
                   onClick={() => setSelectedItemModal(null)}
-                  className="py-2.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-white hover:bg-slate-200 text-slate-700 shadow-2xs flex items-center justify-center transition-all cursor-pointer border border-slate-200 hover:scale-105"
+                  title="Close"
                 >
-                  {lang === 'it' ? 'Chiudi' : lang === 'en' ? 'Close' : 'Yopish'}
+                  <X className="w-4 h-4 stroke-[2.5]" />
                 </button>
+              </div>
+
+              {/* Main 2-Column Body */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 flex-1 overflow-y-auto lg:overflow-hidden">
+                
+                {/* LEFT COLUMN (lg:col-span-5): Image & Quick Recipe Specs */}
+                <div className="lg:col-span-5 bg-slate-50/60 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-200/80 flex flex-col gap-4 lg:overflow-y-auto">
+                  
+                  {/* Contained Dish Image - Natural Proportions without Distortion */}
+                  <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200/90 bg-white group shrink-0">
+                    <img 
+                      src={selectedItemModal.image} 
+                      alt={selectedItemModal[`name_${lang}`] || selectedItemModal.name_uz}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-md">
+                      {selectedItemModal[`region_${lang}`] || selectedItemModal.region_uz}
+                    </div>
+                  </div>
+
+                  {/* 4 Quick Metadata Cards */}
+                  <div className="grid grid-cols-2 gap-2.5 shrink-0">
+                    <div className="p-3 bg-white rounded-xl border border-slate-200/70 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                        {lang === 'it' ? 'Tempo' : lang === 'en' ? 'Cooking Time' : 'Tayyorlash'}
+                      </span>
+                      <span className="text-xs font-bold text-slate-800 block mt-0.5">
+                        {selectedItemModal.cookTime}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-white rounded-xl border border-slate-200/70 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                        {lang === 'it' ? 'Porzioni' : lang === 'en' ? 'Servings' : 'Porsiya'}
+                      </span>
+                      <span className="text-xs font-bold text-slate-800 block mt-0.5">
+                        {selectedItemModal[`servings_${lang}`] || selectedItemModal.servings_uz || '4-6 porzioni'}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-white rounded-xl border border-slate-200/70 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                        {lang === 'it' ? 'Calorie' : lang === 'en' ? 'Calories' : 'Kaloriya'}
+                      </span>
+                      <span className="text-xs font-bold text-slate-800 block mt-0.5">
+                        {selectedItemModal.calories || '450 kcal'}
+                      </span>
+                    </div>
+                    <div className="p-3 bg-white rounded-xl border border-slate-200/70 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                        {lang === 'it' ? 'Tradizione' : lang === 'en' ? 'Heritage' : 'An\'ana'}
+                      </span>
+                      <span className="text-xs font-bold text-emerald-800 block mt-0.5">
+                        {selectedItemModal.category === 'pastry' ? 'Tandir & Forno' : 'Qozon & Damlash'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Master Chef Secret Quote Card */}
+                  <div className="p-4 bg-emerald-50/80 rounded-2xl border border-emerald-200/80 text-xs text-emerald-950 space-y-1.5 shrink-0">
+                    <div className="flex items-center gap-1.5 text-[#0c594d] font-bold text-[11px] uppercase tracking-wider">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{lang === 'it' ? 'Segreto del Maestro Oshpaz' : lang === 'en' ? 'Master Chef Secret' : 'Oshpazning Bosh Siri'}</span>
+                    </div>
+                    <p className="text-[11px] leading-relaxed italic text-emerald-900 font-normal">
+                      "{selectedItemModal[`secret_${lang}`] || selectedItemModal.secret_uz}"
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* RIGHT COLUMN (lg:col-span-7): Title, Navigation & Full Recipe Steps */}
+                <div className="lg:col-span-7 flex flex-col h-full bg-white overflow-hidden">
+                  
+                  {/* Title Header */}
+                  <div className="p-5 sm:p-6 pb-4 border-b border-slate-100 shrink-0">
+                    <h3 className="font-serif font-black text-xl sm:text-2xl text-slate-900 leading-tight">
+                      {selectedItemModal[`name_${lang}`] || selectedItemModal.name_uz}
+                    </h3>
+                    <p className="text-xs text-slate-500 font-light mt-1">
+                      {selectedItemModal[`region_${lang}`] || selectedItemModal.region_uz} • {selectedItemModal.cookTime}
+                    </p>
+                  </div>
+
+                  {/* Minimalist Tab Selector */}
+                  {selectedItemModal.steps_uz && (
+                    <div className="flex border-b border-slate-200 bg-white px-5 sm:px-6 gap-3 sm:gap-5 overflow-x-auto shrink-0 scrollbar-none">
+                      <button
+                        onClick={() => setDishModalTab('recipe')}
+                        className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                          dishModalTab === 'recipe'
+                            ? 'border-[#0c594d] text-[#0c594d] font-bold'
+                            : 'border-transparent text-slate-500 hover:text-slate-800'
+                        }`}
+                      >
+                        {lang === 'it' ? 'Ricetta (8 Passaggi)' : lang === 'en' ? 'Recipe (8 Steps)' : '8 Bosqichli Retsept'}
+                      </button>
+                      <button
+                        onClick={() => setDishModalTab('ingredients')}
+                        className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                          dishModalTab === 'ingredients'
+                            ? 'border-[#0c594d] text-[#0c594d] font-bold'
+                            : 'border-transparent text-slate-500 hover:text-slate-800'
+                        }`}
+                      >
+                        {lang === 'it' ? 'Ingredienti' : lang === 'en' ? 'Ingredients' : 'Masalliqlar'}
+                      </button>
+                      <button
+                        onClick={() => setDishModalTab('rice')}
+                        className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                          dishModalTab === 'rice'
+                            ? 'border-[#0c594d] text-[#0c594d] font-bold'
+                            : 'border-transparent text-slate-500 hover:text-slate-800'
+                        }`}
+                      >
+                        {lang === 'it' ? 'Segreti dello Chef' : lang === 'en' ? 'Chef Secrets' : 'Pazandachilik Sirlari'}
+                      </button>
+                      <button
+                        onClick={() => setDishModalTab('story')}
+                        className={`py-3 text-xs sm:text-sm font-semibold transition-all border-b-2 whitespace-nowrap cursor-pointer ${
+                          dishModalTab === 'story'
+                            ? 'border-[#0c594d] text-[#0c594d] font-bold'
+                            : 'border-transparent text-slate-500 hover:text-slate-800'
+                        }`}
+                      >
+                        {lang === 'it' ? 'Storia & Tradizione' : lang === 'en' ? 'Heritage & Story' : 'Tarixi'}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Scrollable Tab Content */}
+                  <div className="p-5 sm:p-6 space-y-5 text-sm overflow-y-auto flex-1">
+                    {selectedItemModal.steps_uz ? (
+                      <>
+                        {/* TAB 1: 8 BOSQICHLI RETSEPT */}
+                        {dishModalTab === 'recipe' && (
+                          <div className="space-y-4 animate-fade-in">
+                            <div className="pb-2 border-b border-slate-100">
+                              <h4 className="font-serif font-black text-slate-900 text-sm sm:text-base">
+                                {lang === 'it' ? 'Metodo di Preparazione Passo dopo Passo' : lang === 'en' ? 'Step-by-Step Cooking Directions' : 'Bosqichma-bosqich Tayyorlash Usuli'}
+                              </h4>
+                              <p className="text-xs text-slate-500 font-light">
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? '8 passaggi per una sfoglia perfetta e ripieno incredibilmente succoso.' : lang === 'en' ? '8 clear steps for crispy flaky pastry and succulent meat filling.' : 'Qarsildoq qatlama va sersuv qiyma hosil qilishning 8 ta aniq bosqichi.')
+                                  : (lang === 'it' ? '8 fasi dettagliate dal soffritto dorato alla perfetta cottura finale.' : lang === 'en' ? '8 clear stages from searing ingredients to final gentle perfection.' : 'Dastlabki tayyorgarlikdan tortishgacha bo\'lgan 8 ta aniq bosqich.')}
+                              </p>
+                            </div>
+
+                            <div className="space-y-2.5">
+                              {(selectedItemModal[`steps_${lang}`] || selectedItemModal.steps_uz || []).map((step, idx) => (
+                                <div 
+                                  key={idx} 
+                                  className="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-200/70 hover:border-emerald-300 transition-colors flex gap-3 items-start"
+                                >
+                                  <div className="w-6 h-6 rounded-full bg-[#0c594d] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs mt-0.5">
+                                    {idx + 1}
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                                    {step}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Master Tip Box */}
+                            <div className="p-3.5 bg-amber-50/90 rounded-2xl border border-amber-200 text-xs text-amber-900">
+                              <p className="leading-relaxed">
+                                <strong className="text-amber-950 font-bold">{lang === 'it' ? 'Regola d\'oro:' : lang === 'en' ? 'Golden Rule:' : 'Oltin Qoida:'}</strong>{' '}
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? 'Non tritare mai la carne a macchina: tagliarla a cubetti al coltello mantiene il succo naturale intrappolato all\'interno!' : lang === 'en' ? 'Never grind the meat in a machine: hand-dicing keeps the succulent juices bursting inside each bite!' : 'Go\'shtni aslo qiymalagichdan chiqarmang: pichoqda mayda to\'g\'rash barcha shira va sersuvlikni somsa ichida saqlab qoladi!')
+                                  : (lang === 'it' ? 'Durante la fase di damlash (vaporizzazione finale), non sollevare mai il coperchio per 10-15 minuti!' : lang === 'en' ? 'During the damlash (final steaming), never open the lid for 10-15 minutes!' : 'Damlash jarayonida qozon qopqog\'ini 10-15 daqiqa davomida aslo ochmang!')}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TAB 2: MASALLIQLAR */}
+                        {dishModalTab === 'ingredients' && (
+                          <div className="space-y-4 animate-fade-in">
+                            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                              <div>
+                                <h4 className="font-serif font-black text-slate-900 text-sm sm:text-base">
+                                  {lang === 'it' ? 'Ingredienti Ufficiali' : lang === 'en' ? 'Official Ingredients' : 'To\'liq Masalliqlar Ro\'yxati'}
+                                </h4>
+                                <p className="text-xs text-slate-500 font-light">
+                                  {lang === 'it' 
+                                    ? 'Misurazioni precise testate per garantire equilibrio aromatico e fragranza.' 
+                                    : lang === 'en' 
+                                      ? 'Exact tested measurements for authentic flavor and crisp texture.' 
+                                      : 'Mukammal ta\'m va me\'yor uchun aniq o\'lchangan masalliqlar.'}
+                                </p>
+                              </div>
+                              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
+                                {selectedItemModal[`servings_${lang}`] || selectedItemModal.servings_uz}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {(selectedItemModal[`ingredients_${lang}`] || selectedItemModal.ingredients_uz || []).map((ing, i) => (
+                                <div 
+                                  key={i} 
+                                  className="p-2.5 bg-slate-50 rounded-xl border border-slate-200/70 flex items-center gap-2.5 text-xs text-slate-800"
+                                >
+                                  <div className="w-4 h-4 rounded-full bg-emerald-100 text-[#0c594d] flex items-center justify-center shrink-0">
+                                    <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                  </div>
+                                  <span className="font-medium">{ing}</span>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 text-xs text-slate-600 space-y-1 font-light">
+                              <p className="font-semibold text-slate-800">
+                                {lang === 'it' ? 'Note pratiche per la preparazione:' : lang === 'en' ? 'Practical cooking notes:' : 'Pazandachilik bo\'yicha amaliy maslahatlar:'}
+                              </p>
+                              <ul className="list-disc list-inside space-y-0.5 text-[11px]">
+                                {selectedItemModal.category === 'pastry' ? (
+                                  <>
+                                    <li>{lang === 'it' ? 'Pasta sfoglia: confezione da 10 quadrati già pronta (puff pastry) di ottima qualità.' : lang === 'en' ? 'Puff pastry: pack of 10 ready-rolled squares of good quality.' : 'Qatlama xamir: 10 ta tayyor kvadratli sifatli puff pastry.'}</li>
+                                    <li>{lang === 'it' ? 'Carne: fresco agnello o manzo magro tagliato finemente al coltello.' : lang === 'en' ? 'Meat: fresh lamb or lean beef, hand-diced very finely.' : 'Go\'sht: yangi qo\'y yoki lahm mol go\'shti, o\'tkir pichoqda maydalangan.'}</li>
+                                    <li>{lang === 'it' ? 'Cipolle: 2 grandi cipolle dolci per donare abbondante succosità.' : lang === 'en' ? 'Onions: 2 large sweet onions to create rich natural broth inside.' : 'Piyoz: sersuvlik uchun 2 dona yirik shirin piyoz.'}</li>
+                                  </>
+                                ) : (
+                                  <>
+                                    <li>{lang === 'it' ? 'Carne: preferibile fresco agnello con osso o tenero manzo.' : lang === 'en' ? 'Meat: fresh bone-in lamb or tender marbled beef.' : 'Go\'sht: yangi qo\'y yoki yumshoq mol go\'shti.'}</li>
+                                    <li>{lang === 'it' ? 'Cumino: usare solo cumino zira di montagna per aroma autentico.' : lang === 'en' ? 'Spices: whole mountain cumin (zira) yields unforgettable fragrance.' : 'Ziravorlar: sara tog\' zirasi va maydalangan kashnich urug\'i.'}</li>
+                                    <li>{lang === 'it' ? 'Verdure fresche: tagliare in modo uniforme per garantire cottura perfetta.' : lang === 'en' ? 'Vegetables: slice uniformly to ensure even cooking.' : 'Sabzavotlar: bir xil shaklda to\'g\'rash bir tekis pishish garovidir.'}</li>
+                                  </>
+                                )}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TAB 3: PAZANDACHILIK SIRLARI */}
+                        {dishModalTab === 'rice' && (
+                          <div className="space-y-3.5 animate-fade-in">
+                            <div className="pb-2 border-b border-slate-100">
+                              <h4 className="font-serif font-black text-slate-900 text-sm sm:text-base">
+                                {lang === 'it' ? 'Segreti dello Chef & Tecnica Tradizionale' : lang === 'en' ? 'Chef Secrets & Traditional Technique' : 'Pazandachilik Sirlari va Maxsus Texnika'}
+                              </h4>
+                              <p className="text-xs text-slate-500 font-light">
+                                {lang === 'it' ? 'Consigli pratici e regole essenziali per ottenere un risultato perfetto.' : lang === 'en' ? 'Practical tips and essential guidelines for authentic results.' : 'Taomni mukammal darajada pishirish uchun amaliy va sinalgan sirlar.'}
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-1.5">
+                              <h5 className="text-xs font-bold text-slate-900">
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? 'Segreti della Pasta Sfoglia (Puff Pastry & Porzionatura)' : lang === 'en' ? 'Puff Pastry Secrets & Proper Sizing' : 'Qatlama Xamir (Puff Pastry) va Bo\'laklash Siri')
+                                  : (lang === 'it' ? 'Scelta delle Materie Prime & Varietà' : lang === 'en' ? 'Ingredient Selection & Varieties' : 'Asosiy Masalliqlar va Tanlash Qo\'llanmasi')}
+                              </h5>
+                              <p className="text-xs text-slate-600 leading-relaxed font-light">
+                                {selectedItemModal[`riceGuide_${lang}`] || selectedItemModal.riceGuide_uz}
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-1.5">
+                              <h5 className="text-xs font-bold text-slate-900">
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? 'Temperatura del Forno a Due Stadi (215°C poi 175°C)' : lang === 'en' ? 'Two-Stage Oven Baking (420°F then 350°F)' : 'Duxovka Harorati: Ikki Bosqichli Pishirish')
+                                  : (lang === 'it' ? 'Calore, Fuoco e Metodo di Cottura' : lang === 'en' ? 'Heat Control & Cooking Methods' : 'Olov Harorati va Idish Tanlash')}
+                              </h5>
+                              <p className="text-xs text-slate-600 leading-relaxed font-light">
+                                {selectedItemModal[`cookerGuide_${lang}`] || selectedItemModal.cookerGuide_uz}
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-1.5">
+                              <h5 className="text-xs font-bold text-slate-900">
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? 'Ripieno Succoso al Coltello e Cipolla Dolce' : lang === 'en' ? 'Succulent Hand-Diced Meat & Onion Juices' : 'Sersuv Qiyma: Go\'shtni Pichoqda To\'g\'rash Siri')
+                                  : (lang === 'it' ? 'Tecnica di Taglio e Preparazione' : lang === 'en' ? 'Cutting Technique & Preparation' : 'To\'g\'rash Texnikasi va Masalliqlar')}
+                              </h5>
+                              <p className="text-xs text-slate-600 leading-relaxed font-light">
+                                {selectedItemModal[`carrotsGuide_${lang}`] || selectedItemModal.carrotsGuide_uz}
+                              </p>
+                            </div>
+
+                            <div className="p-3.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs space-y-1.5">
+                              <h5 className="text-xs font-bold text-slate-900">
+                                {selectedItemModal.category === 'pastry'
+                                  ? (lang === 'it' ? 'Doratura all\'Uovo & Semi Tradizionali' : lang === 'en' ? 'Golden Egg Wash & Traditional Seeds' : 'Yarqiroq Tuxum va Qora Sedana Sirlari')
+                                  : (lang === 'it' ? 'Aromi, Ziravorlar e Finitura' : lang === 'en' ? 'Aromatics, Spices & Finishing Touches' : 'Ziravorlar va Xushbo\'y Qo\'shimchalar')}
+                              </h5>
+                              <p className="text-xs text-slate-600 leading-relaxed font-light">
+                                {selectedItemModal[`aromaticsGuide_${lang}`] || selectedItemModal.aromaticsGuide_uz}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* TAB 4: TARIXI VA TAVSIF */}
+                        {dishModalTab === 'story' && (
+                          <div className="space-y-3.5 animate-fade-in">
+                            <div className="pb-2 border-b border-slate-100">
+                              <h4 className="font-serif font-black text-slate-900 text-sm sm:text-base">
+                                {lang === 'it' ? 'Storia, Tradizione & Patrimonio' : lang === 'en' ? 'Heritage, Culture & Legacy' : 'Tarixi, Madaniyati va An\'analari'}
+                              </h4>
+                              <p className="text-xs text-slate-500 font-light">
+                                {lang === 'it' 
+                                  ? 'Il sapore autentico dell\'ospitalità e della cucina tradizionale uzbeka.' 
+                                  : lang === 'en' 
+                                    ? 'The timeless taste of Uzbek hospitality and culinary heritage.' 
+                                    : 'O\'zbek dasturxonining asriy an\'anasi va madaniy merosi.'}
+                              </p>
+                            </div>
+
+                            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+                              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-light">
+                                {selectedItemModal[`story_${lang}`] || selectedItemModal.story_uz}
+                              </p>
+                              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-light">
+                                {selectedItemModal[`history_${lang}`] || selectedItemModal.history_uz}
+                              </p>
+                            </div>
+
+                            {selectedItemModal.sourceUrl && (
+                              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-100 flex items-center justify-between text-xs text-emerald-900">
+                                <span className="font-medium text-[11px]">
+                                  {lang === 'it' ? 'Retsept va ma\'lumotlar arbuz.com tajribasi asosida' : lang === 'en' ? 'Recipe & experience based on arbuz.com culinary guide' : 'Retsept va ma\'lumotlar arbuz.com tajribasi asosida'}
+                                </span>
+                                <a 
+                                  href={selectedItemModal.sourceUrl} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-[11px] font-bold text-[#0c594d] hover:underline flex items-center gap-1"
+                                >
+                                  <span>{selectedItemModal.sourceUrl.replace('https://', '')}</span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* Standard fallback dish modal */
+                      <div className="space-y-4">
+                        <p className="text-slate-600 leading-relaxed font-light text-xs sm:text-sm">
+                          {selectedItemModal[`history_${lang}`] || selectedItemModal.history_uz}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Bottom Footer Actions */}
+                  <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex justify-end shrink-0">
+                    <button
+                      onClick={() => setSelectedItemModal(null)}
+                      className="py-2 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer"
+                    >
+                      {lang === 'it' ? 'Chiudi' : lang === 'en' ? 'Close' : 'Yopish'}
+                    </button>
+                  </div>
+
+                </div>
+
               </div>
             </div>
           ) : (
