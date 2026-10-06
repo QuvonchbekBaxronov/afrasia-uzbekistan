@@ -200,7 +200,7 @@ export default function AdminPanel() {
 
       const localStore = getAllStoredDB();
 
-      const rData = localStore.regions || resR?.data || [];
+      const rData = (localStore.regions && localStore.regions.length >= 14) ? localStore.regions : ((resR?.data && resR.data.length >= 14) ? resR.data : (localStore.regions || []));
       const cData = localStore.cuisine || resC?.data || [];
       const tData = localStore.tours || resT?.data || [];
       const bData = localStore.pageBanners || resB?.data || {};

@@ -29,13 +29,32 @@ export default function RegionDetail({ currentLang }) {
 
   useEffect(() => {
     const savedRegions = getStoredData('regions', []);
-    const found = savedRegions.find(r => r.id === id);
+    const matchId = (r) => {
+      if (!r) return false;
+      if (r.id === id) return true;
+      if (r.link && r.link.endsWith(id)) return true;
+      if (id === 'xiva' && r.id === 'xorazm') return true;
+      if (id === 'xorazm' && r.id === 'xiva') return true;
+      if (id === 'shahrisabz' && r.id === 'qashqadaryo') return true;
+      if (id === 'qarshi' && r.id === 'qashqadaryo') return true;
+      if (id === 'termiz' && r.id === 'surxondaryo') return true;
+      if (id === 'zomin' && r.id === 'jizzax') return true;
+      if (id === 'guliston' && r.id === 'sirdaryo') return true;
+      if (id === 'nukus' && r.id === 'qoraqalpogiston') return true;
+      if ((id === 'toshkent' || id === 'toshkent-shahri') && (r.id === 'toshkent' || r.id === 'toshkent-shahri')) return true;
+      return false;
+    };
+    const found = savedRegions.find(matchId);
     if (found) {
       setRegion(found);
     } else {
       axios.get(`${API_BASE}/regions/${id}`)
-        .then(res => setRegion(res.data))
-        .catch(err => console.error(err));
+        .then(res => {
+          if (res.data) setRegion(res.data);
+        })
+        .catch(() => {
+          if (savedRegions.length > 0) setRegion(savedRegions[0]);
+        });
     }
   }, [id]);
 

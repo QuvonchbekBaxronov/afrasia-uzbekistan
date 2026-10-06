@@ -114,7 +114,8 @@ export default function Home({ currentLang }) {
 
     axios.get(`${API_BASE}/db`)
       .then(res => {
-        const regions = savedRegions || res.data.regions || [];
+        const fetchedRegions = (res.data?.regions || []).filter(r => (r.name_uz || r.name || r.name_it) && r.center);
+        const regions = (fetchedRegions.length >= 14) ? fetchedRegions : (savedRegions || []);
         const attractions = res.data.attractions || [];
         const news = res.data.news || [];
         setData({

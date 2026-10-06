@@ -5,7 +5,7 @@ import { initialDb } from '../data/initialDbData';
 
 const STORAGE_KEY = 'afrasia_db_store';
 const VERSION_KEY = 'afrasia_db_version';
-const CURRENT_VERSION = 'v3'; // Bumped to force clear bloated base64 and cache clean local database
+const CURRENT_VERSION = 'v4'; // Bumped to force clear corrupted 8-region cache and load authentic 14 regions
 
 export const getStoredData = (key, fallback = null) => {
   try {
@@ -17,6 +17,9 @@ export const getStoredData = (key, fallback = null) => {
     }
     const store = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     if (store[key] && Array.isArray(store[key]) && store[key].length > 0) {
+      if (key === 'regions' && store[key].length < 14) {
+        return initialDb.regions;
+      }
       return store[key];
     }
     if (store[key] && typeof store[key] === 'object' && Object.keys(store[key]).length > 0) {
@@ -44,6 +47,9 @@ export const getAllStoredDB = () => {
     const store = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     const getValidList = (key) => {
       if (store[key] && Array.isArray(store[key]) && store[key].length > 0) {
+        if (key === 'regions' && store[key].length < 14) {
+          return initialDb.regions;
+        }
         return store[key];
       }
       return initialDb[key] || [];

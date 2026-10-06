@@ -16,12 +16,20 @@ export default function Regions({ currentLang }) {
   useEffect(() => {
     const savedRegions = getStoredData('regions', []);
     if (savedRegions && savedRegions.length > 0) {
-      setRegions(savedRegions);
+      const validSaved = savedRegions.filter(r => (r.name_uz || r.name || r.name_it) && r.center);
+      if (validSaved.length >= 14) {
+        setRegions(validSaved);
+      }
     }
 
     axios.get(`${API_BASE}/regions`)
       .then(res => {
-        if (res.data && res.data.length > 0) setRegions(res.data);
+        if (res.data && Array.isArray(res.data)) {
+          const valid = res.data.filter(r => (r.name_uz || r.name || r.name_it) && r.center);
+          if (valid.length >= 14) {
+            setRegions(valid);
+          }
+        }
       })
       .catch(err => console.error("Regions load fallback:", err));
 

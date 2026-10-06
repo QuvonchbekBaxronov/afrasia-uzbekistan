@@ -1,68 +1,12 @@
 {
   "regions": [
     {
-      "id": "toshkent-shahri",
-      "name": "Città di Tashkent",
-      "name_uz": "Qoraqalpog'iston",
-      "name_en": "Qoraqalpog'iston",
-      "name_it": "Qoraqalpog'iston",
-      "slogan": "Il cuore dell'Uzbekistan",
-      "slogan_uz": "Cho'lda g'arq bo'lgan olam",
-      "slogan_en": "Cho'lda g'arq bo'lgan olam",
-      "slogan_it": "Cho'lda g'arq bo'lgan olam",
-      "image": "/images/toshkent_shahri.jpg",
-      "population": "3.0 million",
-      "center": "Tashkent",
-      "center_uz": "Nukus shahri",
-      "center_en": "Nukus shahri",
-      "center_it": "Nukus shahri",
-      "about_uz": "Mazkur joyda neolit davridan beri insonlar yashab kelganliklari uchun qoraqalpoq xalqining madaniyati va tarixi benihoya boydir. Bu yerda qadimiy qal'alar va jahonga mashhur Savitskiy muzeyi joylashgan.",
-      "about_en": "Mazkur joyda neolit davridan beri insonlar yashab kelganliklari uchun qoraqalpoq xalqining madaniyati va tarixi benihoya boydir. Bu yerda qadimiy qal'alar va jahonga mashhur Savitskiy muzeyi joylashgan.",
-      "about_it": "Mazkur joyda neolit davridan beri insonlar yashab kelganliklari uchun qoraqalpoq xalqining madaniyati va tarixi benihoya boydir. Bu yerda qadimiy qal'alar va jahonga mashhur Savitskiy muzeyi joylashgan.",
-      "geography_uz": "Qoraqalpog'iston Respublikasi O'zbekistonning shimoli-g'arbiy qismida joylashgan bo'lib, Orol dengizining qurigan qismi va Orolbo'yi hududlarini o'z ichiga oladi.",
-      "geography_en": "Qoraqalpog'iston Respublikasi O'zbekistonning shimoli-g'arbiy qismida joylashgan bo'lib, Orol dengizining qurigan qismi va Orolbo'yi hududlarini o'z ichiga oladi.",
-      "geography_it": "Qoraqalpog'iston Respublikasi O'zbekistonning shimoli-g'arbiy qismida joylashgan bo'lib, Orol dengizining qurigan qismi va Orolbo'yi hududlarini o'z ichiga oladi.",
-      "bestTimeToVisit": "Primavera e Autunno",
-      "bestTimeToVisit_it": "Primavera e Autunno",
-      "famousPlaces": [
-        {
-          "name_uz": "Chorsu Bozori",
-          "name_en": "Chorsu Bazaar",
-          "name_it": "Bazar di Chorsu",
-          "category": "Tarixiy maskan",
-          "workHours": "06:00 - 18:00",
-          "image": "/images/toshkent_shahri.jpg",
-          "mapUrl": "https://yandex.uz/maps/-/CTCGyE3H",
-          "history_it": "Tashkent è un’antica città con una storia di molti secoli. In passato era conosciuta con i nomi di Chach e Shash. Grazie alla sua posizione lungo la Via della Seta, la città si sviluppò come importante centro commerciale, artigianale, scientifico e culturale. Oggi Tashkent è la capitale dell’Uzbekistan e una grande metropoli moderna.",
-          "history_en": "Tashkent is an ancient city with a history spanning many centuries. In the past, it was known as Chach and Shash. Due to its location along the Great Silk Road, the city developed as an important centre of trade, craftsmanship, science, and culture. Today, Tashkent is the capital of Uzbekistan and a major modern metropolis.",
-          "history_uz": "Toshkent — ko‘p asrlik tarixga ega qadimiy shaharlardan biridir. U qadimda Choch va Shosh nomlari bilan mashhur bo‘lgan. Buyuk Ipak yo‘li bo‘yida joylashgani sababli shahar savdo, hunarmandchilik, ilm-fan va madaniyat markazi sifatida rivojlangan. Bugungi kunda Toshkent O‘zbekistonning poytaxti va zamonaviy yirik megapolis hisoblanadi.",
-          "history": "Tashkent è un’antica città con una storia di molti secoli. In passato era conosciuta con i nomi di Chach e Shash. Grazie alla sua posizione lungo la Via della Seta, la città si sviluppò come importante centro commerciale, artigianale, scientifico e culturale. Oggi Tashkent è la capitale dell’Uzbekistan e una grande metropoli moderna.",
-          "name": "Bazar di Chorsu"
-        },
-        {
-          "name": "Chilpiq minorasi",
-          "image": "https://uzbekistan.travel/storage/app/uploads/public/67b/6a9/0a4/thumb_4631_740_0_0_0_auto.png",
-          "history": "Zardushtiylik davriga oid qadimiy daxma.",
-          "location": "Nukus yaqinida",
-          "name_it": "Chilpiq minorasi",
-          "name_en": "Chilpiq minorasi",
-          "name_uz": "Chilpiq minorasi",
-          "history_it": "Zardushtiylik davriga oid qadimiy daxma.",
-          "history_en": "Zardushtiylik davriga oid qadimiy daxma.",
-          "history_uz": "Zardushtiylik davriga oid qadimiy daxma.",
-          "location_it": "Nukus yaqinida",
-          "location_en": "Nukus yaqinida",
-          "location_uz": "Nukus yaqinida"
-        }
-      ]
-    },
-    {
       "id": "toshkent",
-      "name": "Toshkent shahri va viloyati",
+      "name": "Tashkent City",
       "slogan": "Qadimiy Sharq javohiri va zamonaviy O'zbekistonning poytaxti",
       "image": "/images/toshkent_shahri.jpg",
       "population": "3,000,000+",
-      "center": "Toshkent shahri",
+      "center": "Toshkent",
       "about": "Toshkent - O'zbekistonning poytaxti va Markaziy Osiyodagi eng yirik shaharlardan biri. Ko'p asrlik tarixga ega bu shahar zamonaviy megapolis va tarixiy madaniyat chorrahasidir.",
       "geography": "Toshkent shahri Chotqol tog' tizmalari etagida, Chirchiq daryosi vodiysida joylashgan.",
       "famousPlaces": [
@@ -587,14 +531,14 @@
           ]
         }
       ],
-      "name_it": "Città e Regione di Tashkent",
-      "name_en": "Tashkent City & Region",
-      "name_uz": "Toshkent shahri va viloyati",
-      "slogan_it": "Il gioiello dell'antica Via della Seta e vibrante capitale moderna dell'Uzbekistan",
-      "slogan_en": "The jewel of the ancient Silk Road and vibrant modern capital of Uzbekistan",
-      "slogan_uz": "Qadimiy Sharq javohiri va zamonaviy O'zbekistonning gavjum poytaxti",
-      "center_it": "Toshkent shahri",
-      "center_en": "Toshkent shahri",
+      "name_it": "Città di Tashkent",
+      "name_en": "Tashkent City",
+      "name_uz": "Toshkent shahri",
+      "slogan_it": "Capitale e cuore dell'Uzbekistan",
+      "slogan_en": "Capital and heart of Uzbekistan",
+      "slogan_uz": "O'zbekistonning poytaxti va yuragi",
+      "center_it": "Tashkent",
+      "center_en": "Tashkent",
       "center_uz": "Toshkent shahri",
       "about_it": "Toshkent - O'zbekistonning poytaxti va Markaziy Osiyodagi eng yirik shaharlardan biri. Ko'p asrlik tarixga ega bu shahar zamonaviy megapolis va tarixiy madaniyat chorrahasidir.",
       "about_en": "Toshkent - O'zbekistonning poytaxti va Markaziy Osiyodagi eng yirik shaharlardan biri. Ko'p asrlik tarixga ega bu shahar zamonaviy megapolis va tarixiy madaniyat chorrahasidir.",
@@ -605,17 +549,17 @@
     },
     {
       "id": "samarqand",
-      "name": "Regione di Samarcanda",
+      "name": "Samarkand",
       "name_uz": "Samarqand viloyati",
       "name_en": "Samarkand Region",
       "name_it": "Regione di Samarcanda",
-      "slogan": "Lo specchio del mondo",
+      "slogan": "Yer yuzining sayqali",
       "slogan_uz": "Yer yuzining sayqali",
       "slogan_en": "The Mirror of the World",
       "slogan_it": "Lo specchio del mondo",
       "image": "/images/samarqand.jpg",
       "population": "4.1 million",
-      "center": "Samarcanda",
+      "center": "Samarqand",
       "center_uz": "Samarqand",
       "center_en": "Samarkand",
       "center_it": "Samarcanda",
@@ -625,7 +569,7 @@
       "geography_uz": "Zarafshon vodiysida, Hisor va Turkiston tizma tog'lari orasida joylashgan.",
       "geography_en": "Located in the Zarafshan Valley, between the Gissar and Turkestan mountain ranges.",
       "geography_it": "Situata nella valle di Zarafshan, tra le catene montuose Gissar e Turkestan.",
-      "bestTimeToVisit": "Primavera (Aprile-Maggio)",
+      "bestTimeToVisit": "Bahor (Aprel-May)",
       "bestTimeToVisit_it": "Primavera (Aprile-Maggio)",
       "famousPlaces": [
         {
@@ -634,13 +578,7 @@
           "name_it": "Piazza Registan",
           "category": "Tarixiy obida",
           "workHours": "08:00 - 22:00",
-          "image": "/images/samarqand.jpg",
-          "mapUrl": "https://yandex.uz/maps/-/CTASnU7F",
-          "history_it": "Piazza Registan è il monumento più famoso di Samarcanda e uno dei simboli dell’Uzbekistan. La piazza è circondata da tre magnifiche madrase: la Madrasa di Ulugh Beg (XV secolo), la Madrasa Sher-Dor e la Madrasa Tilya-Kori (XVII secolo). Nel Medioevo il Registan era il centro della vita pubblica della città, dove si svolgevano commerci, cerimonie ufficiali e feste. Oggi fa parte del UNESCO World Heritage Site.\n",
-          "history_en": "Registan Square is the most famous landmark of Samarkand and one of the symbols of Uzbekistan. The square is surrounded by three magnificent madrasahs: Ulugh Beg Madrasah (15th century), Sher-Dor Madrasah, and Tilya-Kori Madrasah (17th century). During the Middle Ages, Registan was the city’s main public square, where trade, royal ceremonies, and public events took place. Today, it is part of the UNESCO World Heritage Site.",
-          "history_uz": "Registon maydoni Samarqandning eng mashhur tarixiy majmuasi va Oʻzbekistonning ramzlaridan biridir. Maydon uchta ulugʻvor madrasa — Ulugʻbek madrasasi (XV asr), Sherdor madrasasi va Tillakori madrasasi (XVII asr) bilan o‘ralgan. O‘rta asrlarda Registon shahar hayotining markazi bo‘lib, bu yerda savdo, tantanalar va davlat marosimlari o‘tkazilgan. Bugungi kunda u UNESCO World Heritage Site tarkibiga kiradi.",
-          "history": "Piazza Registan è il monumento più famoso di Samarcanda e uno dei simboli dell’Uzbekistan. La piazza è circondata da tre magnifiche madrase: la Madrasa di Ulugh Beg (XV secolo), la Madrasa Sher-Dor e la Madrasa Tilya-Kori (XVII secolo). Nel Medioevo il Registan era il centro della vita pubblica della città, dove si svolgevano commerci, cerimonie ufficiali e feste. Oggi fa parte del UNESCO World Heritage Site.\n",
-          "name": "Piazza Registan"
+          "image": "/images/samarqand.jpg"
         },
         {
           "name_uz": "Go'ri Amir Maqbarasi",
@@ -648,8 +586,7 @@
           "name_it": "Mausoleo di Gur-e-Amir",
           "category": "Tarixiy obida",
           "workHours": "09:00 - 19:00",
-          "image": "/images/samarqand.jpg",
-          "name": "Mausoleo di Gur-e-Amir"
+          "image": "/images/samarqand.jpg"
         },
         {
           "name_uz": "Shohi Zinda Majmuasi",
@@ -657,26 +594,23 @@
           "name_it": "Shah-i-Zinda",
           "category": "Tarixiy obida",
           "workHours": "09:00 - 19:00",
-          "image": "/images/samarqand.jpg",
-          "name": "Shah-i-Zinda"
+          "image": "/images/samarqand.jpg"
         }
-      ],
-      "about": "Samarcanda è una famosa città con 2750 anni di storia, situata al crocevia dell'antica Via della Seta. I suoi monumenti con cupole azzurre sono famosi in tutto il mondo.",
-      "geography": "Situata nella valle di Zarafshan, tra le catene montuose Gissar e Turkestan."
+      ]
     },
     {
       "id": "buxoro",
-      "name": "Regione di Bukhara",
+      "name": "Bukhara",
       "name_uz": "Buxoro viloyati",
       "name_en": "Bukhara Region",
       "name_it": "Regione di Bukhara",
-      "slogan": "Città delle Antiche Cupole",
+      "slogan": "Qadimiy Gumbazlar Shahri",
       "slogan_uz": "Qadimiy Gumbazlar Shahri",
       "slogan_en": "City of Ancient Domes",
       "slogan_it": "Città delle Antiche Cupole",
       "image": "/images/buxoro.jpg",
       "population": "2.0 million",
-      "center": "Bukhara",
+      "center": "Buxoro",
       "center_uz": "Buxoro",
       "center_en": "Bukhara",
       "center_it": "Bukhara",
@@ -686,7 +620,7 @@
       "geography_uz": "O'zbekistonning janubi-g'arbiy qismida, Qizilqum cho'li yaqinida joylashgan.",
       "geography_en": "Located in the southwestern part of Uzbekistan, near the Kyzylkum desert.",
       "geography_it": "Situata nella parte sud-occidentale dell'Uzbekistan, vicino al deserto del Kyzylkum.",
-      "bestTimeToVisit": "Autunno (Settembre-Ottobre)",
+      "bestTimeToVisit": "Kuz (Sentyabr-Oktyabr)",
       "bestTimeToVisit_it": "Autunno (Settembre-Ottobre)",
       "famousPlaces": [
         {
@@ -695,8 +629,7 @@
           "name_it": "Fortezza dell'Ark",
           "category": "Tarixiy obida",
           "workHours": "09:00 - 18:00",
-          "image": "/images/buxoro.jpg",
-          "name": "Fortezza dell'Ark"
+          "image": "/images/buxoro.jpg"
         },
         {
           "name_uz": "Kalon Minorasi",
@@ -704,8 +637,7 @@
           "name_it": "Minareto Kalyan",
           "category": "Tarixiy obida",
           "workHours": "24 soat",
-          "image": "/images/buxoro.jpg",
-          "name": "Minareto Kalyan"
+          "image": "/images/buxoro.jpg"
         },
         {
           "name_uz": "Labihovuz",
@@ -713,26 +645,23 @@
           "name_it": "Lyabi-Hauz",
           "category": "Tarixiy maskan",
           "workHours": "24 soat",
-          "image": "/images/buxoro.jpg",
-          "name": "Lyabi-Hauz"
+          "image": "/images/buxoro.jpg"
         }
-      ],
-      "about": "Bukhara è una delle città-museo a cielo aperto dell'Uzbekistan con i monumenti storici meglio conservati.",
-      "geography": "Situata nella parte sud-occidentale dell'Uzbekistan, vicino al deserto del Kyzylkum."
+      ]
     },
     {
       "id": "xorazm",
-      "name": "Regione di Khorezm",
+      "name": "Khorezm",
       "name_uz": "Xorazm viloyati",
       "name_en": "Khorezm Region",
       "name_it": "Regione di Khorezm",
-      "slogan": "Città delle mille cupole",
+      "slogan": "Ming gumbazli shahar",
       "slogan_uz": "Ming gumbazli shahar",
       "slogan_en": "City of a thousand domes",
       "slogan_it": "Città delle mille cupole",
       "image": "/images/xorazm.jpg",
       "population": "1.9 million",
-      "center": "Urgench",
+      "center": "Urganch",
       "center_uz": "Urganch",
       "center_en": "Urgench",
       "center_it": "Urgench",
@@ -742,7 +671,7 @@
       "geography_uz": "Amudaryo daryosining quyi oqimida, shimoli-g'arbda joylashgan.",
       "geography_en": "Located in the lower reaches of the Amu Darya river, in the northwest.",
       "geography_it": "Situata nel basso corso del fiume Amu Darya, nel nord-ovest.",
-      "bestTimeToVisit": "Primavera e Autunno",
+      "bestTimeToVisit": "Bahor va Kuz",
       "bestTimeToVisit_it": "Primavera e Autunno",
       "famousPlaces": [
         {
@@ -751,8 +680,7 @@
           "name_it": "Ichan-Kala",
           "category": "Tarixiy obida",
           "workHours": "08:00 - 20:00",
-          "image": "/images/xorazm.jpg",
-          "name": "Ichan-Kala"
+          "image": "/images/xorazm.jpg"
         },
         {
           "name_uz": "Kalta Minor",
@@ -760,8 +688,7 @@
           "name_it": "Minareto Kalta Minor",
           "category": "Tarixiy obida",
           "workHours": "24 soat",
-          "image": "/images/xorazm.jpg",
-          "name": "Minareto Kalta Minor"
+          "image": "/images/xorazm.jpg"
         },
         {
           "name_uz": "Toshhovli Saroyi",
@@ -769,36 +696,519 @@
           "name_it": "Palazzo Tash-Khauli",
           "category": "Tarixiy obida",
           "workHours": "09:00 - 18:00",
-          "image": "/images/xorazm.jpg",
-          "name": "Palazzo Tash-Khauli"
+          "image": "/images/xorazm.jpg"
         }
-      ],
-      "about": "Khorezm è un'antica oasi dell'Uzbekistan, il suo cuore Khiva è famosa per il complesso fiabesco di Ichan-Kala.",
-      "geography": "Situata nel basso corso del fiume Amu Darya, nel nord-ovest."
+      ]
     },
     {
-      "id": "2",
-      "title": "O'zbekiston hududlarida ko'ngilochar tadbirlar taqvimi",
-      "image": "https://uzbekistan.travel/storage/app/uploads/public/69c/61f/041/thumb_5182_740_0_0_0_auto.jpg",
-      "title_it": "O'zbekiston hududlarida ko'ngilochar tadbirlar taqvimi",
-      "title_en": "O'zbekiston hududlarida ko'ngilochar tadbirlar taqvimi",
-      "title_uz": "O'zbekiston hududlarida ko'ngilochar tadbirlar taqvimi"
+      "id": "qashqadaryo",
+      "name": "Kashkadarya",
+      "name_uz": "Qashqadaryo viloyati",
+      "name_en": "Kashkadarya Region",
+      "name_it": "Regione di Kashkadarya",
+      "slogan": "Amir Temur Vatani",
+      "slogan_uz": "Amir Temur Vatani",
+      "slogan_en": "Homeland of Amir Timur",
+      "slogan_it": "Patria di Amir Timur",
+      "image": "/images/qashqadaryo.jpg",
+      "population": "3.4 million",
+      "center": "Qarshi",
+      "center_uz": "Qarshi",
+      "center_en": "Karshi",
+      "center_it": "Karshi",
+      "about_uz": "Qashqadaryo O'zbekistonning boy tarix va tabiatga ega viloyati, Amir Temur tug'ilgan Shahrisabz shahri bilan mashhur.",
+      "about_en": "Kashkadarya is a region with rich history and nature in Uzbekistan, famous for Shahrisabz, the birthplace of Amir Timur.",
+      "about_it": "Kashkadarya è una regione con una ricca storia e natura in Uzbekistan, famosa per Shahrisabz, città natale di Amir Timur.",
+      "geography_uz": "O'zbekistonning janubida, Qashqadaryo havzasida joylashgan.",
+      "geography_en": "Located in the south of Uzbekistan, in the Kashkadarya basin.",
+      "geography_it": "Situata nel sud dell'Uzbekistan, nel bacino del Kashkadarya.",
+      "bestTimeToVisit": "Bahor (May)",
+      "bestTimeToVisit_it": "Primavera (Maggio)",
+      "famousPlaces": [
+        {
+          "name_uz": "Oq Saroy (Shahrisabz)",
+          "name_en": "Ak-Saray Palace",
+          "name_it": "Palazzo Ak-Saray",
+          "category": "Tarixiy obida",
+          "workHours": "08:00 - 19:00",
+          "image": "/images/qashqadaryo.jpg"
+        },
+        {
+          "name_uz": "Dorut Tilovat",
+          "name_en": "Dorut Tilovat",
+          "name_it": "Dorut Tilovat",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/qashqadaryo.jpg"
+        },
+        {
+          "name_uz": "Hazrati Imom masjidi",
+          "name_en": "Hazrati Imam Mosque",
+          "name_it": "Moschea di Hazrati Imam",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 18:00",
+          "image": "/uploads/places/hazrati_imom_cover.webp"
+        }
+      ]
     },
     {
-      "id": "3",
-      "title": "Barcha uchun qulay turizm",
-      "image": "https://uzbekistan.travel/storage/app/uploads/public/696/080/d6b/thumb_5082_740_0_0_0_auto.jpg",
-      "title_it": "Barcha uchun qulay turizm",
-      "title_en": "Barcha uchun qulay turizm",
-      "title_uz": "Barcha uchun qulay turizm"
+      "id": "surxondaryo",
+      "name": "Surkhandarya",
+      "name_uz": "Surxondaryo viloyati",
+      "name_en": "Surkhandarya Region",
+      "name_it": "Regione di Surkhandarya",
+      "slogan": "Qadimiy sivilizatsiyalar beshigi",
+      "slogan_uz": "Qadimiy sivilizatsiyalar beshigi",
+      "slogan_en": "Cradle of ancient civilizations",
+      "slogan_it": "Culla di antiche civiltà",
+      "image": "/images/surxondaryo.jpg",
+      "population": "2.8 million",
+      "center": "Termiz",
+      "center_uz": "Termiz",
+      "center_en": "Termez",
+      "center_it": "Termez",
+      "about_uz": "Surxondaryo O'zbekistonning eng janubiy va issiq viloyati bo'lib, buddizm obidalari va ajoyib tog' manzaralari bilan ajralib turadi.",
+      "about_en": "Surkhandarya is the southernmost and warmest region of Uzbekistan, distinguished by its Buddhist monuments and magnificent mountain landscapes.",
+      "about_it": "Surkhandarya è la regione più meridionale e più calda dell'Uzbekistan, distinta per i suoi monumenti buddisti e i magnifici paesaggi montani.",
+      "geography_uz": "Janubda, Afg'oniston va Tojikiston bilan chegaradosh.",
+      "geography_en": "In the south, bordering Afghanistan and Tajikistan.",
+      "geography_it": "Nel sud, al confine con Afghanistan e Tagikistan.",
+      "bestTimeToVisit": "Erta bahor yoki kech kuz",
+      "bestTimeToVisit_it": "Inizio primavera o tardo autunno",
+      "famousPlaces": [
+        {
+          "name_uz": "Fayoztepa (Buddizm obidasi)",
+          "name_en": "Fayaztepa (Buddhist stupa)",
+          "name_it": "Fayaztepa (Stupa buddista)",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 17:00",
+          "image": "/images/surxondaryo.jpg"
+        },
+        {
+          "name_uz": "Hakim at-Termiziy Maqbarasi",
+          "name_en": "Al-Hakim at-Termizi Mausoleum",
+          "name_it": "Mausoleo di Al-Hakim at-Termizi",
+          "category": "Tarixiy obida",
+          "workHours": "08:00 - 19:00",
+          "image": "/images/surxondaryo.jpg"
+        },
+        {
+          "name_uz": "Boysun tog'lari",
+          "name_en": "Boysun Mountains",
+          "name_it": "Montagne di Boysun",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/surxondaryo.jpg"
+        }
+      ]
     },
     {
-      "id": "4",
-      "title": "Buxorodan Sariosiyoga bir soatda: Silk Avia yangi ichki aviaqatnovni yo'lga qo'yadi",
-      "image": "https://uzbekistan.travel/storage/app/uploads/public/6a4/65f/f08/thumb_5265_400_260_0_0_crop.jpg",
-      "title_it": "Buxorodan Sariosiyoga bir soatda: Silk Avia yangi ichki aviaqatnovni yo'lga qo'yadi",
-      "title_en": "Buxorodan Sariosiyoga bir soatda: Silk Avia yangi ichki aviaqatnovni yo'lga qo'yadi",
-      "title_uz": "Buxorodan Sariosiyoga bir soatda: Silk Avia yangi ichki aviaqatnovni yo'lga qo'yadi"
+      "id": "navoiy",
+      "name": "Navoi",
+      "name_uz": "Navoiy viloyati",
+      "name_en": "Navoi Region",
+      "name_it": "Regione di Navoi",
+      "slogan": "Sanoat va Tabiat Uyg'unligi",
+      "slogan_uz": "Sanoat va Tabiat Uyg'unligi",
+      "slogan_en": "Harmony of Industry and Nature",
+      "slogan_it": "Armonia di Industria e Natura",
+      "image": "/images/navoiy.jpg",
+      "population": "1.0 million",
+      "center": "Navoiy",
+      "center_uz": "Navoiy",
+      "center_en": "Navoi",
+      "center_it": "Navoi",
+      "about_uz": "Navoiy O'zbekistonning eng katta maydonga ega va yirik sanoatlashgan mintaqasidir. Sarmishsoy qoyatosh suratlari diqqatga sazovor.",
+      "about_en": "Navoi is the largest region by area and a highly industrialized zone in Uzbekistan. Sarmishsay petroglyphs are a major attraction.",
+      "about_it": "Navoi è la regione più grande per superficie e una zona altamente industrializzata dell'Uzbekistan. I petroglifi di Sarmishsay sono una grande attrazione.",
+      "geography_uz": "Qizilqum cho'lining markaziy qismini egallaydi.",
+      "geography_en": "Occupies the central part of the Kyzylkum desert.",
+      "geography_it": "Occupa la parte centrale del deserto del Kyzylkum.",
+      "bestTimeToVisit": "Kuz",
+      "bestTimeToVisit_it": "Autunno",
+      "famousPlaces": [
+        {
+          "name_uz": "Sarmishsoy darasi",
+          "name_en": "Sarmishsay Gorge",
+          "name_it": "Gola di Sarmishsay",
+          "category": "Tabiat",
+          "workHours": "08:00 - 18:00",
+          "image": "/images/navoiy.jpg"
+        },
+        {
+          "name_uz": "Chashma Majmuasi (Nurota)",
+          "name_en": "Chashma Complex (Nurata)",
+          "name_it": "Complesso Chashma (Nurata)",
+          "category": "Tarixiy maskan",
+          "workHours": "08:00 - 20:00",
+          "image": "/images/navoiy.jpg"
+        },
+        {
+          "name_uz": "Aydarko'l",
+          "name_en": "Aydarkul Lake",
+          "name_it": "Lago Aydarkul",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/navoiy.jpg"
+        }
+      ]
+    },
+    {
+      "id": "jizzax",
+      "name": "Jizzakh",
+      "name_uz": "Jizzax viloyati",
+      "name_en": "Jizzakh Region",
+      "name_it": "Regione di Jizzakh",
+      "slogan": "Tog'lar O'lkasi",
+      "slogan_uz": "Tog'lar O'lkasi",
+      "slogan_en": "Land of Mountains",
+      "slogan_it": "Terra di Montagne",
+      "image": "/images/jizzax.jpg",
+      "population": "1.4 million",
+      "center": "Jizzax",
+      "center_uz": "Jizzax",
+      "center_en": "Jizzakh",
+      "center_it": "Jizzakh",
+      "about_uz": "Jizzax go'zal tabiati, ajoyib qo'riqxonalari va mazali somsalari bilan mashhur. Zomin tog'lari sayyohlar yoqtirgan maskan.",
+      "about_en": "Jizzakh is famous for its beautiful nature, wonderful reserves, and delicious samsas. Zaamin mountains are a favorite tourist spot.",
+      "about_it": "Jizzakh è famosa per la sua natura meravigliosa, le splendide riserve e le deliziose samsa. Le montagne di Zaamin sono una meta turistica preferita.",
+      "geography_uz": "Mirzacho'l tekisligi va Turkiston tizmasi oralig'ida.",
+      "geography_en": "Between the Mirzacho'l plain and the Turkestan range.",
+      "geography_it": "Tra la pianura di Mirzacho'l e la catena del Turkestan.",
+      "bestTimeToVisit": "Yoz (Iyul-Avgust)",
+      "bestTimeToVisit_it": "Estate (Luglio-Agosto)",
+      "famousPlaces": [
+        {
+          "name_uz": "Zomin Milliy Bog'i",
+          "name_en": "Zaamin National Park",
+          "name_it": "Parco Nazionale Zaamin",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/jizzax.jpg"
+        },
+        {
+          "name_uz": "Aydar-Arnasoy ko'llar tizimi",
+          "name_en": "Aydar-Arnasay Lakes",
+          "name_it": "Laghi Aydar-Arnasay",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/jizzax.jpg"
+        },
+        {
+          "name_uz": "Jizzax Somsasi",
+          "name_en": "Jizzakh Samsa Centers",
+          "name_it": "Centri Samsa di Jizzakh",
+          "category": "Gastronomiya",
+          "workHours": "08:00 - 22:00",
+          "image": "/images/jizzax.jpg"
+        }
+      ]
+    },
+    {
+      "id": "sirdaryo",
+      "name": "Syrdarya",
+      "name_uz": "Sirdaryo viloyati",
+      "name_en": "Syrdarya Region",
+      "name_it": "Regione di Syrdarya",
+      "slogan": "Hosildor Zamin",
+      "slogan_uz": "Hosildor Zamin",
+      "slogan_en": "Fertile Land",
+      "slogan_it": "Terra Fertile",
+      "image": "/images/sirdaryo.jpg",
+      "population": "0.9 million",
+      "center": "Guliston",
+      "center_uz": "Guliston",
+      "center_en": "Gulistan",
+      "center_it": "Gulistan",
+      "about_uz": "Sirdaryo daryosi yoqasida joylashgan viloyat bo'lib, poliz ekinlari va qovunlari bilan butun respublikaga tanilgan.",
+      "about_en": "A region located along the Syr Darya river, known throughout the republic for its melons and crops.",
+      "about_it": "Una regione situata lungo il fiume Syr Darya, nota in tutta la repubblica per i suoi meloni e colture.",
+      "geography_uz": "Mirzacho'l tekisligida, Sirdaryo daryosining chap qirg'og'ida.",
+      "geography_en": "In the Mirzacho'l plain, on the left bank of the Syr Darya river.",
+      "geography_it": "Nella pianura di Mirzacho'l, sulla riva sinistra del fiume Syr Darya.",
+      "bestTimeToVisit": "Kuz",
+      "bestTimeToVisit_it": "Autunno",
+      "famousPlaces": [
+        {
+          "name_uz": "Guliston shahar bog'i",
+          "name_en": "Gulistan City Park",
+          "name_it": "Parco Cittadino di Gulistan",
+          "category": "Tabiat",
+          "workHours": "06:00 - 23:00",
+          "image": "/images/sirdaryo.jpg"
+        },
+        {
+          "name_uz": "Sirdaryo daryosi bo'ylari",
+          "name_en": "Syrdarya River Banks",
+          "name_it": "Rive del Fiume Syrdarya",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/sirdaryo.jpg"
+        },
+        {
+          "name_uz": "Qovun bozori",
+          "name_en": "Melon Market",
+          "name_it": "Mercato dei Meloni",
+          "category": "Bozor",
+          "workHours": "07:00 - 19:00",
+          "image": "/images/sirdaryo.jpg"
+        }
+      ]
+    },
+    {
+      "id": "toshkent-viloyati",
+      "name": "Tashkent Region",
+      "name_uz": "Toshkent viloyati",
+      "name_en": "Tashkent Region",
+      "name_it": "Regione di Tashkent",
+      "slogan": "Poytaxt Atrofidagi Tabiat",
+      "slogan_uz": "Poytaxt Atrofidagi Tabiat",
+      "slogan_en": "Nature around the Capital",
+      "slogan_it": "Natura attorno alla Capitale",
+      "image": "/images/toshkent_vil.jpg",
+      "population": "2.9 million",
+      "center": "Nurafshon",
+      "center_uz": "Nurafshon",
+      "center_en": "Nurafshon",
+      "center_it": "Nurafshon",
+      "about_uz": "Toshkent viloyati tabiat qo'ynida dam olish uchun ko'plab oromgohlar, baland tog'lar va Chorvoq suv omboriga ega.",
+      "about_en": "Tashkent region has many resorts, high mountains, and the Charvak reservoir for relaxing in nature.",
+      "about_it": "La regione di Tashkent ha molti resort, alte montagne e il bacino idrico di Charvak per rilassarsi nella natura.",
+      "geography_uz": "O'zbekistonning shimoli-sharqiy qismi, Tyan-Shan tog'lari etaklari.",
+      "geography_en": "Northeastern part of Uzbekistan, foothills of Tien Shan mountains.",
+      "geography_it": "Parte nord-orientale dell'Uzbekistan, ai piedi delle montagne Tien Shan.",
+      "bestTimeToVisit": "Yoz (Iyun-Avgust)",
+      "bestTimeToVisit_it": "Estate (Giugno-Agosto)",
+      "famousPlaces": [
+        {
+          "name_uz": "Chorvoq Suv Ombori",
+          "name_en": "Charvak Reservoir",
+          "name_it": "Bacino di Charvak",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/uploads/places/chimyon_chorvoq_cover.webp"
+        },
+        {
+          "name_uz": "Amirsoy Tog' Kurorti",
+          "name_en": "Amirsoy Mountain Resort",
+          "name_it": "Località Montana Amirsoy",
+          "category": "Dam Olish",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/toshkent_vil.jpg"
+        },
+        {
+          "name_uz": "Ugom-Chatqol Milliy Bog'i",
+          "name_en": "Ugam-Chatkal National Park",
+          "name_it": "Parco Nazionale Ugam-Chatkal",
+          "category": "Tabiat",
+          "workHours": "24 soat",
+          "image": "/images/toshkent_vil.jpg"
+        }
+      ]
+    },
+    {
+      "id": "andijon",
+      "name": "Andijan",
+      "name_uz": "Andijon viloyati",
+      "name_en": "Andijan Region",
+      "name_it": "Regione di Andijan",
+      "slogan": "Bobur diyori",
+      "slogan_uz": "Bobur diyori",
+      "slogan_en": "Land of Babur",
+      "slogan_it": "Terra di Babur",
+      "image": "/images/andijon.jpg",
+      "population": "3.2 million",
+      "center": "Andijon",
+      "center_uz": "Andijon",
+      "center_en": "Andijan",
+      "center_it": "Andijan",
+      "about_uz": "Andijon - Farg'ona vodiysining eng zich joylashgan, hunarmandchilik, qishloq xo'jaligi va san'ati bilan mashhur hududi.",
+      "about_en": "Andijan is the most densely populated region of the Fergana Valley, famous for its crafts, agriculture, and arts.",
+      "about_it": "Andijan è la regione più densamente popolata della valle di Fergana, famosa per i suoi mestieri, agricoltura e arti.",
+      "geography_uz": "Farg'ona vodiysining sharqiy qismida.",
+      "geography_en": "In the eastern part of the Fergana Valley.",
+      "geography_it": "Nella parte orientale della valle di Fergana.",
+      "bestTimeToVisit": "Bahor",
+      "bestTimeToVisit_it": "Primavera",
+      "famousPlaces": [
+        {
+          "name_uz": "Zahiriddin Muhammad Bobur Bog'i",
+          "name_en": "Babur Ecopark",
+          "name_it": "Ecoparco Babur",
+          "category": "Tabiat va Tarix",
+          "workHours": "08:00 - 22:00",
+          "image": "/images/andijon.jpg"
+        },
+        {
+          "name_uz": "Jome Masjidi",
+          "name_en": "Juma Mosque",
+          "name_it": "Moschea Juma",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/andijon.jpg"
+        },
+        {
+          "name_uz": "Hunarmandlar Markazi",
+          "name_en": "Craftsmen Center",
+          "name_it": "Centro Artigianale",
+          "category": "Madaniyat",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/andijon.jpg"
+        }
+      ]
+    },
+    {
+      "id": "namangan",
+      "name": "Namangan",
+      "name_uz": "Namangan viloyati",
+      "name_en": "Namangan Region",
+      "name_it": "Regione di Namangan",
+      "slogan": "Gullar Shahri",
+      "slogan_uz": "Gullar Shahri",
+      "slogan_en": "City of Flowers",
+      "slogan_it": "Città dei Fiori",
+      "image": "/images/namangan.jpg",
+      "population": "2.9 million",
+      "center": "Namangan",
+      "center_uz": "Namangan",
+      "center_en": "Namangan",
+      "center_it": "Namangan",
+      "about_uz": "Namangan butun dunyoga o'zining xalqaro Gullar bayrami va mohir tikuvchilari bilan mashhur.",
+      "about_en": "Namangan is known worldwide for its International Flower Festival and skilled tailors.",
+      "about_it": "Namangan è conosciuta in tutto il mondo per il suo Festival Internazionale dei Fiori e per gli abili sarti.",
+      "geography_uz": "Farg'ona vodiysining shimoliy qismi.",
+      "geography_en": "Northern part of the Fergana Valley.",
+      "geography_it": "Parte settentrionale della valle di Fergana.",
+      "bestTimeToVisit": "Bahor (May oyi - Gullar bayrami)",
+      "bestTimeToVisit_it": "Primavera (Maggio - Festa dei fiori)",
+      "famousPlaces": [
+        {
+          "name_uz": "Bobur nomidagi istirohat bog'i",
+          "name_en": "Babur Recreation Park",
+          "name_it": "Parco Ricreativo Babur",
+          "category": "Tabiat",
+          "workHours": "07:00 - 23:00",
+          "image": "/images/namangan.jpg"
+        },
+        {
+          "name_uz": "Chortoq Orimgohi",
+          "name_en": "Chartak Resort",
+          "name_it": "Località di Chartak",
+          "category": "Dam Olish",
+          "workHours": "24 soat",
+          "image": "/images/namangan.jpg"
+        },
+        {
+          "name_uz": "Mulla Qirg'iz Madrasasi",
+          "name_en": "Mulla Kyrgyz Madrasa",
+          "name_it": "Madrasa di Mulla Kyrgyz",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 17:00",
+          "image": "/images/namangan.jpg"
+        }
+      ]
+    },
+    {
+      "id": "fargona",
+      "name": "Fergana",
+      "name_uz": "Farg'ona viloyati",
+      "name_en": "Fergana Region",
+      "name_it": "Regione di Fergana",
+      "slogan": "Ipak va Hunarmandlar Vatani",
+      "slogan_uz": "Ipak va Hunarmandlar Vatani",
+      "slogan_en": "Homeland of Silk and Craftsmen",
+      "slogan_it": "Patria di Seta e Artigiani",
+      "image": "/images/fargona.jpg",
+      "population": "3.9 million",
+      "center": "Farg'ona",
+      "center_uz": "Farg'ona",
+      "center_en": "Fergana",
+      "center_it": "Fergana",
+      "about_uz": "Farg'ona - O'zbekistonning eng ko'kalamzorlashtirilgan viloyatlaridan. Marg'ilon shoyisi va Rishton kulolchiligi bilan juda mashhur.",
+      "about_en": "Fergana is one of the greenest regions in Uzbekistan. Very famous for Margilan silk and Rishtan ceramics.",
+      "about_it": "Fergana è una delle regioni più verdi dell'Uzbekistan. Molto famosa per la seta di Margilan e la ceramica di Rishtan.",
+      "geography_uz": "Farg'ona vodiysining janubiy qismi.",
+      "geography_en": "Southern part of the Fergana Valley.",
+      "geography_it": "Parte meridionale della valle di Fergana.",
+      "bestTimeToVisit": "Bahor va Kuz",
+      "bestTimeToVisit_it": "Primavera e Autunno",
+      "famousPlaces": [
+        {
+          "name_uz": "Yodgorlik Ipak Fabrikasi (Marg'ilon)",
+          "name_en": "Yodgorlik Silk Factory",
+          "name_it": "Fabbrica di Seta Yodgorlik",
+          "category": "Hunarmandchilik",
+          "workHours": "09:00 - 17:00",
+          "image": "/images/fargona.jpg"
+        },
+        {
+          "name_uz": "Xudoyorxon O'rdasi (Qo'qon)",
+          "name_en": "Palace of Khudayar Khan (Kokand)",
+          "name_it": "Palazzo di Khudayar Khan",
+          "category": "Tarixiy obida",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/fargona.jpg"
+        },
+        {
+          "name_uz": "Rishton Kulolchilik Ustaxonalari",
+          "name_en": "Rishtan Ceramics Workshops",
+          "name_it": "Laboratori di Ceramica di Rishtan",
+          "category": "Hunarmandchilik",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/fargona.jpg"
+        }
+      ]
+    },
+    {
+      "id": "qoraqalpogiston",
+      "name": "Karakalpakstan",
+      "name_uz": "Qoraqalpog'iston Res.",
+      "name_en": "Republic of Karakalpakstan",
+      "name_it": "Repubblica del Karakalpakstan",
+      "slogan": "Orol Bo'yi Mo'jizalari",
+      "slogan_uz": "Orol Bo'yi Mo'jizalari",
+      "slogan_en": "Wonders of the Aral Sea Region",
+      "slogan_it": "Meraviglie della Regione del Lago d'Aral",
+      "image": "/images/qoraqalpogiston.jpg",
+      "population": "1.9 million",
+      "center": "Nukus",
+      "center_uz": "Nukus",
+      "center_en": "Nukus",
+      "center_it": "Nukus",
+      "about_uz": "Qoraqalpog'iston o'ziga xos madaniyat, Savitskiy san'at muzeyi hamda qadimgi xorazm qal'alari va qurib borayotgan Orol dengizi fojiasi bilan sayyohlarni jalb etadi.",
+      "about_en": "Karakalpakstan attracts tourists with its unique culture, the Savitsky Art Museum, ancient Khorezmian fortresses, and the tragedy of the shrinking Aral Sea.",
+      "about_it": "Il Karakalpakstan attira i turisti con la sua cultura unica, il Museo d'Arte Savitsky, le antiche fortezze della Corasmia e la tragedia del prosciugamento del Lago d'Aral.",
+      "geography_uz": "O'zbekistonning shimoli-g'arbiy qismi, Amudaryoning quyi oqimi va Orol dengizi bo'yi.",
+      "geography_en": "Northwestern part of Uzbekistan, lower reaches of the Amu Darya and Aral Sea coast.",
+      "geography_it": "Parte nord-occidentale dell'Uzbekistan, basso corso dell'Amu Darya e costa del Lago d'Aral.",
+      "bestTimeToVisit": "Bahor va Kuz (Mo'tadil harorat)",
+      "bestTimeToVisit_it": "Primavera e Autunno (Temperature moderate)",
+      "famousPlaces": [
+        {
+          "name_uz": "Savitskiy Muzeyi (Nukus)",
+          "name_en": "Savitsky Art Museum",
+          "name_it": "Museo d'Arte Savitsky",
+          "category": "Muzey",
+          "workHours": "09:00 - 18:00",
+          "image": "/images/qoraqalpogiston.jpg"
+        },
+        {
+          "name_uz": "Orol Dengizi Kema Qabristoni (Mo'ynoq)",
+          "name_en": "Ship Graveyard (Muynak)",
+          "name_it": "Cimitero delle Navi (Muynak)",
+          "category": "Tarixiy Maskan",
+          "workHours": "24 soat",
+          "image": "/images/qoraqalpogiston.jpg"
+        },
+        {
+          "name_uz": "Ayaz Qal'a",
+          "name_en": "Ayaz Kala Fortress",
+          "name_it": "Fortezza di Ayaz Kala",
+          "category": "Tarixiy obida",
+          "workHours": "24 soat",
+          "image": "/images/qoraqalpogiston.jpg"
+        }
+      ]
     }
   ],
   "attractions": [
