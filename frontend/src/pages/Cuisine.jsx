@@ -10,7 +10,7 @@ export default function Cuisine({ currentLang }) {
   const [cuisine, setCuisine] = useState(() => getStoredData('cuisine', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.cuisine || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    return b.cuisine || "/uploads/cuisine/uzbek_plov.jpg";
   });
 
   useEffect(() => {
@@ -70,10 +70,10 @@ export default function Cuisine({ currentLang }) {
                 {/* Card Image */}
                 <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-50 border border-gray-100 mb-3 relative">
                   <img 
-                    src={dish.image} 
+                    src={dish.image || '/uploads/cuisine/uzbek_plov.jpg'} 
                     alt={dishName} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    onError={(e) => { e.target.style.display = 'none'; }} 
+                    onError={(e) => { e.currentTarget.src = '/uploads/cuisine/uzbek_plov.jpg'; }} 
                   />
                 </div>
                 

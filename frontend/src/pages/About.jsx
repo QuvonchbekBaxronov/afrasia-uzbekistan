@@ -6,7 +6,7 @@ import { API_BASE } from '../config/api';
 
 export default function About({ currentLang }) {
   const lang = currentLang?.code || 'it';
-  const [bannerUrl, setBannerUrl] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
+  const [bannerUrl, setBannerUrl] = useState("/images/toshkent_shahri.jpg");
   const [aboutData, setAboutData] = useState({
     aboutHeroTitle_it: "Informazioni sull'Uzbekistan",
     aboutHeroTitle_en: "About Uzbekistan",
@@ -32,7 +32,7 @@ export default function About({ currentLang }) {
     historyOrigins_it: "L'Uzbekistan è una culla della civiltà situata al centro della Via della Seta.",
     historyOrigins_en: "Uzbekistan is a cradle of civilization situated at the heart of the Silk Road.",
     historyOrigins_uz: "O'zbekiston — Buyuk Ipak yo'li markazida joylashgan qadimiy sivilizatsiyalar beshigi.",
-    historyOriginsImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+    historyOriginsImage: "/images/buxoro.jpg",
     religionFaithTitle_it: "Religione e Storia Spirituale",
     religionFaithTitle_en: "Religion & Spiritual Heritage",
     religionFaithTitle_uz: "Din va E'tiqod Tarixi",
@@ -116,7 +116,7 @@ export default function About({ currentLang }) {
           text_it: "Durante le campagne di Alessandro Magno, Samarcanda (Maracanda) era famosa per le sue fortezze e il commercio.",
           text_en: "During Alexander the Great's campaigns, Samarkand (Maracanda) stood as a world-famous fortress along the Silk Road.",
           text_uz: "Buyuk Iskandar yurishi davrida Samarqand (Marakanda) dunyoga mashhur savdo va madaniyat markazi bo'lgan.",
-          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+          image: "/images/samarqand.jpg"
         },
         { 
           id: 2,
@@ -125,7 +125,7 @@ export default function About({ currentLang }) {
           text_it: "L'arrivo dell'Islam avviò uno straordinario sviluppo scientifico e architettonico.",
           text_en: "The arrival of Islamic culture marked a golden era in mathematics, astronomy, and architecture.",
           text_uz: "Islom madaniyati kirib kelishi bilan matematika, astronomiya va me'morchilik rivojlandi.",
-          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+          image: "/images/buxoro.jpg"
         },
         { 
           id: 3,
@@ -152,7 +152,7 @@ export default function About({ currentLang }) {
           text_it: "L'Uzbekistan ottiene l'indipendenza e valorizza il suo ricco patrimonio storico.",
           text_en: "The Republic of Uzbekistan declared independence, preserving its rich history for the world.",
           text_uz: "O'zbekiston Respublikasi mustaqillikka erishib, boy madaniyatini tikladi.",
-          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+          image: "/images/toshkent_shahri.jpg"
         }
       ];
 
@@ -225,9 +225,10 @@ export default function About({ currentLang }) {
             <div className="bg-white rounded-2xl overflow-hidden border border-slate-150 shadow-sm hover:shadow-lg transition-all group flex flex-col">
               <div className="h-48 overflow-hidden relative">
                 <img 
-                  src={aboutData.historyOriginsImage || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="} 
+                  src={aboutData.historyOriginsImage || "/images/buxoro.jpg"} 
                   alt="Origins" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  onError={(e) => { e.currentTarget.src = '/images/buxoro.jpg'; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
                 <h3 className="absolute bottom-3 left-4 right-4 text-white font-bold text-lg drop-shadow">

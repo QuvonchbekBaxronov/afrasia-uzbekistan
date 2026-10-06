@@ -438,86 +438,68 @@ export default function App() {
         <div className="lg:hidden fixed top-[60px] inset-x-0 bg-[#0c594d]/95 backdrop-blur-2xl text-white border-b border-teal-400/30 p-5 space-y-4 shadow-2xl z-50 animate-fadeIn">
           
           {/* Main 2-Column Grid Navigation Links */}
-          <div className="grid grid-cols-2 gap-2 text-xs font-bold uppercase tracking-wider">
+          <div className="grid grid-cols-2 gap-2 text-xs font-semibold tracking-wide">
             <Link 
               to="/" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>🏠</span>
               <span>{t('home', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/regions" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>🏙️</span>
               <span>{t('regions', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/tours" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>🗺️</span>
               <span>{t('tours', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/cuisine" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>🍲</span>
               <span>{t('cuisine', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/art" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>🪕</span>
               <span>{t('art', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/language" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center gap-2 transition-all border border-white/10"
+              className="p-3 bg-white/10 hover:bg-white/20 active:bg-white/25 rounded-2xl flex items-center justify-center transition-all border border-white/10 text-center"
             >
-              <span>💬</span>
               <span>{t('language', currentLang.code)}</span>
             </Link>
 
             <Link 
-              to="/language/academy" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:opacity-90 active:bg-emerald-800 rounded-2xl flex items-center gap-2 transition-all border border-emerald-400/40 col-span-2 justify-center font-bold text-xs"
-            >
-              <span>🎓</span>
-              <span>{currentLang.code === 'it' ? 'Accademia di Lingua Uzbeka (A1-A2)' : 'O\'zbek Tili Akademiyasi (A1-A2)'}</span>
-            </Link>
-
-
-            <Link 
               to="/go-uzbekistan" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-3 bg-emerald-400 text-slate-950 font-black rounded-2xl flex items-center gap-2 transition-all shadow-md col-span-2 justify-center"
+              className="p-3 bg-emerald-400 text-slate-950 font-bold rounded-2xl flex items-center justify-center transition-all shadow-md col-span-2 text-center"
             >
-              <span>🌟</span>
               <span>{t('goUzbekistan', currentLang.code)}</span>
             </Link>
 
             <Link 
               to="/about" 
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center justify-center gap-2 transition-all border border-white/10 col-span-2 text-center text-[11px]"
+              className="p-2.5 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center justify-center transition-all border border-white/10 col-span-2 text-center text-xs"
             >
-              <span>ℹ️</span>
               <span>{t('aboutHeroTitle', currentLang.code)}</span>
             </Link>
           </div>
@@ -525,8 +507,8 @@ export default function App() {
           {/* Compact Language Selector Chips */}
           <div className="pt-2 border-t border-white/15 flex items-center justify-between gap-2">
 
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-teal-200">
-              🌐 {t('language', currentLang.code)}:
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-teal-200">
+              {t('language', currentLang.code)}:
             </span>
             <div className="flex gap-1.5">
               {languages.map((lItem, idx) => (
@@ -879,7 +861,12 @@ export default function App() {
                               onClick={() => setSearchModalOpen(false)}
                               className="flex items-center gap-3 p-2 hover:bg-slate-100/80 rounded-xl transition-colors"
                             >
-                              <img src={r.image || '/uz_banner.png'} alt={rName} className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" />
+                              <img 
+                                src={r.image || '/images/samarqand.jpg'} 
+                                alt={rName} 
+                                className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" 
+                                onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
+                              />
                               <div className="flex-1 min-w-0">
                                 <span className="font-bold text-xs text-slate-800 block truncate">{rName}</span>
                                 <span className="text-[10px] text-slate-500">Viloyat</span>
@@ -910,7 +897,12 @@ export default function App() {
                               onClick={() => setSearchModalOpen(false)}
                               className="flex items-center gap-3 p-2 hover:bg-slate-100/80 rounded-xl transition-colors"
                             >
-                              <img src={p.image || '/uz_banner.png'} alt={pName} className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" />
+                              <img 
+                                src={p.image || '/images/samarqand.jpg'} 
+                                alt={pName} 
+                                className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" 
+                                onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
+                              />
                               <div className="flex-1 min-w-0">
                                 <span className="font-bold text-xs text-slate-800 block truncate">{pName}</span>
                                 <span className="text-[10px] text-slate-500 truncate block">📍 {pLoc}</span>
@@ -938,7 +930,12 @@ export default function App() {
                               onClick={() => setSearchModalOpen(false)}
                               className="flex items-center gap-3 p-2 hover:bg-slate-100/80 rounded-xl transition-colors"
                             >
-                              <img src={c.image || '/uz_banner.png'} alt={cName} className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" />
+                              <img 
+                                src={c.image || '/uploads/cuisine/uzbek_plov.jpg'} 
+                                alt={cName} 
+                                className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" 
+                                onError={(e) => { e.currentTarget.src = '/uploads/cuisine/uzbek_plov.jpg'; }}
+                              />
                               <div className="flex-1 min-w-0">
                                 <span className="font-bold text-xs text-slate-800 block truncate">{cName}</span>
                                 <span className="text-[10px] text-slate-500">Milliy Taom</span>
@@ -964,7 +961,12 @@ export default function App() {
                             onClick={() => setSearchModalOpen(false)}
                             className="flex items-center gap-3 p-2 hover:bg-slate-100/80 rounded-xl transition-colors"
                           >
-                            <img src={inst.image || '/uz_banner.png'} alt={inst.name} className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" />
+                            <img 
+                              src={inst.image || '/uploads/instruments/dutor.jpg'} 
+                              alt={inst.name} 
+                              className="w-10 h-10 object-cover rounded-lg border border-slate-200 shrink-0" 
+                              onError={(e) => { e.currentTarget.src = '/uploads/instruments/dutor.jpg'; }}
+                            />
                             <div className="flex-1 min-w-0">
                               <span className="font-bold text-xs text-slate-800 block truncate">{inst.name}</span>
                               <span className="text-[10px] text-slate-500">Cholg'u Asbobi</span>

@@ -183,26 +183,6 @@ export default function AdminPanel() {
       ctx.drawImage(img, -renderW / 2, -renderH / 2, renderW, renderH);
 
       ctx.restore();
-
-      // Draw subtle crop viewfinder frame grid
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(10, 10, targetW - 20, targetH - 20);
-
-      // Rule of thirds dashed lines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([6, 6]);
-      ctx.beginPath();
-      ctx.moveTo(targetW / 3, 0);
-      ctx.lineTo(targetW / 3, targetH);
-      ctx.moveTo((2 * targetW) / 3, 0);
-      ctx.lineTo((2 * targetW) / 3, targetH);
-      ctx.moveTo(0, targetH / 3);
-      ctx.lineTo(targetW, targetH / 3);
-      ctx.moveTo(0, (2 * targetH) / 3);
-      ctx.lineTo(targetW, (2 * targetH) / 3);
-      ctx.stroke();
     };
   }, [cropperModal.isOpen, cropperModal.imageSrc, cropperRatio, cropScale, cropPan, cropRotation]);
 
@@ -722,7 +702,7 @@ export default function AdminPanel() {
                 <div>
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">1. Asosiy Sahifa Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.home || '/uz_banner.png'} alt="Home Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.home || '/images/samarqand.jpg'} alt="Home Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'home')} />
                   </div>
                 </div>
@@ -731,7 +711,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">2. Go Uzbekistan Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.goUzbekistan || data.pageBanners?.regions || '/uz_banner.png'} alt="Go Uzbekistan Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.goUzbekistan || data.pageBanners?.regions || '/images/buxoro.jpg'} alt="Go Uzbekistan Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'goUzbekistan')} />
                   </div>
                 </div>
@@ -740,7 +720,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">3. Viloyatlar (Shaharlar) Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.regions || ''} alt="Regions Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.regions || '/images/toshkent_shahri.jpg'} alt="Regions Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'regions')} />
                   </div>
                 </div>
@@ -749,7 +729,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">4. Sayohatlar (Turlar) Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.tours || '/uz_banner.png'} alt="Tours Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.tours || '/images/samarqand.jpg'} alt="Tours Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'tours')} />
                   </div>
                 </div>
@@ -758,7 +738,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">5. Taomlar Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.cuisine || ''} alt="Cuisine Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.cuisine || '/uploads/cuisine/uzbek_plov.jpg'} alt="Cuisine Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'cuisine')} />
                   </div>
                 </div>
@@ -767,7 +747,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">6. San'at va Hunarmandchilik Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.art || data.pageBanners?.tours || '/uz_banner.png'} alt="Art Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.art || data.pageBanners?.tours || '/images/samarqand.jpg'} alt="Art Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'art')} />
                   </div>
                 </div>
@@ -776,7 +756,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">7. Til va Iboralar Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.language || data.pageBanners?.regions || '/uz_banner.png'} alt="Language Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.language || data.pageBanners?.regions || '/images/buxoro.jpg'} alt="Language Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'language')} />
                   </div>
                 </div>
@@ -785,7 +765,7 @@ export default function AdminPanel() {
                 <div className="border-t border-slate-200 pt-2">
                   <span className="block text-xs font-bold text-slate-700 uppercase mb-1">8. Biz Haqimizda Banneri (16:9):</span>
                   <div className="flex items-center gap-3">
-                    <img src={data.pageBanners?.about || data.pageBanners?.home || '/uz_banner.png'} alt="About Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
+                    <img src={data.pageBanners?.about || data.pageBanners?.home || '/images/toshkent_shahri.jpg'} alt="About Banner" className="h-10 w-16 object-cover rounded border border-slate-200" />
                     <input type="file" accept="image/*" className="text-xs w-full" onChange={(e) => handleBannerUpload(e, 'about')} />
                   </div>
                 </div>
@@ -1721,7 +1701,7 @@ export default function AdminPanel() {
             </span>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <img 
-                src={homeFacts.aboutImage || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                src={homeFacts.aboutImage || '/images/samarqand.jpg'} 
                 alt="About Showcase" 
                 className="h-28 w-full sm:w-48 object-cover rounded-xl border border-slate-200 shadow-sm shrink-0" 
               />
@@ -1878,7 +1858,7 @@ export default function AdminPanel() {
                 
                 {/* Photo & File Upload */}
                 <div className="space-y-2">
-                  <img src={homeFacts.historyOriginsImage || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} alt="Origins" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
+                  <img src={homeFacts.historyOriginsImage || '/images/buxoro.jpg'} alt="Origins" className="w-full h-36 object-cover rounded-xl border border-slate-200" />
                   <label className="block text-[10px] font-extrabold text-slate-600 uppercase">Fayldan Rasm Yuklash va Qirqish:</label>
                   <input type="file" accept="image/*" className="text-xs w-full bg-slate-50 p-2 border border-slate-200 rounded-xl cursor-pointer" onChange={e => handleTopicImageUpload(e, 'historyOriginsImage')} />
                   <input type="text" placeholder="yoki Rasm URL manzili..." className="w-full p-2 border border-slate-200 rounded-xl text-xs" value={homeFacts.historyOriginsImage || ''} onChange={e => setHomeFacts({ ...homeFacts, historyOriginsImage: e.target.value })} />
@@ -2159,6 +2139,14 @@ export default function AdminPanel() {
             {/* Live Canvas Viewport */}
             <div className="relative bg-slate-950 rounded-2xl overflow-hidden aspect-[16/9] flex items-center justify-center border border-slate-800 shadow-inner mb-4">
               <canvas ref={canvasRef} className="max-w-full max-h-full object-contain" />
+              {/* Non-destructive CSS overlay (visual guide only, never baked into image) */}
+              <div className="pointer-events-none absolute inset-6 border border-white/25 rounded-lg">
+                <div className="w-full h-full grid grid-cols-3 grid-rows-3 divide-x divide-y divide-white/10">
+                  <div></div><div></div><div></div>
+                  <div></div><div></div><div></div>
+                  <div></div><div></div><div></div>
+                </div>
+              </div>
             </div>
 
             {/* Interactive Control Sliders */}

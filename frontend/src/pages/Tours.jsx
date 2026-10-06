@@ -16,7 +16,7 @@ export default function Tours({ currentLang }) {
   const [loading, setLoading] = useState(false);
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.tours || "/uz_banner.png";
+    return b.tours || "/images/samarqand.jpg";
   });
 
   // Filters state
@@ -303,7 +303,7 @@ export default function Tours({ currentLang }) {
                     src={tour.image} 
                     alt={tourTitle} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-95"
-                    onError={(e) => { e.target.src = '/uz_banner.png'; }}
+                    onError={(e) => { e.target.src = '/images/samarqand.jpg'; }}
                   />
                   
                   {/* Badge */}

@@ -61,7 +61,7 @@ export default function Home({ currentLang }) {
     population: '2.6M',
     monuments: '1,800+',
     places: '350+',
-    image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    image: '/images/toshkent_shahri.jpg',
     labelX: 740,
     labelY: 200,
     link: '/regions/toshkent'
@@ -172,7 +172,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Samarcanda' : lang === 'en' ? 'Samarkand' : 'Samarqand',
       subtitle: lang === 'it' ? 'La perla della Via della Seta' : lang === 'en' ? 'Pearl of the Silk Road' : "Ipak yo'li durri",
-      img: getRegionImage('samarqand', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
+      img: getRegionImage('samarqand', '/images/samarqand.jpg'),
       link: '/regions/samarqand',
       badge1: 'UNESCO',
       badge2: lang === 'it' ? 'Storia' : lang === 'en' ? 'History' : 'Tarix'
@@ -180,7 +180,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Bukhara' : lang === 'en' ? 'Bukhara' : 'Buxoro',
       subtitle: lang === 'it' ? 'Città sacra medievale' : lang === 'en' ? 'Sacred medieval city' : 'Muqaddas shahar',
-      img: getRegionImage('buxoro', 'https://uzbekistan.travel/storage/app/uploads/public/67b/6aa/42a/thumb_4635_740_0_0_0_auto.jpg'),
+      img: getRegionImage('buxoro', '/images/buxoro.jpg'),
       link: '/regions/buxoro',
       badge1: 'UNESCO',
       badge2: lang === 'it' ? 'Cultura' : lang === 'en' ? 'Culture' : 'Madaniyat'
@@ -188,7 +188,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Khiva' : lang === 'en' ? 'Khiva' : 'Xiva',
       subtitle: lang === 'it' ? 'Città-museo vivente' : lang === 'en' ? 'Living museum city' : 'Muzey-shahar',
-      img: getRegionImage('xiva', 'https://uzbekistan.travel/storage/app/uploads/public/688/061/308/thumb_4921_740_0_0_0_auto.jpg'),
+      img: getRegionImage('xiva', '/images/xorazm.jpg'),
       link: '/regions/xiva',
       badge1: 'UNESCO',
       badge2: lang === 'it' ? 'Architettura' : lang === 'en' ? 'Architecture' : 'Arxitektura'
@@ -196,7 +196,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Tashkent' : lang === 'en' ? 'Tashkent' : 'Toshkent',
       subtitle: lang === 'it' ? 'Capitale moderna' : lang === 'en' ? 'Modern capital' : 'Zamonaviy poytaxt',
-      img: getRegionImage('toshkent', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='),
+      img: getRegionImage('toshkent', '/images/toshkent_shahri.jpg'),
       link: '/regions/toshkent',
       badge1: lang === 'it' ? 'Città' : lang === 'en' ? 'City' : 'Shahar',
       badge2: lang === 'it' ? 'Modernità' : lang === 'en' ? 'Modern' : 'Zamonaviy'
@@ -204,7 +204,7 @@ export default function Home({ currentLang }) {
     {
       title: lang === 'it' ? 'Shahrisabz' : lang === 'en' ? 'Shahrisabz' : 'Shahrisabz',
       subtitle: lang === 'it' ? 'Città di Tamerlano' : lang === 'en' ? 'City of Tamerlane' : 'Temur shahri',
-      img: getRegionImage('shahrisabz', 'https://uzbekistan.travel/storage/app/uploads/public/67b/6a7/96a/thumb_4624_740_0_0_0_auto.jpeg'),
+      img: getRegionImage('shahrisabz', '/images/qashqadaryo.jpg'),
       link: '/regions/shahrisabz',
       badge1: 'UNESCO',
       badge2: lang === 'it' ? 'Storia' : lang === 'en' ? 'History' : 'Tarix'
@@ -527,7 +527,7 @@ export default function Home({ currentLang }) {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                      e.target.src = '/images/samarqand.jpg';
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent"></div>
@@ -636,12 +636,12 @@ export default function Home({ currentLang }) {
                   className="group relative rounded-2xl overflow-hidden h-48 shadow-sm border border-slate-200/80 block transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <img 
-                    src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='}
+                    src={place.image || '/images/samarqand.jpg'}
                     alt={place["name_" + lang] || place.name || place["title_" + lang] || place.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                      e.target.src = '/images/samarqand.jpg';
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>

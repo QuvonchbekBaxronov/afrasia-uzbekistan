@@ -279,9 +279,10 @@ export default function PlaceDetail({ currentLang }) {
             <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm space-y-3">
               <div className="h-80 sm:h-[460px] w-full relative bg-slate-900 rounded-lg overflow-hidden">
                 <img 
-                  src={selectedPhoto || place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                  src={selectedPhoto || place.image || '/images/samarqand.jpg'} 
                   alt={placeTitle} 
                   className="w-full h-full object-cover transition-all duration-300"
+                  onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
                 />
               </div>
 

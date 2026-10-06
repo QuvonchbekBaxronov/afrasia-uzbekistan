@@ -10,7 +10,7 @@ export default function Regions({ currentLang }) {
   const [regions, setRegions] = useState(() => getStoredData('regions', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.regions || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    return b.regions || "/images/toshkent_shahri.jpg";
   });
 
   useEffect(() => {
@@ -83,9 +83,10 @@ export default function Regions({ currentLang }) {
               >
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={reg.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                    src={reg.image || '/images/samarqand.jpg'} 
                     alt={name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   

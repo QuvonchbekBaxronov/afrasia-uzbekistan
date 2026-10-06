@@ -22,7 +22,7 @@ export default function Art({ currentLang }) {
   const [instruments, setInstruments] = useState(() => getStoredData('instruments', []));
   const [bannerUrl, setBannerUrl] = useState(() => {
     const b = getStoredData('pageBanners', {});
-    return b.art || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    return b.art || "/images/buxoro.jpg";
   });
   const [activeVideo, setActiveVideo] = useState(null);
 

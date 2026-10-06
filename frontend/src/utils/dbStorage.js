@@ -5,7 +5,7 @@ import { initialDb } from '../data/initialDbData';
 
 const STORAGE_KEY = 'afrasia_db_store';
 const VERSION_KEY = 'afrasia_db_version';
-const CURRENT_VERSION = 'v2'; // Bumped to force clear old single-language data
+const CURRENT_VERSION = 'v3'; // Bumped to force clear bloated base64 and cache clean local database
 
 export const getStoredData = (key, fallback = null) => {
   try {
@@ -62,7 +62,9 @@ export const getAllStoredDB = () => {
       pageBanners: getValidObj('pageBanners'),
       instruments: getValidList('instruments'),
       phrases: getValidList('phrases'),
-      homeFacts: getValidObj('homeFacts')
+      homeFacts: getValidObj('homeFacts'),
+      uzbekLessons: getValidList('uzbekLessons'),
+      uzbekQuizzes: getValidList('uzbekQuizzes')
     };
   } catch (err) {
     return initialDb;

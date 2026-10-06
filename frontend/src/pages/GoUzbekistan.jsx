@@ -8,7 +8,7 @@ export default function GoUzbekistan() {
   const [allPlaces, setAllPlaces] = useState([]);
   const [regionsList, setRegionsList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [bannerUrl, setBannerUrl] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=");
+  const [bannerUrl, setBannerUrl] = useState("/images/buxoro.jpg");
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -245,9 +245,10 @@ export default function GoUzbekistan() {
                   {/* Image Showcase */}
                   <div className="h-56 overflow-hidden relative">
                     <img 
-                      src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                      src={place.image || '/images/samarqand.jpg'} 
                       alt={place.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
                     />
                     
                     {/* Badges */}
@@ -343,9 +344,10 @@ export default function GoUzbekistan() {
             {/* Modal Header Banner Image */}
             <div className="relative h-72 sm:h-96 w-full">
               <img 
-                src={selectedPlace.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                src={selectedPlace.image || '/images/samarqand.jpg'} 
                 alt={selectedPlace.name} 
                 className="w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
               

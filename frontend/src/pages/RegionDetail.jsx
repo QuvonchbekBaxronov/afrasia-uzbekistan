@@ -335,9 +335,10 @@ export default function RegionDetail({ currentLang }) {
                           {/* Image & Badges */}
                           <div className="h-52 overflow-hidden relative">
                             <img 
-                              src={place.image || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='} 
+                              src={place.image || region.image || '/images/samarqand.jpg'} 
                               alt={placeName} 
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              onError={(e) => { e.currentTarget.src = region.image || '/images/samarqand.jpg'; }}
                             />
                             {place.category && (
                               <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">
