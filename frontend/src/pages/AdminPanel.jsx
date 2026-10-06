@@ -405,16 +405,84 @@ export default function AdminPanel() {
     });
   };
 
+  const extractImageFromDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      return { type: 'file', file: e.dataTransfer.files[0] };
+    }
+    let uri = e.dataTransfer.getData('text/uri-list');
+    if (uri && (uri.startsWith('http://') || uri.startsWith('https://') || uri.startsWith('data:'))) {
+      return { type: 'url', url: uri.split('\n')[0].trim() };
+    }
+    let text = e.dataTransfer.getData('text/plain');
+    if (text && (text.startsWith('http://') || text.startsWith('https://') || text.startsWith('data:'))) {
+      return { type: 'url', url: text.trim() };
+    }
+    const html = e.dataTransfer.getData('text/html');
+    if (html) {
+      const match = html.match(/src=["']([^"']+)["']/i);
+      if (match && match[1]) {
+        return { type: 'url', url: match[1] };
+      }
+    }
+    return null;
+  };
+
+  const addGalleryPhotoToPlace = (placeIdx, photoUrl) => {
+    if (!photoUrl || !photoUrl.trim()) return;
+    setFormData(prev => {
+      const newPlaces = [...(prev.famousPlaces || [])];
+      const currentGallery = newPlaces[placeIdx]?.gallery || [];
+      newPlaces[placeIdx] = {
+        ...newPlaces[placeIdx],
+        gallery: [...currentGallery, photoUrl.trim()]
+      };
+      return { ...prev, famousPlaces: newPlaces };
+    });
+  };
+
+  const handleDropModalImage = (e) => {
+    const res = extractImageFromDrop(e);
+    if (!res) return;
+    if (res.type === 'file') {
+      openCropper(res.file, '16:9', (croppedBase64) => {
+        updateField('image', croppedBase64);
+      });
+    } else if (res.type === 'url') {
+      updateField('image', res.url);
+    }
+  };
+
+  const handleDropPlaceImage = (e, placeIdx) => {
+    const res = extractImageFromDrop(e);
+    if (!res) return;
+    if (res.type === 'file') {
+      openCropper(res.file, '4:3', (croppedBase64) => {
+        updateArrayItem('famousPlaces', placeIdx, 'image', croppedBase64);
+      });
+    } else if (res.type === 'url') {
+      updateArrayItem('famousPlaces', placeIdx, 'image', res.url);
+    }
+  };
+
+  const handleDropPlaceGallery = (e, placeIdx) => {
+    const res = extractImageFromDrop(e);
+    if (!res) return;
+    if (res.type === 'file') {
+      openCropper(res.file, '4:3', (croppedBase64) => {
+        addGalleryPhotoToPlace(placeIdx, croppedBase64);
+      });
+    } else if (res.type === 'url') {
+      addGalleryPhotoToPlace(placeIdx, res.url);
+    }
+  };
+
   const handleGalleryUpload = (e, placeIdx) => {
     const file = e.target.files[0];
     if (file) {
       openCropper(file, '4:3', (croppedBase64) => {
-        setFormData(prev => {
-          const newPlaces = [...prev.famousPlaces];
-          const currentGallery = newPlaces[placeIdx].gallery || [];
-          newPlaces[placeIdx].gallery = [...currentGallery, croppedBase64];
-          return { ...prev, famousPlaces: newPlaces };
-        });
+        addGalleryPhotoToPlace(placeIdx, croppedBase64);
       });
     }
     e.target.value = '';
@@ -951,15 +1019,67 @@ export default function AdminPanel() {
                         </div>
                       </div>
                       
-                      <div>
-                        <div className="flex justify-between items-center mb-1.5">
-                          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">Asosiy Rasm (Fayldan yuklash & Qirqish)</label>
+                      <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider">🖼️ Asosiy Rasm</label>
                           <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                             Tavsiya: 1200 × 675 px (16:9)
                           </span>
                         </div>
-                        <input type="file" accept="image/*" className="w-full border border-slate-200 p-2.5 rounded-xl bg-slate-50 text-sm" onChange={e => handleFileUpload(e, 'image')} />
-                        {formData.image && <img src={formData.image} alt="Preview" className="h-24 mt-3 rounded-xl object-cover border border-slate-200 shadow-sm" />}
+
+                        {/* Google URL Paste */}
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                            🌐 1-usul: Google yoki Internetdan rasm URL manzilini qo'yish:
+                          </label>
+                          <div className="flex gap-2">
+                            <input 
+                              type="text" 
+                              placeholder="https://... Google'dan 'Rasm manzilini nusxalash' qilib bu yerga qo'ying" 
+                              value={formData.image || ''} 
+                              onChange={e => updateField('image', e.target.value)} 
+                              className="flex-1 border border-slate-200 bg-white p-2.5 rounded-xl text-xs" 
+                            />
+                            {formData.image && (
+                              <button 
+                                type="button" 
+                                onClick={() => updateField('image', '')}
+                                className="text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl font-bold transition-colors"
+                              >
+                                Tozalash
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* File Upload / Drag & Drop */}
+                        <div>
+                          <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                            📁 2-usul: Kompyuterdan tanlash yoki sichqoncha bilan tortib olib kelish (Drag & Drop):
+                          </label>
+                          <div 
+                            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                            onDrop={handleDropModalImage}
+                            className="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-xl p-3 text-center bg-white hover:bg-emerald-50/20 transition-all cursor-pointer relative"
+                          >
+                            <input 
+                              type="file" 
+                              accept="image/*" 
+                              className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" 
+                              onChange={e => handleFileUpload(e, 'image')} 
+                            />
+                            <div className="text-xs text-slate-500">
+                              📥 Kompyuterdan fayl tanlang yoki Google rasmni shu yerga tortib olib keling (qirqish bilan)
+                            </div>
+                          </div>
+                        </div>
+
+                        {formData.image && (
+                          <div className="flex items-center gap-3 pt-1">
+                            <img src={formData.image} alt="Preview" className="h-20 w-32 rounded-xl object-cover border border-slate-200 shadow-sm" onError={(e) => { e.target.style.display = 'none'; }} />
+                            <span className="text-xs text-emerald-700 font-semibold">✓ Rasm tanlandi</span>
+                          </div>
+                        )}
                       </div>
                     </>
                   )}
@@ -1589,38 +1709,166 @@ export default function AdminPanel() {
                             <input className="w-full border border-slate-200 bg-white p-2.5 rounded-xl text-sm" value={place.mapUrl || ''} placeholder="https://maps.google.com/..." onChange={e => updateArrayItem('famousPlaces', idx, 'mapUrl', e.target.value)} />
                           </div>
 
-                          <div className="sm:col-span-3">
-                            <div className="flex justify-between items-center mb-1">
-                              <label className="block text-xs font-bold text-slate-600 uppercase">Asosiy Joy Rasmi (Fayldan yuklash & Qirqish)</label>
+                          {/* Asosiy Joy Rasmi */}
+                          <div className="sm:col-span-3 bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <div className="flex justify-between items-center">
+                              <label className="block text-xs font-bold text-slate-800 uppercase tracking-wide">
+                                🖼️ Asosiy Joy Rasmi
+                              </label>
                               <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                                 Tavsiya: 1000 × 750 px (4:3)
                               </span>
                             </div>
-                            <input type="file" accept="image/*" className="w-full border border-slate-200 bg-white p-2.5 rounded-xl text-sm" onChange={e => handleFileUpload(e, 'image', true, idx)} />
-                            {place.image && <img src={place.image} alt="Preview" className="h-20 mt-2 rounded-xl object-cover border border-slate-200 shadow-sm" />}
+
+                            {/* Option A: Direct Google / Web Image URL */}
+                            <div>
+                              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                                🌐 1-usul: Google yoki Internetdan rasm URL manzilini qo'yish (Eng tez va osoni):
+                              </label>
+                              <div className="flex gap-2">
+                                <input 
+                                  type="text" 
+                                  placeholder="https://... (Google'da rasm ustiga o'ng tugmani bosib 'Rasm manzilini nusxalash' qiling)" 
+                                  className="flex-1 border border-slate-200 bg-slate-50 focus:bg-white p-2.5 rounded-xl text-xs transition-colors" 
+                                  value={place.image || ''} 
+                                  onChange={e => updateArrayItem('famousPlaces', idx, 'image', e.target.value)} 
+                                />
+                                {place.image && (
+                                  <button 
+                                    type="button" 
+                                    onClick={() => updateArrayItem('famousPlaces', idx, 'image', '')}
+                                    className="text-xs bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl font-bold transition-colors"
+                                  >
+                                    Tozalash
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Option B: Drag & Drop zone or file upload */}
+                            <div>
+                              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                                📁 2-usul: Kompyuterdan fayl tanlash yoki sichqoncha bilan tortib olib kelish (Drag & Drop):
+                              </label>
+                              <div 
+                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                onDrop={(e) => handleDropPlaceImage(e, idx)}
+                                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 rounded-xl p-3 text-center bg-slate-50/50 hover:bg-emerald-50/20 transition-all cursor-pointer relative"
+                              >
+                                <input 
+                                  type="file" 
+                                  accept="image/*" 
+                                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" 
+                                  onChange={e => handleFileUpload(e, 'image', true, idx)} 
+                                />
+                                <div className="text-xs text-slate-600">
+                                  📥 Kompyuterdan fayl tanlang yoki Google'dan rasmni shu yerga tortib olib keling (qirqish bilan)
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Image Preview */}
+                            {place.image && (
+                              <div className="flex items-center gap-3 pt-1">
+                                <img 
+                                  src={place.image} 
+                                  alt="Preview" 
+                                  className="h-24 w-36 object-cover rounded-xl border border-slate-200 shadow-sm"
+                                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                />
+                                <span className="text-xs text-emerald-700 font-semibold">✓ Joy rasmi muvaffaqiyatli ulandi</span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Multi-Photo Gallery Upload Section */}
-                          <div className="sm:col-span-3 border-t border-slate-200 pt-3">
-                            <div className="flex justify-between items-center mb-2">
-                              <label className="block text-xs font-bold text-slate-700 uppercase">Ko'proq Rasmlar Galereyasi ({place.gallery?.length || 0} ta rasm)</label>
-                              <span className="text-[11px] text-slate-500">Sayyohlarga ko'rsatish uchun rasm qo'shing</span>
+                          <div className="sm:col-span-3 border-t border-slate-200 pt-4 bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <label className="block text-xs font-bold text-slate-800 uppercase tracking-wide">
+                                  📸 Ko'proq Rasmlar Galereyasi ({place.gallery?.length || 0} ta rasm)
+                                </label>
+                                <p className="text-[11px] text-slate-500">
+                                  Sayyohlarga ushbu obidaning turli burchaklardan olingan qo'shimcha fotolari
+                                </p>
+                              </div>
                             </div>
-                            <input 
-                              type="file" 
-                              accept="image/*" 
-                              className="w-full border border-slate-200 bg-white p-2.5 rounded-xl text-sm mb-3" 
-                              onChange={e => handleGalleryUpload(e, idx)} 
-                            />
+
+                            {/* Option A: Paste Google URL + Add button */}
+                            <div>
+                              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                                🌐 Google / Internetdan rasm URL manzilini qo'shish:
+                              </label>
+                              <div className="flex gap-2">
+                                <input 
+                                  id={`gallery-url-input-${idx}`}
+                                  type="text" 
+                                  placeholder="https://... Google'dan 'Rasm manzilini nusxalash' qilib bu yerga qo'ying" 
+                                  className="flex-1 border border-slate-200 bg-slate-50 focus:bg-white p-2.5 rounded-xl text-xs transition-colors"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      const val = e.target.value.trim();
+                                      if (val) {
+                                        addGalleryPhotoToPlace(idx, val);
+                                        e.target.value = '';
+                                      }
+                                    }
+                                  }}
+                                />
+                                <button 
+                                  type="button" 
+                                  onClick={() => {
+                                    const inp = document.getElementById(`gallery-url-input-${idx}`);
+                                    if (inp && inp.value.trim()) {
+                                      addGalleryPhotoToPlace(idx, inp.value.trim());
+                                      inp.value = '';
+                                    }
+                                  }} 
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm shrink-0"
+                                >
+                                  + Galereyaga Qo'shish
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Option B: Drag & drop or local file upload */}
+                            <div>
+                              <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                                📁 Kompyuterdan fayl tanlash yoki sichqoncha bilan tortib tashlash:
+                              </label>
+                              <div 
+                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                onDrop={(e) => handleDropPlaceGallery(e, idx)}
+                                className="border-2 border-dashed border-slate-200 hover:border-emerald-500 rounded-xl p-3 text-center bg-slate-50/50 hover:bg-emerald-50/20 transition-all cursor-pointer relative"
+                              >
+                                <input 
+                                  type="file" 
+                                  accept="image/*" 
+                                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer" 
+                                  onChange={e => handleGalleryUpload(e, idx)} 
+                                />
+                                <div className="text-xs text-slate-600">
+                                  📥 Kompyuterdan fayl tanlang yoki Google rasmni shu yerga tortib olib keling (qirqish bilan)
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Gallery Photos Grid Preview */}
                             {place.gallery && place.gallery.length > 0 && (
-                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2">
                                 {place.gallery.map((gImg, gIdx) => (
-                                  <div key={gIdx} className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm h-24">
-                                    <img src={gImg} alt={`Gallery ${gIdx}`} className="w-full h-full object-cover" />
+                                  <div key={gIdx} className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm h-24 bg-slate-100">
+                                    <img 
+                                      src={gImg} 
+                                      alt={`Gallery ${gIdx}`} 
+                                      className="w-full h-full object-cover" 
+                                      onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }} 
+                                    />
                                     <button 
                                       type="button" 
                                       onClick={() => removeGalleryPhotoFromPlace(idx, gIdx)} 
-                                      className="absolute top-1 right-1 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow"
+                                      className="absolute top-1 right-1 bg-rose-600 hover:bg-rose-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow transition-transform group-hover:scale-110"
                                       title="Rasmni o'chirish"
                                     >
                                       ✕
