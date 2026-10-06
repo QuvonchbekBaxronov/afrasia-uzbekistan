@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Save, LogOut, Lock } from 'lucide-react';
 import { API_BASE } from '../config/api';
-import { getStoredData, saveStoredData, getAllStoredDB, setAllStoredDB } from '../utils/dbStorage';
+import { getStoredData, saveStoredData, getAllStoredDB, setAllStoredDB, cleanImageUrl } from '../utils/dbStorage';
 
 export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -299,12 +299,24 @@ export default function AdminPanel() {
       if (newItem.duration_it) newItem.duration = newItem.duration_it;
       if (newItem.description_it) newItem.description = newItem.description_it;
       
+      if (newItem.image) {
+        newItem.image = cleanImageUrl(newItem.image);
+      }
+
       if (newItem.famousPlaces) {
         newItem.famousPlaces = newItem.famousPlaces.map(p => {
-          if (p.name_it) p.name = p.name_it;
-          if (p.location_it) p.location = p.location_it;
-          if (p.history_it) p.history = p.history_it;
-          return p;
+          const cleanedPlace = { ...p };
+          if (cleanedPlace.image) cleanedPlace.image = cleanImageUrl(cleanedPlace.image);
+          if (cleanedPlace.gallery && Array.isArray(cleanedPlace.gallery)) {
+            cleanedPlace.gallery = cleanedPlace.gallery.map(g => cleanImageUrl(g)).filter(Boolean);
+          }
+          if (cleanedPlace.name_it) cleanedPlace.name = cleanedPlace.name_it;
+          else if (cleanedPlace.name_uz) cleanedPlace.name = cleanedPlace.name_uz;
+          if (cleanedPlace.location_it) cleanedPlace.location = cleanedPlace.location_it;
+          else if (cleanedPlace.location_uz) cleanedPlace.location = cleanedPlace.location_uz;
+          if (cleanedPlace.history_it) cleanedPlace.history = cleanedPlace.history_it;
+          else if (cleanedPlace.history_uz) cleanedPlace.history = cleanedPlace.history_uz;
+          return cleanedPlace;
         });
       }
 
@@ -317,11 +329,14 @@ export default function AdminPanel() {
         updatedList = [...list, newItem];
         axios.post(`${API_BASE}/${editing.type}`, newItem).catch(() => {});
       } else {
-        updatedList = list.map(item => item.id === editing.id ? newItem : item);
+        updatedList = list.map(item => String(item.id) === String(editing.id) ? newItem : item);
         axios.put(`${API_BASE}/${editing.type}/${editing.id}`, newItem).catch(() => {});
       }
 
-      saveStoredData(editing.type, updatedList);
+      const saveSuccess = saveStoredData(editing.type, updatedList);
+      if (!saveSuccess) {
+        console.warn("Storage save returned false, might exceed quota");
+      }
       setData(prev => ({ ...prev, [editing.type]: updatedList }));
 
       alert("Muvaffaqiyatli saqlandi!");
@@ -398,9 +413,15 @@ export default function AdminPanel() {
   };
 
   const updateArrayItem = (arrayName, index, field, value) => {
+    const finalVal = (field === 'image' || field === 'mapUrl') ? cleanImageUrl(value) : value;
     setFormData(prev => {
-      const newArray = [...prev[arrayName]];
-      newArray[index][field] = value;
+      const currentList = prev[arrayName] || [];
+      const newArray = currentList.map((item, i) => {
+        if (i === index) {
+          return { ...item, [field]: finalVal };
+        }
+        return item;
+      });
       return { ...prev, [arrayName]: newArray };
     });
   };
@@ -411,32 +432,60 @@ export default function AdminPanel() {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       return { type: 'file', file: e.dataTransfer.files[0] };
     }
-    let uri = e.dataTransfer.getData('text/uri-list');
-    if (uri && (uri.startsWith('http://') || uri.startsWith('https://') || uri.startsWith('data:'))) {
-      return { type: 'url', url: uri.split('\n')[0].trim() };
-    }
-    let text = e.dataTransfer.getData('text/plain');
-    if (text && (text.startsWith('http://') || text.startsWith('https://') || text.startsWith('data:'))) {
-      return { type: 'url', url: text.trim() };
-    }
+    
+    // 1. Check HTML first (Google search provides rich HTML with high-res imgurl)
     const html = e.dataTransfer.getData('text/html');
     if (html) {
-      const match = html.match(/src=["']([^"']+)["']/i);
-      if (match && match[1]) {
-        return { type: 'url', url: match[1] };
+      const imgurlMatch = html.match(/[?&]imgurl=([^&"'>\s]+)/i);
+      if (imgurlMatch && imgurlMatch[1]) {
+        try {
+          const decoded = decodeURIComponent(imgurlMatch[1]);
+          if (decoded.startsWith('http://') || decoded.startsWith('https://')) {
+            return { type: 'url', url: decoded };
+          }
+        } catch {}
+      }
+      const srcMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (srcMatch && srcMatch[1]) {
+        const cleaned = cleanImageUrl(srcMatch[1]);
+        if (cleaned && (cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.startsWith('data:'))) {
+          return { type: 'url', url: cleaned };
+        }
       }
     }
+
+    // 2. Check uri-list
+    let uri = e.dataTransfer.getData('text/uri-list');
+    if (uri) {
+      const firstLine = uri.split('\n')[0].trim();
+      const cleaned = cleanImageUrl(firstLine);
+      if (cleaned && (cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.startsWith('data:'))) {
+        return { type: 'url', url: cleaned };
+      }
+    }
+
+    // 3. Check plain text
+    let text = e.dataTransfer.getData('text/plain');
+    if (text) {
+      const cleaned = cleanImageUrl(text.trim());
+      if (cleaned && (cleaned.startsWith('http://') || cleaned.startsWith('https://') || cleaned.startsWith('data:'))) {
+        return { type: 'url', url: cleaned };
+      }
+    }
+
     return null;
   };
 
   const addGalleryPhotoToPlace = (placeIdx, photoUrl) => {
-    if (!photoUrl || !photoUrl.trim()) return;
+    const cleaned = cleanImageUrl(photoUrl);
+    if (!cleaned || !cleaned.trim()) return;
     setFormData(prev => {
       const newPlaces = [...(prev.famousPlaces || [])];
-      const currentGallery = newPlaces[placeIdx]?.gallery || [];
+      const targetPlace = newPlaces[placeIdx] || {};
+      const currentGallery = targetPlace.gallery || [];
       newPlaces[placeIdx] = {
-        ...newPlaces[placeIdx],
-        gallery: [...currentGallery, photoUrl.trim()]
+        ...targetPlace,
+        gallery: [...currentGallery, cleaned.trim()]
       };
       return { ...prev, famousPlaces: newPlaces };
     });
@@ -1769,14 +1818,41 @@ export default function AdminPanel() {
 
                             {/* Image Preview */}
                             {place.image && (
-                              <div className="flex items-center gap-3 pt-1">
+                              <div className="flex flex-wrap items-center gap-3 pt-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
                                 <img 
+                                  key={place.image}
                                   src={place.image} 
+                                  referrerPolicy="no-referrer"
                                   alt="Preview" 
-                                  className="h-24 w-36 object-cover rounded-xl border border-slate-200 shadow-sm"
-                                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                  className="h-24 w-36 object-cover rounded-xl border border-slate-200 shadow-sm bg-white"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="144" height="96" viewBox="0 0 144 96"><rect width="100%" height="100%" fill="%23fee2e2"/><text x="50%" y="50%" fill="%23b91c1c" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle" dy=".3em">Rasm ochilmadi ⚠️</text></svg>';
+                                    const errNote = document.getElementById(`img-err-note-${idx}`);
+                                    if (errNote) errNote.style.display = 'block';
+                                    const okNote = document.getElementById(`img-ok-note-${idx}`);
+                                    if (okNote) okNote.style.display = 'none';
+                                  }}
+                                  onLoad={(e) => {
+                                    if (!e.currentTarget.src.startsWith('data:image/svg+xml')) {
+                                      const errNote = document.getElementById(`img-err-note-${idx}`);
+                                      if (errNote) errNote.style.display = 'none';
+                                      const okNote = document.getElementById(`img-ok-note-${idx}`);
+                                      if (okNote) okNote.style.display = 'inline-block';
+                                    }
+                                  }}
                                 />
-                                <span className="text-xs text-emerald-700 font-semibold">✓ Joy rasmi muvaffaqiyatli ulandi</span>
+                                <div className="flex-1">
+                                  <span id={`img-ok-note-${idx}`} className="text-xs text-emerald-700 font-semibold block">
+                                    ✓ Joy rasmi muvaffaqiyatli ulandi va ko'rinyapti
+                                  </span>
+                                  <div id={`img-err-note-${idx}`} style={{ display: 'none' }} className="text-xs text-rose-700 font-medium bg-rose-50 p-2 rounded-lg border border-rose-200">
+                                    ⚠️ <b>Ushbu havola rasm sifatida ochilmadi!</b>
+                                    <p className="text-[11px] text-slate-600 mt-0.5">
+                                      Google Images'da rasm ustiga sichqonchaning o'ng tugmasini bosib, <b>"Rasm manzilini nusxalash"</b> (Copy image address) ni tanlang yoki rasmni to'g'ridan-to'g'ri yuqoridagi katakka tortib olib keling.
+                                    </p>
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </div>

@@ -31,14 +31,73 @@ export const getStoredData = (key, fallback = null) => {
   return initialDb[key] || fallback || [];
 };
 
+export const cleanImageUrl = (rawUrl) => {
+  if (!rawUrl || typeof rawUrl !== 'string') return '';
+  let url = rawUrl.trim();
+
+  // Strip brackets or quotes like @[...], [...], <...>, "...", '...'
+  url = url.replace(/^@?\[(.*)\]$/, '$1').replace(/^<(.*)>$/, '$1').replace(/^["'](.*)["']$/, '$1').trim();
+
+  // 1. Google imgres URL extraction:
+  // e.g. https://www.google.com/imgres?q=...&imgurl=https%3A%2F%2Fexample.com%2Fphoto.jpg...
+  if (url.includes('google.') && (url.includes('imgres') || url.includes('imgurl='))) {
+    try {
+      const parsed = new URL(url.startsWith('http') ? url : 'https://' + url);
+      const imgurl = parsed.searchParams.get('imgurl');
+      if (imgurl) {
+        return decodeURIComponent(imgurl).trim();
+      }
+    } catch {
+      const match = url.match(/[?&]imgurl=([^&]+)/);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1]).trim();
+      }
+    }
+  }
+
+  // 2. Google redirect / search URL:
+  // e.g. https://www.google.com/url?sa=i&url=https%3A%2F%2F...
+  if (url.includes('google.') && (url.includes('/url?') || url.includes('url='))) {
+    try {
+      const parsed = new URL(url.startsWith('http') ? url : 'https://' + url);
+      const target = parsed.searchParams.get('url') || parsed.searchParams.get('q');
+      if (target && (target.startsWith('http://') || target.startsWith('https://'))) {
+        return decodeURIComponent(target).trim();
+      }
+    } catch {
+      const match = url.match(/[?&](?:url|q)=([^&]+)/);
+      if (match && match[1]) {
+        return decodeURIComponent(match[1]).trim();
+      }
+    }
+  }
+
+  // 3. Yandex images redirect:
+  if (url.includes('yandex.') && url.includes('img_url=')) {
+    try {
+      const parsed = new URL(url.startsWith('http') ? url : 'https://' + url);
+      const imgUrl = parsed.searchParams.get('img_url');
+      if (imgUrl) return decodeURIComponent(imgUrl).trim();
+    } catch {}
+  }
+
+  return url;
+};
+
 export const saveStoredData = (key, value) => {
   try {
+    localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
     const store = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     store[key] = value;
     store.lastUpdated = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    try {
+      window.dispatchEvent(new Event('storage'));
+    } catch {}
+    return true;
   } catch (err) {
     console.error("Storage write error:", err);
+    return false;
   }
 };
 

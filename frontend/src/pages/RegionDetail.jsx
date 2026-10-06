@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
-import { getStoredData } from '../utils/dbStorage';
+import { getStoredData, cleanImageUrl } from '../utils/dbStorage';
 
 export default function RegionDetail({ currentLang }) {
   const { id } = useParams();
@@ -354,10 +354,16 @@ export default function RegionDetail({ currentLang }) {
                           {/* Image & Badges */}
                           <div className="h-52 overflow-hidden relative">
                             <img 
-                              src={place.image || region.image || '/images/samarqand.jpg'} 
+                              src={cleanImageUrl(place.image) || region.image || '/images/samarqand.jpg'} 
                               alt={placeName} 
+                              referrerPolicy="no-referrer"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              onError={(e) => { e.currentTarget.src = region.image || '/images/samarqand.jpg'; }}
+                              onError={(e) => { 
+                                const fallback = region.image || '/images/samarqand.jpg';
+                                if (e.currentTarget.src !== fallback) {
+                                  e.currentTarget.src = fallback;
+                                }
+                              }}
                             />
                             {place.category && (
                               <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">

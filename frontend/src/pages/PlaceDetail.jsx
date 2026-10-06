@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { t } from '../utils/translations';
 import { API_BASE } from '../config/api';
-import { getStoredData } from '../utils/dbStorage';
+import { getStoredData, cleanImageUrl } from '../utils/dbStorage';
 
 export default function PlaceDetail({ currentLang }) {
   const { regionId, placeName } = useParams();
@@ -279,10 +279,15 @@ export default function PlaceDetail({ currentLang }) {
             <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm space-y-3">
               <div className="h-80 sm:h-[460px] w-full relative bg-slate-900 rounded-lg overflow-hidden">
                 <img 
-                  src={selectedPhoto || place.image || '/images/samarqand.jpg'} 
+                  src={cleanImageUrl(selectedPhoto || place.image) || '/images/samarqand.jpg'} 
                   alt={placeTitle} 
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-all duration-300"
-                  onError={(e) => { e.currentTarget.src = '/images/samarqand.jpg'; }}
+                  onError={(e) => { 
+                    if (e.currentTarget.src !== '/images/samarqand.jpg') {
+                      e.currentTarget.src = '/images/samarqand.jpg'; 
+                    }
+                  }}
                 />
               </div>
 
@@ -301,7 +306,17 @@ export default function PlaceDetail({ currentLang }) {
                           selectedPhoto === photo ? 'border-emerald-600 shadow-md scale-105' : 'border-transparent opacity-75 hover:opacity-100'
                         }`}
                       >
-                        <img src={photo} alt={`Thumbnail ${pIdx}`} className="w-full h-full object-cover" />
+                        <img 
+                          src={cleanImageUrl(photo)} 
+                          referrerPolicy="no-referrer"
+                          alt={`Thumbnail ${pIdx}`} 
+                          className="w-full h-full object-cover" 
+                          onError={(e) => {
+                            if (e.currentTarget.src !== '/images/samarqand.jpg') {
+                              e.currentTarget.src = '/images/samarqand.jpg';
+                            }
+                          }}
+                        />
                       </button>
                     ))}
                   </div>
