@@ -5,7 +5,7 @@ import { initialDb } from '../data/initialDbData';
 
 const STORAGE_KEY = 'afrasia_db_store';
 const VERSION_KEY = 'afrasia_db_version';
-const CURRENT_VERSION = 'v4'; // Bumped to force clear corrupted 8-region cache and load authentic 14 regions
+const CURRENT_VERSION = 'v5'; // Bumped to force clear cache and load new authentic Toshkent places & photos
 
 export const getStoredData = (key, fallback = null) => {
   try {
